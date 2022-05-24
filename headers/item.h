@@ -2,8 +2,8 @@
 
 #include < vector >
 
-#include "globals.h"
-#include "usages.h"
+#include "..\headers\globals.h"
+#include "..\headers\usages.h"
 
 namespace hid
 {

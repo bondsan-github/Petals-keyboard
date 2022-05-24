@@ -5,9 +5,9 @@
 #include < hidsdi.h >
 #include < hidpi.h >
 
-#include "globals.h"
-#include "raw_device.h"
-#include "item.h"
+#include "..\headers\globals.h"
+#include "..\headers\raw_device.h"
+#include "..\headers\item.h"
 
 namespace hid
 {

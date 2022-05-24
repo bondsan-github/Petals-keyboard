@@ -144,6 +144,7 @@
     <Manifest Include="resources\DeclareDPIAware.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headers\d2d.h" />
     <ClInclude Include="headers\globals.h" />
     <ClInclude Include="headers\hidp_status.h" />
     <ClInclude Include="headers\hid_device.h" />
@@ -156,7 +157,7 @@
     <ClInclude Include="headers\raw_device_base.h" />
     <ClInclude Include="headers\text_box.h" />
     <ClInclude Include="headers\usages.h" />
-    <ClInclude Include="headers\window.h" />
+    <ClInclude Include="headers\main_window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

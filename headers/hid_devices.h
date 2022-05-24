@@ -5,8 +5,8 @@
 #include < hidsdi.h >
 #include < hidpi.h >
 
-#include "raw_devices.h"
-#include "hid_device.h"
+#include "..\headers\raw_devices.h"
+#include "..\headers\hid_device.h"
 
 namespace hid
 {

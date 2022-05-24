@@ -5,7 +5,8 @@
 #include "hid_device.h"
 #include "hid_devices.h"
 
-#include "window.h"
+#include "..\headers\main_window.h"
+#include "..\headers\text_box.h"
 
 // 1. transparent full screen draw contacts
 
@@ -21,17 +22,12 @@ namespace hid
          {
             D2D1_POINT_2F      a     {};
             D2D1_POINT_2F      b     {};
-            ID2D1Brush *       brush {};
+            ID2D1Brush      *  brush {};
             float              width {};
             ID2D1StrokeStyle * style {};
          };
 
-         vector< wstring > text_boxes {};
-
-         void add_text_box( wstring in_string )
-         {
-            text_boxes.emplace_back( in_string );
-         }
+         //vector< text_box >  text_boxes {};
 
          hid_devices          devices;
          vector< hid_device > input;
@@ -45,13 +41,6 @@ namespace hid
 
          uint      spacer_row{ 20 };
          uint      spacer_column{ 20 };
-
-         uint      width_device{ 250 };
-         uint      height_device{ 100 };
-
-         uint      width_item{ 200 };
-         uint      height_item{ 100 };
-
          
       private: // functions
 
@@ -64,9 +53,9 @@ namespace hid
             input = devices.devices();
                         
             if( input.empty() ) 
-            {}
-               //add_text_box( text_box( L"no precision touchpads found" , { 50 , 50 , 350 , 120 } ) );
-            
+            {
+               add_text_box( L"no precision touchpads found" );
+            }
             else
             {
                // draw_item_information()
@@ -75,7 +64,7 @@ namespace hid
                   wstring text { device.text( item_type::device ) };
 
                   add_text_box( text );
-
+                  //text_boxes.emplace_back( in_string );
 
 
                   vector< item > items = device._items();
@@ -93,7 +82,6 @@ namespace hid
                   // press over force threshold for capital letter
 
                   //for(  )
-                  index++;
                }
             }
 

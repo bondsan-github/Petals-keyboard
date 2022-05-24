@@ -2,7 +2,8 @@
 
 #include < vector >
 
-#include "raw_device.h"
+#include "..\headers\raw_device.h"
+#include "..\headers\globals.h"
 
 namespace hid
 { 

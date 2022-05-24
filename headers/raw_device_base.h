@@ -5,7 +5,7 @@
 #include < hidsdi.h >
 #include < hidpi.h >
 
-#include "globals.h"
+#include "..\headers\globals.h"
 
 namespace hid
 {

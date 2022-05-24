@@ -64,7 +64,10 @@
     <ClInclude Include="headers\usages.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\window.h">
+    <ClInclude Include="headers\main_window.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\d2d.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

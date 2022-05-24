@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Windows.h>
+#include < Windows.h >
 
-#include "raw_device_base.h"
+#include "..\headers\raw_device_base.h"
 
 namespace hid
 {
