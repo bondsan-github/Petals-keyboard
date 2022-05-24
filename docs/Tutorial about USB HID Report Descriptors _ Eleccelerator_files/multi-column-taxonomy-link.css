@@ -1,0 +1,39 @@
+div.multi-column-taxonomy-list {
+	clear:both;
+}
+
+.multi-column-taxonomy-list ul {
+	float:left;
+	margin-left:0;
+	padding:10px 20px 0 0;
+	width: 31%;
+	list-style:none;
+}
+
+	.multi-column-taxonomy-list li {
+		margin: 0;
+	}
+
+.multi-column-alpha-group {
+	font-weight: bold;
+}
+
+ul.multi-column-3 {
+	padding-right:0;
+}
+
+.multi-column-taxonomy-list a {
+	display:block;
+	padding:4px 0 4px 2px;
+	border-bottom:1px dotted #53575f;
+}
+
+	.multi-column-taxonomy-list a:hover {
+		background-color:#f0f0f0;
+	}
+
+.multi-column-taxonomy-list span.rss {
+	float:right;
+	margin:2px 2px 0 0;
+	text-decoration:none;
+}
