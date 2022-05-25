@@ -52,9 +52,6 @@
     <ClInclude Include="headers\raw_device.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\raw_device_base.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="headers\raw_devices.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -64,10 +61,13 @@
     <ClInclude Include="headers\usages.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\main_window.h">
+    <ClInclude Include="headers\window.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\d2d.h">
+    <ClInclude Include="headers\graphics.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\write.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

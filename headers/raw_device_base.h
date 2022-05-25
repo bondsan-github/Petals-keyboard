@@ -11,14 +11,17 @@ namespace hid
 {
    using namespace std;
 
-   class raw_device_base
+   class raw_device
    {
       protected:
-      
+
+         HANDLE           pointer{};
          raw_device_type  type  {};
          ushort           page  {};
          ushort           usage {};
          
+         HANDLE           file_pointer {};
+         wstring          path{}; // or std::filesystem::wpath
          //NTSTATUS    hid_result { HIDP_STATUS_NULL };
          //hidp_status status     {};
 
@@ -30,8 +33,6 @@ namespace hid
             ushort data_identifier_amount {};
          };
       
-         HANDLE           pointer {};
-
          const struct
          {
             uint data = 0x20'000'005; // ( 2 << 7 ) & 5
@@ -51,11 +52,8 @@ namespace hid
 
       public: // functions
 
-         HANDLE          _pointer( void ) { return pointer; }
-         raw_device_type _type( void )    { return type; }
-
-         raw_device_base( HANDLE in_pointer , raw_device_type in_type ) 
-         : pointer( in_pointer ) , type( in_type )
+         raw_device( HANDLE in_pointer ) 
+         : pointer( in_pointer )
          {
             HIDP_CAPS caps {};
 
@@ -89,9 +87,24 @@ namespace hid
             feature.button_amount          = caps.NumberFeatureButtonCaps;
             feature.value_amount           = caps.NumberFeatureValueCaps;
             feature.data_identifier_amount = caps.NumberFeatureDataIndices;
+
+            uint path_char_amount{};
+
+            GetRawInputDeviceInfo( pointer , requests.path , nullptr , &path_char_amount );
+
+            path.resize( path_char_amount );
+
+            GetRawInputDeviceInfo( pointer , requests.path , path.data() , &path_char_amount );  // wchar_t
+
+            // open i_o device for query 
+            file_pointer = CreateFileW( path.data() ,
+                                        0 ,                                  // access
+                                        FILE_SHARE_READ | FILE_SHARE_WRITE , // share
+                                        0 ,                                  // security
+                                        OPEN_EXISTING ,                      // creation
+                                        FILE_ATTRIBUTE_NORMAL ,              // flags
+                                        0 );                                 // template
          }
-         
-         bool is_hid() { return type == raw_device_type::hid; }
 
          bool is_multi_touch() { return page == HID_USAGE_PAGE_DIGITIZER && usage == HID_USAGE_DIGITIZER_TOUCH_PAD; }
 

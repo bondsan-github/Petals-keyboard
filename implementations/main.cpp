@@ -11,9 +11,10 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance , _In_opt_ HINSTANCE hPrevInstance
    using namespace hid;
 
    multi_touch input;
-   //main_window app_window;
+
+   int result = input.message_loop();
    
    //MessageBox( 0 , L"application working" , L"precision multi touch" , MB_OK );
 
-   return 0;
+   return result;
 }

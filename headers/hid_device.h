@@ -11,188 +11,194 @@
 
 namespace hid
 {
-   using item_node = HIDP_LINK_COLLECTION_NODE;
-
    class hid_device : public raw_device
    {
-      private: // variables
-         
-         HANDLE                     pointer           {};
-         HIDD_ATTRIBUTES            attributes        {};
-         HIDP_EXTENDED_ATTRIBUTES   attributes_extra  {};
+      HIDD_ATTRIBUTES            attributes{};
+      HIDP_EXTENDED_ATTRIBUTES   attributes_extra{};
          
          // For USB devices, the maximum string length is 126 wide characters 
          // (not including the terminating NULL character).         
-         static const int           string_size       { 127 };
-         wchar_t                    manufacturer      [ string_size ];
-         wchar_t                    product           [ string_size ];
-         wchar_t                    physical          [ string_size ];
-
-         //ushort                     vendor            {};
-         //ushort                     product           {};
+      static const int           string_size{ 127 };
+      wchar_t                    manufacturer[ string_size ];
+      wchar_t                    product[ string_size ];
+      wchar_t                    physical[ string_size ];
 
          //wstring::size_type       string_size       { 127 };
          //wstring                  manufacturer      ( string_size , ' ' );
          
-         vector< item >             items            {};
-                  
+      vector< item >             items{};
+         
+      void information();
+         // data
          // concurrent points
          // x,y points x 5 + 3 buttons
 
-      public: // functions
+      public:
          
-         hid_device( HANDLE in_pointer , raw_device_type in_type )
-         : raw_device{ in_pointer , in_type }
+      //hid_device() = delete;
+
+      hid_device( HANDLE in_pointer )
+      : raw_device( in_pointer )
+      {     
+         if( is_multi_touch() ) information();
+      }
+
+      void draw_information()
+      {
+         
+
+
+      }
+
+      // move constructor
+      //hid_device( hid_device && destination ) //noexcept
+
+      //~hid_device() { delete [] manufacturer }
+
+      wstring text( item_type in_type )
+      {
+         using enum item_type;
+
+         wstring text;
+
+         switch( in_type )
          {
-            // raw_device.page();
-            // raw_device.usage();
-            // data
-            // raw_device.path()
-            
-            HidD_GetAttributes        ( file_pointer , & attributes );
-            HidD_GetManufacturerString( file_pointer , manufacturer , string_size );//manufacturer.data() , string_size );
-            HidD_GetProductString     ( file_pointer , product      , string_size );
-            HidD_GetPhysicalDescriptor( file_pointer , physical     , string_size );
-            
-            vector< HIDP_LINK_COLLECTION_NODE > nodes {};
-            nodes.resize( item_amount );
-
-            HidP_GetLinkCollectionNodes( nodes.data() , & item_amount , data );//static_cast<unsigned long *>(
-            
-            items.resize( item_amount );
-            uint index{};
-
-            for( const auto & node : nodes )
+            case device:
             {
-               item new_item;
+               text =  L"manufacturer : ";
+               text += manufacturer;
+               text += L"\nproduct\t: ";
+               text += product;
+               text += L"\npage\t: ";
+               text += usages.page( page ); // page
+               text += L"\nusage\t: ";
+               text += usages.usage( page , usage ); // usage
 
-               new_item.type   = item_type { node.CollectionType };
-               new_item.page   = node.LinkUsagePage; // usages
-               new_item.usage  = node.LinkUsage;
-               new_item.alias  = node.IsAlias;
-               new_item.amount = node.NumberOfChildren;
+               return text;
 
-               //using  link = vector< item >::pointer;
+            } break;
 
-               if( node.Parent ) 
-                  new_item.origin = & items.at( node.Parent - 1);
-
-               if( node.NextSibling )
-                  new_item.next   = & items.at( node.NextSibling - 1);
-
-               if( node.FirstChild )
-               {
-                  new_item.first  = & items.at( node.FirstChild - 1 );
-               }
-
-               items.at( index ) = move( new_item );
-
-               index++;
-            }
-
-            ushort                     button_amount       {};
-            vector< HIDP_BUTTON_CAPS > button_input_items  {};
-            vector< HIDP_BUTTON_CAPS > button_output_items {};
-            vector< HIDP_BUTTON_CAPS > button_features     {};
-
-            uint                       value_amount        {};
-            vector< HIDP_VALUE_CAPS >  value_input_items   {};
-            vector< HIDP_VALUE_CAPS >  value_output_items  {};
-            vector< HIDP_VALUE_CAPS >  value_features      {};
-
-            button_input_items.resize ( input.button_amount );
-            HidP_GetButtonCaps( HidP_Input   , button_input_items.data() , & input.button_amount   , data );
-
-            button_output_items.resize( output.button_amount );
-            HidP_GetButtonCaps( HidP_Output  , button_input_items.data() , & input.button_amount   , data );
-
-            button_features.resize    ( feature.button_amount );
-            HidP_GetButtonCaps( HidP_Feature , button_features.data()    , & feature.button_amount , data );
-
-
-            value_input_items.resize  ( input.value_amount );
-            HidP_GetValueCaps( HidP_Input    , value_input_items.data()  , & input.value_amount    , data );
-
-            value_output_items.resize ( output.value_amount );
-            HidP_GetValueCaps( HidP_Output   , value_output_items.data() , & output.value_amount   , data );
-
-            value_features.resize     ( feature.value_amount ); 
-            HidP_GetValueCaps( HidP_Feature  , value_features.data()     , & output.value_amount   , data );
-
-            //for( auto & input_item : button_input_items )
-                        //for each cap
-            // id = cap.
-         }
-
-         vector< item > _items() 
-         { 
-            return items; 
-         }
-
-         //~hid_device() { }
-
-         wstring text( item_type in_type )
-         {
-            using enum item_type;
-
-            wstring text;
-
-            switch( in_type )
+            case physical:
+            case application:
+            case logical:
+            case report:
+            case named_array:
+            case usage_switch:
+            case usage_modifier:
             {
-               case device:
+               text = L"type : ";
+               /*
+               text += collection_type_text.at( collection.CollectionType );
+               wcout << "    page : " << usages.page( collection.LinkUsagePage ).c_str() << endl;
+               wcout << "      usage : " << usages.usage( collection.LinkUsagePage , collection.LinkUsage ).c_str() << endl;
+
+               if( collection.IsAlias )
+                  wcout << "    This link node is an alias of the next link node." << endl;
+
+               wcout << "    parent : " << collection.Parent << endl;
+               wcout << "    next sibling : " << collection.NextSibling << endl;
+
+               if( collection.NumberOfChildren )
                {
-                  text =  L"manufacturer : ";
-                  text += manufacturer;
-                  text += L"\nproduct\t: ";
-                  text += product;
-                  text += L"\npage\t: ";
-                  text += usages.page( page ); // page
-                  text += L"\nusage\t: ";
-                  text += usages.usage( page , usage ); // usage
+                  wcout << "      amount of children : " << collection.NumberOfChildren << endl;
+                  wcout << "      first child : " << collection.FirstChild << endl;
+                  }
+                  */
+               return text;
+            } break;
 
-                  return text;
+            default:
+            {
+               return L"unknown collection type";
+            } break;
 
-               } break;
+         } // switch in_type
 
-               case physical:
-               case application:
-               case logical:
-               case report:
-               case named_array:
-               case usage_switch:
-               case usage_modifier:
-               {
-                  text = L"type : ";
-                  /*
-                  text += collection_type_text.at( collection.CollectionType );
-                  wcout << "    page : " << usages.page( collection.LinkUsagePage ).c_str() << endl;
-                  wcout << "      usage : " << usages.usage( collection.LinkUsagePage , collection.LinkUsage ).c_str() << endl;
-
-                  if( collection.IsAlias )
-                     wcout << "    This link node is an alias of the next link node." << endl;
-
-                  wcout << "    parent : " << collection.Parent << endl;
-                  wcout << "    next sibling : " << collection.NextSibling << endl;
-
-                  if( collection.NumberOfChildren )
-                  {
-                     wcout << "      amount of children : " << collection.NumberOfChildren << endl;
-                     wcout << "      first child : " << collection.FirstChild << endl;
-                     }
-                     */
-                  return text;
-               } break;
-
-               default:
-               {
-                  return L"unknown collection type";
-               } break;
-
-            } // switch in_type
-
-         } // text()
+      } // text()
 
    }; // class device
+
+   void hid_device::information()
+   {
+      HidD_GetAttributes( file_pointer , &attributes );
+      HidD_GetManufacturerString( file_pointer , manufacturer , string_size );//manufacturer.data() , string_size );
+      HidD_GetProductString( file_pointer , product , string_size );
+      HidD_GetPhysicalDescriptor( file_pointer , physical , string_size );
+
+      vector< HIDP_LINK_COLLECTION_NODE > nodes{};
+
+      nodes.resize( item_amount );
+
+      HidP_GetLinkCollectionNodes( nodes.data() , &item_amount , data );
+
+      items.resize( item_amount );
+
+      uint index{};
+
+      for( const auto & node : nodes )
+      {
+         item new_item;
+
+         new_item.type   = item_type{ node.CollectionType };
+         new_item.page   = node.LinkUsagePage; // usages
+         new_item.usage  = node.LinkUsage;
+         new_item.alias  = node.IsAlias;
+         new_item.amount = node.NumberOfChildren;
+
+         //using  link = vector< item >::pointer;
+
+         if( node.Parent )
+            new_item.origin = &items.at( node.Parent - 1 );
+
+         if( node.NextSibling )
+            new_item.next   = &items.at( node.NextSibling - 1 );
+
+         if( node.FirstChild )
+         {
+            new_item.first  = &items.at( node.FirstChild - 1 );
+         }
+
+         items.at( index ) = move( new_item );
+
+         index++;
+      }
+
+      using button_item = HIDP_BUTTON_CAPS;
+      using value_item  = HIDP_VALUE_CAPS;
+
+      ushort                button_amount{};
+      vector< button_item > button_input_items{};
+      vector< button_item > button_output_items{};
+      vector< button_item > button_features{};
+
+      uint                  value_amount{};
+      vector< value_item >  value_input_items{};
+      vector< value_item >  value_output_items{};
+      vector< value_item >  value_features{};
+
+      button_input_items.resize( input.button_amount );
+      HidP_GetButtonCaps( HidP_Input , button_input_items.data() , &input.button_amount , data );
+
+      button_output_items.resize( output.button_amount );
+      HidP_GetButtonCaps( HidP_Output , button_input_items.data() , &input.button_amount , data );
+
+      button_features.resize( feature.button_amount );
+      HidP_GetButtonCaps( HidP_Feature , button_features.data() , &feature.button_amount , data );
+
+
+      value_input_items.resize( input.value_amount );
+      HidP_GetValueCaps( HidP_Input , value_input_items.data() , &input.value_amount , data );
+
+      value_output_items.resize( output.value_amount );
+      HidP_GetValueCaps( HidP_Output , value_output_items.data() , &output.value_amount , data );
+
+      value_features.resize( feature.value_amount );
+      HidP_GetValueCaps( HidP_Feature , value_features.data() , &output.value_amount , data );
+
+      //for( auto & input_item : button_input_items )
+                  //for each cap
+      // id = cap.
+   }
 
 } // namespace hid
 

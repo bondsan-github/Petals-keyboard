@@ -10,36 +10,36 @@
 
 namespace hid
 {
-   class hid_devices
+   class hid_devices //: public raw_devices
    {
-      private: // variables
-      
-         raw_devices          raw;
-         vector< hid_device > _devices; // multi-touch devices
+      protected:
+         
+         vector< hid_device > input; // multi-touch devices
 
-      public: // functions
+      public:
 
         hid_devices()
         {
-           vector< raw_device > raw_devices = raw.devices();
+           using                     raw_device_list = RAWINPUTDEVICELIST;
+           uint                      amount          {};
+           vector< raw_device_list > raw_list        {};
 
-            for( auto & raw : raw_devices )
-            {
-               //if( raw.is_hid() ) // ignore keyboards and mice
-               if( raw.is_multi_touch() )
-               {
-                  //hid_device new_device( raw._pointer() , raw._type() );
-                  //_devices.emplace_back( new_device );
+           GetRawInputDeviceList( nullptr         , & amount , sizeof( raw_device_list ) );
 
-                  _devices.emplace_back( raw._pointer() , raw._type() );
-               }
-            }
+           raw_list.resize( amount );
+
+           GetRawInputDeviceList( raw_list.data() , & amount , sizeof( raw_device_list ) );
+
+           for( auto & device : raw_list )
+           { 
+              hid_device new_device( device.hDevice );
+
+              if( new_device.is_multi_touch() )
+                 input.emplace_back( move( new_device ) );
+           }
+
         }
 
-        vector< hid_device > devices()
-        {
-           return _devices;
-        }
-   };
+   }; // class hid_devices
 
-} // nsamespace hid
+} // namespace hid

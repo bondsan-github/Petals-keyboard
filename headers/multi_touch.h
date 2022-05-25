@@ -5,7 +5,7 @@
 #include "hid_device.h"
 #include "hid_devices.h"
 
-#include "..\headers\main_window.h"
+#include "..\headers\window.h"
 #include "..\headers\text_box.h"
 
 // 1. transparent full screen draw contacts
@@ -14,108 +14,53 @@ namespace hid
 {
    using namespace std;
 
-   class multi_touch : public main_window// one or more mutli-touch inputs for example touchpad , touchscreen. 
+   // one or more mutli-touch inputs for example touchpad , touchscreen. 
+   class multi_touch : public window , public hid_devices
    {
-      private: // variables
+      bool      display_information {};
 
-         struct line
-         {
-            D2D1_POINT_2F      a     {};
-            D2D1_POINT_2F      b     {};
-            ID2D1Brush      *  brush {};
-            float              width {};
-            ID2D1StrokeStyle * style {};
-         };
+      uint      row            {};
+      uint      column         {};
 
-         //vector< text_box >  text_boxes {};
+      uint      index          {};
 
-         hid_devices          devices;
-         vector< hid_device > input;
-
-         uint      row{};
-         uint      column{};
-
-         D2D_RECT_F position{};
-
-         uint      index{};
-
-         uint      spacer_row{ 20 };
-         uint      spacer_column{ 20 };
+      uint      spacer_row { 20 };
+      uint      spacer_column { 20 };
          
-      private: // functions
-
-         virtual void on_paint() override; // final
-
-      public: // functions
+      public:
 
          multi_touch()
          {
-            input = devices.devices();
-                        
-            if( input.empty() ) 
+            if( display_information )
             {
-               add_text_box( L"no precision touchpads found" );
-            }
-            else
-            {
-               // draw_item_information()
-               for( auto & device : input )
+               if( input.empty() )
                {
-                  wstring text { device.text( item_type::device ) };
+                  text_box no_devices( L"no precision multi-touch devices found" );
 
-                  add_text_box( text );
-                  //text_boxes.emplace_back( in_string );
-
-
-                  vector< item > items = device._items();
-
-                  for( auto & item : items )
+                  no_devices.draw();
+               }
+               else
+               {
+                  for( auto & device : input )
                   {
-                     wstring text { item.text() };
+                     // 
+                     text_box device_text( device.text( item_type::device ) );
 
-                     add_text_box( text );
+                     paint.text_box();
                   }
-
+               }
+            }
                   // input_modifiers  ( buttons , values , features ) 
                   // output_modifiers
                   // 
                   // press over force threshold for capital letter
+                  // delay after press for context 
+                  // combined movement is mouse // 
 
-                  //for(  )
-               }
-            }
-
-            message_loop();
-
-         } // default constructor
+         }
 
    }; // class multi_touch
 
-   void multi_touch::on_paint()
-   {
-      create_resources();
-
-         render_target_size = render_target->GetSize();
-
-         BeginPaint( pointer , &paint );
-
-         render_target->BeginDraw();
-         render_target->SetTransform( Matrix3x2F::Identity() );
-         render_target->Clear( colour_clear );
-
-         if( text_boxes.empty() ) { }
-         else
-         {
-            for( auto & box : text_boxes )
-            {
-               //box->draw();
-            }
-         }
-
-         render_target->EndDraw();
-
-         EndPaint( pointer , &paint );
-   }
 
 } // namespace hid
 
