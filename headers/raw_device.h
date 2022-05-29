@@ -15,7 +15,7 @@ namespace hid
    {
       protected:
 
-         HANDLE           pointer      {};
+         HANDLE           window_ptr      {};
 
          ushort           page         {};
          ushort           usage        {};
@@ -54,15 +54,15 @@ namespace hid
       public:
 
          raw_device( HANDLE in_pointer )
-         : pointer( in_pointer )
+         : window_ptr( in_pointer )
          {
             uint data_size {};
 
-            GetRawInputDeviceInfo( pointer , requests.data , nullptr , & data_size );
+            GetRawInputDeviceInfo( window_ptr , requests.data , nullptr , & data_size );
 
             data_vector.resize( data_size );
 
-            GetRawInputDeviceInfo( pointer , requests.data , data_vector.data() , & data_size );
+            GetRawInputDeviceInfo( window_ptr , requests.data , data_vector.data() , & data_size );
 
             data = reinterpret_cast< PHIDP_PREPARSED_DATA >( data_vector.data() );
 
@@ -91,11 +91,11 @@ namespace hid
 
             uint path_char_amount {};
 
-            GetRawInputDeviceInfo( pointer , requests.path , nullptr     , & path_char_amount );
+            GetRawInputDeviceInfo( window_ptr , requests.path , nullptr     , & path_char_amount );
 
             path.resize( path_char_amount );
 
-            GetRawInputDeviceInfo( pointer , requests.path , path.data() , & path_char_amount );  // wchar_t
+            GetRawInputDeviceInfo( window_ptr , requests.path , path.data() , & path_char_amount );  // wchar_t
 
             // open i_o device for query 
             file_pointer = CreateFileW( path.data() ,
@@ -127,9 +127,9 @@ namespace hid
             page  = source.page;
             usage = source.usage;
 
-            pointer = source.pointer;
+            window_ptr = source.window_ptr;
 
-            //preparsed_data.pointer = source.preparsed_data.pointer;
+            //preparsed_data.window_ptr = source.preparsed_data.window_ptr;
             //preparsed_data.size = source.preparsed_data.size;
 
             if( data ) HidD_FreePreparsedData( data );

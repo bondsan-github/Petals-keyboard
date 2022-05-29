@@ -1,6 +1,10 @@
 #pragma once
 
 #include < string >
+#include < vector >
+
+#include < wrl.h >
+
 #include < d2d1.h >
 #include < dwrite.h >
 
@@ -9,56 +13,153 @@
 namespace hid
 {
    using namespace D2D1;
+   using namespace Microsoft::WRL;
 
-   class write
+   //using com_ptr = ComPtr<>;
+   using write_factory = IDWriteFactory;
+   using text_format = IDWriteTextFormat;
+   using text_layout = IDWriteTextLayout;
+   using brush_solid_colour = ID2D1SolidColorBrush;
+   using render_target = ID2D1RenderTarget;
+   using colours      = ColorF;
+   using point        = D2D1_POINT_2F;
+   using trimming     = DWRITE_TRIMMING;
+
+   //struct write_factory { inline static ComPtr< IDWriteFactory > factory {}; };
+
+   class text //: public write_factory
    {
-         IDWriteFactory *       write_factory {};
+      ComPtr< write_factory >     factory {};
+      ComPtr< render_target >      sheet   {};
+      ComPtr< text_format >        format  {}; // simple version of text_layout
+      ComPtr< brush_solid_colour > brush   {};
+      ComPtr< text_layout >        layout  {};
 
-         IDWriteTextFormat *    text_format  {}; // simple version of text_layout
-         IDWriteTextLayout *    text_layout  {};
-         wstring                text_name    { L"Times New Roman" };
-         uint                   text_size    { 15 }; // MS "size * 96.0f/72.0f"
-         DWRITE_TEXT_METRICS *  text_metrics {};
-         ColorF                 text_colour  { ColorF::LightYellow };
+      point                        origin  { 10.0f , 10.0f }; // top left
+      wstring                      name    { L"Times New Roman" };
+      float                        size    { 15.0f }; // MS "size * 96.0f/72.0f"
+      colours                      colour  { ColorF::DarkSlateGray };
+      wstring                      content {};
 
-         ID2D1SolidColorBrush * text_brush   {};
+      // area.
+      float width  { 200.0f };
+      float height { 200.0f };
 
       public:
 
-         write()
+      text( ComPtr< write_factory >     in_factory           ,
+            ComPtr< render_target >     in_sheet             ,
+            const wstring               in_content = {}      ,
+            const point                 in_origin  = {}      ,
+            const float                 in_size    = { 15u } ,
+            const colours               in_colour  = { ColorF::DarkSlateGray }
+          )
+      : factory( in_factory.Get() ) , sheet( in_sheet.Get() ) , content( in_content ) , 
+        origin( in_origin) , size( in_size ) , colour( in_colour )
+      {
+         reset_format();
+         reset_layout();
+         reset_brush();
+      }
+
+      void reset_brush()
+      {
+         sheet->CreateSolidColorBrush( colour , brush.ReleaseAndGetAddressOf() );
+      }
+
+      void reset_format()
+      {
+          //result_win
+         HRESULT result = factory->CreateTextFormat( name.c_str() ,
+                                                     0 ,
+                                                     DWRITE_FONT_WEIGHT_REGULAR ,
+                                                     DWRITE_FONT_STYLE_NORMAL ,
+                                                     DWRITE_FONT_STRETCH_NORMAL ,
+                                                     size ,
+                                                     L"en-us" , // locale       
+                                                     format.ReleaseAndGetAddressOf() );
+
+         // format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
+         format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
+
+         trimming trim{};
+         trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;
+         format->SetTrimming( &trim , 0 );
+      }
+
+      void reset_layout()
+      {
+         factory->CreateTextLayout( content.c_str() ,
+                                    content.size() ,
+                                    format.Get() ,
+                                    width ,
+                                    height ,
+                                    layout.ReleaseAndGetAddressOf() );
+      }
+
+      void add( const wstring in_string )
+      {
+         content += in_string;
+
+         reset_layout();         
+      }
+
+      void draw()
+      {
+         if( sheet.Get() ) 
          {
-            DWriteCreateFactory( DWRITE_FACTORY_TYPE_SHARED ,
-                                 __uuidof( write_factory ) ,
-                                 reinterpret_cast< IUnknown ** >( &write_factory ) );
+           sheet->DrawTextLayout( origin, layout.Get() , brush.Get() );
 
-            //GetMetrics( [ out ] DWRITE_TEXT_METRICS1 * textMetrics
+           D2D1_ROUNDED_RECT rectangle {};
 
-            // Set the font weight to bold for the first 5 letters.
-            // DWRITE_TEXT_RANGE textRange ={ 0, 5 };
-            // pTextLayout_->SetFontWeight( DWRITE_FONT_WEIGHT_BOLD , textRange );
+           sheet->DrawRoundedRectangle( rectangle , brush.Get() );
+         }
+      }
+   };
 
-            write_factory->CreateTextFormat( text_name.c_str() ,
-                                             0 ,
-                                             DWRITE_FONT_WEIGHT_REGULAR ,
-                                             DWRITE_FONT_STYLE_NORMAL ,
-                                             DWRITE_FONT_STRETCH_NORMAL ,
-                                             text_size ,
-                                             L"en-uk" , // locale       
-                                             & text_format );
+   class write //: public write_factory
+   {
+         ComPtr< write_factory > factory {};
+         ComPtr< render_target > sheet   {}; //unique_ptr
+         vector< text >          texts   {};
+      
+      public:
 
-            //text_format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); //DWRITE_TEXT_ALIGNMENT_LEADING
-            text_format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
+         void initialise( ComPtr< render_target > in_sheet )
+         {
+            sheet = in_sheet.Get();
 
-            DWRITE_TRIMMING trim {};
-            trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;
-
-            text_format->SetTrimming( & trim , 0 );
-
-            //render_target->CreateSolidColorBrush( text_colour , &text_brush );
+            HRESULT result = DWriteCreateFactory( DWRITE_FACTORY_TYPE_SHARED ,
+                                 __uuidof( IDWriteFactory ) ,
+                                 & factory );
          }
 
-         //write_factory->Release();
+         void add( const wstring in_text , 
+                   const point   in_origin = { 100.0f ,100.0f } ,
+                   const float   in_size   = { 15u } ,
+                   const colours in_colour = { ColorF::DarkSlateGray } )
+         {            
+            texts.emplace_back( factory , sheet , in_text , in_origin , in_size , in_colour);
+         }
+
+         void draw()
+         {
+            if( sheet ) 
+            {
+               for( auto & _text : texts )
+               {
+                  _text.draw();
+                  
+               }
+            }
+         }
 
    }; // class direct_write
 
 } // namespace hid
+
+//GetMetrics( [ out ] DWRITE_TEXT_METRICS1 * textMetrics
+
+            // Set the font weight to bold for the first 5 letters.
+            // DWRITE_TEXT_RANGE textRange ={ 0, 5 };
+            // pTextLayout_->SetFontWeight( DWRITE_FONT_WEIGHT_BOLD , textRange );

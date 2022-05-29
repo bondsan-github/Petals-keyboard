@@ -55,7 +55,7 @@ namespace hid
 
       //~hid_device() { delete [] manufacturer }
 
-      wstring text( item_type in_type )
+      wstring text( item_type in_type ) const
       {
          using enum item_type;
 
@@ -145,7 +145,7 @@ namespace hid
          new_item.alias  = node.IsAlias;
          new_item.amount = node.NumberOfChildren;
 
-         //using  link = vector< item >::pointer;
+         //using  link = vector< item >::window_ptr;
 
          if( node.Parent )
             new_item.origin = &items.at( node.Parent - 1 );
@@ -339,7 +339,7 @@ namespace hid
                   wcout << "IsAlias    : " << value.IsAlias << endl;
 
                   wcout << "BitField         : " << value.BitField << endl;
-                  wcout << "LinkCollection   : " << value.LinkCollection << endl;   // A unique internal index pointer
+                  wcout << "LinkCollection   : " << value.LinkCollection << endl;   // A unique internal index window_ptr
 
                   wcout << "LinkUsage        : " << value.LinkUsage << endl;
                   wcout << "LinkUsagePage    : " << value.LinkUsagePage << endl;

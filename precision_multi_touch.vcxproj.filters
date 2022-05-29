@@ -52,22 +52,22 @@
     <ClInclude Include="headers\raw_device.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\raw_devices.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="headers\text_box.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\usages.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\window.h">
+    <ClInclude Include="headers\windows.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\graphics.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\write.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\window_pointer.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

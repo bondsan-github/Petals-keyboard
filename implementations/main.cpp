@@ -6,15 +6,23 @@
 
 #include "..\headers\multi_touch.h"
 
-int WINAPI wWinMain( _In_ HINSTANCE hInstance , _In_opt_ HINSTANCE hPrevInstance , _In_ LPWSTR lpCmdLine , _In_ int nShowCmd )
+int WINAPI wWinMain( _In_ HINSTANCE instance , _In_opt_ HINSTANCE instance_previous , _In_ LPWSTR parameters , _In_ int show_flags )
 {
    using namespace hid;
 
+   // Initialize COM apartment threaded. This is the recommended way to initialize COM for the UI thread.
+   //CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED );
+
+   //application
+   int         result {};
    multi_touch input;
 
-   int result = input.message_loop();
+   input.initialise( instance , parameters , show_flags );
+   result = input.start();
    
-   //MessageBox( 0 , L"application working" , L"precision multi touch" , MB_OK );
+   //::CoUninitialize();
 
    return result;
 }
+
+//MessageBox( 0 , L"application working" , L"precision multi touch" , MB_OK );

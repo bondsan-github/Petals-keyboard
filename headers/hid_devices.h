@@ -5,16 +5,13 @@
 #include < hidsdi.h >
 #include < hidpi.h >
 
-#include "..\headers\raw_devices.h"
 #include "..\headers\hid_device.h"
 
 namespace hid
 {
-   class hid_devices //: public raw_devices
+   class hid_devices
    {
-      protected:
-         
-         vector< hid_device > input; // multi-touch devices
+         vector< hid_device > _input; // multi-touch devices
 
       public:
 
@@ -35,9 +32,13 @@ namespace hid
               hid_device new_device( device.hDevice );
 
               if( new_device.is_multi_touch() )
-                 input.emplace_back( move( new_device ) );
+                 _input.emplace_back( move( new_device ) );
            }
+        }
 
+        const vector<hid_device> & devices()
+        {
+           return  _input;
         }
 
    }; // class hid_devices

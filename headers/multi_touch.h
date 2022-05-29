@@ -5,8 +5,8 @@
 #include "hid_device.h"
 #include "hid_devices.h"
 
-#include "..\headers\window.h"
-#include "..\headers\text_box.h"
+#include "..\headers\windows.h"
+#include "..\headers\hid_devices.h"
 
 // 1. transparent full screen draw contacts
 
@@ -15,48 +15,50 @@ namespace hid
    using namespace std;
 
    // one or more mutli-touch inputs for example touchpad , touchscreen. 
-   class multi_touch : public window , public hid_devices
+   class multi_touch //: public window , public hid_devices
    {
-      bool      display_information {};
+      window      main_window;
+      hid_devices input;
 
+      bool        display_information { true };
+
+      /*
       uint      row            {};
       uint      column         {};
-
       uint      index          {};
-
       uint      spacer_row { 20 };
       uint      spacer_column { 20 };
-         
+      */
+      
       public:
 
-         multi_touch()
+         // multi_touch(
+
+         void initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
+         {
+            main_window.initialise( instance , parameters , show_flags );
+         }
+
+         int start()
          {
             if( display_information )
             {
-               if( input.empty() )
+               if( input.devices().empty() )
                {
-                  text_box no_devices( L"no precision multi-touch devices found" );
-
-                  no_devices.draw();
+                  main_window.paint.text.add( L"no precision multi-touch devices found" );
                }
                else
                {
-                  for( auto & device : input )
+                  for( auto & device : input.devices() )
                   {
-                     // 
-                     text_box device_text( device.text( item_type::device ) );
+                     wstring device_text( device.text( item_type::device ) );
 
-                     paint.text_box();
+                     main_window.paint.text.add( device_text , point { 40 , 0 } , 15 , colours::White );
                   }
                }
             }
-                  // input_modifiers  ( buttons , values , features ) 
-                  // output_modifiers
-                  // 
-                  // press over force threshold for capital letter
-                  // delay after press for context 
-                  // combined movement is mouse // 
 
+            return main_window.message_loop();
          }
 
    }; // class multi_touch
@@ -68,7 +70,7 @@ namespace hid
 // this is not to re-invent the wheel simply add a spoke
 // 
 // touchpad HID - mouse + keyboard
-// one finger navigation - mouse pointer | context | direct touch 
+// one finger navigation - mouse window_ptr | context | direct touch 
 // two finger context
 // ten finger 
 
@@ -80,6 +82,13 @@ namespace hid
 *    C++ How to program 10th edition , Deitel & Associates, Inc , ISBN-10: 0-13-444823-5 , ISBN-13: 978-0-13-444823-7
 */
 
+// input_modifiers  ( buttons , values , features ) 
+                  // output_modifiers
+                  // 
+                  // press over force threshold for capital letter
+                  // delay after press for context 
+                  // combined movement is mouse // 
+                  // 
 //class value  {};
 
 //class button

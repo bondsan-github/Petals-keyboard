@@ -38,8 +38,8 @@ namespace hid
          void draw()
          {
             //render_target->DrawTextLayout
-            //if( render_target )
-               //render_target->DrawRoundedRectangle( rrect , text_brush );
+            if( render_target )
+               render_target->DrawRoundedRectangle( rrect , text_brush );
          }
 
    };// class text_box

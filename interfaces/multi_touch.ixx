@@ -21,14 +21,7 @@ namespace hid
    {
       private: // variables
 
-         struct line
-         {
-            D2D1_POINT_2F      a     {};
-            D2D1_POINT_2F      b     {};
-            ID2D1Brush *       brush {};
-            float              width {};
-            ID2D1StrokeStyle * style {};
-         };
+         
 
          class text_box : public d2d
          {
@@ -147,7 +140,7 @@ namespace hid
 
          render_target->BeginDraw();
          render_target->SetTransform( D2D1::Matrix3x2F::Identity() );
-         render_target->Clear( colour_clear ); //D2D1::ColorF::DarkGrey ) );
+         render_target->Clear( colour_clear ); 
 
          //pRenderTarget->FillEllipse( ellipse , pBrush );
          //RectF()
