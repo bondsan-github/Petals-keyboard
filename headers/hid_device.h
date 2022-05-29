@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include < vector >
 
 #include < hidsdi.h >
 #include < hidpi.h >
@@ -13,20 +13,20 @@ namespace hid
 {
    class hid_device : public raw_device
    {
-      HIDD_ATTRIBUTES            attributes{};
-      HIDP_EXTENDED_ATTRIBUTES   attributes_extra{};
+      HIDD_ATTRIBUTES            attributes       { .Size = sizeof( HIDD_ATTRIBUTES ) };
+      HIDP_EXTENDED_ATTRIBUTES   attributes_extra {};
          
          // For USB devices, the maximum string length is 126 wide characters 
          // (not including the terminating NULL character).         
-      static const int           string_size{ 127 };
-      wchar_t                    manufacturer[ string_size ];
-      wchar_t                    product[ string_size ];
-      wchar_t                    physical[ string_size ];
+      static const int           string_size  { 127 };
+      wchar_t                    manufacturer [ string_size ];
+      wchar_t                    product      [ string_size ];
+      wchar_t                    physical     [ string_size ];
 
          //wstring::size_type       string_size       { 127 };
          //wstring                  manufacturer      ( string_size , ' ' );
          
-      vector< item >             items{};
+      vector< item >             items {};
          
       void information();
          // data
@@ -35,101 +35,58 @@ namespace hid
 
       public:
          
-      //hid_device() = delete;
+      vector< wstring > text_items() const
+      {
+         vector< wstring > texts{};
 
-      hid_device( HANDLE in_pointer )
-      : raw_device( in_pointer )
+         for( auto & item : items )
+         texts.emplace_back( item.text() );
+
+         return texts;         
+      }
+
+      hid_device( HANDLE in_pointer ) : raw_device( in_pointer )
       {     
          if( is_multi_touch() ) information();
       }
 
-      void draw_information()
+      wstring text_device() const
       {
-         
+         wstring text {};
 
+         text =  L"manufacturer\t: ";
+         text += manufacturer;
+         text += L"\nproduct   \t: ";
+         text += product;
+         text += L"\npage      \t: ";
+         text += usages.page( page );
+         text += L"\nusage     \t: ";
+         text += usages.usage( page , usage );
 
+         // += 
+         //attributes.VendorID;
+         //attributes.ProductID;
+         //attributes.VersionNumber;
+
+         // += physical
+
+         return text;
       }
-
-      // move constructor
-      //hid_device( hid_device && destination ) //noexcept
-
-      //~hid_device() { delete [] manufacturer }
-
-      wstring text( item_type in_type ) const
-      {
-         using enum item_type;
-
-         wstring text;
-
-         switch( in_type )
-         {
-            case device:
-            {
-               text =  L"manufacturer : ";
-               text += manufacturer;
-               text += L"\nproduct\t: ";
-               text += product;
-               text += L"\npage\t: ";
-               text += usages.page( page ); // page
-               text += L"\nusage\t: ";
-               text += usages.usage( page , usage ); // usage
-
-               return text;
-
-            } break;
-
-            case physical:
-            case application:
-            case logical:
-            case report:
-            case named_array:
-            case usage_switch:
-            case usage_modifier:
-            {
-               text = L"type : ";
-               /*
-               text += collection_type_text.at( collection.CollectionType );
-               wcout << "    page : " << usages.page( collection.LinkUsagePage ).c_str() << endl;
-               wcout << "      usage : " << usages.usage( collection.LinkUsagePage , collection.LinkUsage ).c_str() << endl;
-
-               if( collection.IsAlias )
-                  wcout << "    This link node is an alias of the next link node." << endl;
-
-               wcout << "    parent : " << collection.Parent << endl;
-               wcout << "    next sibling : " << collection.NextSibling << endl;
-
-               if( collection.NumberOfChildren )
-               {
-                  wcout << "      amount of children : " << collection.NumberOfChildren << endl;
-                  wcout << "      first child : " << collection.FirstChild << endl;
-                  }
-                  */
-               return text;
-            } break;
-
-            default:
-            {
-               return L"unknown collection type";
-            } break;
-
-         } // switch in_type
-
-      } // text()
 
    }; // class device
 
    void hid_device::information()
    {
-      HidD_GetAttributes( file_pointer , &attributes );
-      HidD_GetManufacturerString( file_pointer , manufacturer , string_size );//manufacturer.data() , string_size );
-      HidD_GetProductString( file_pointer , product , string_size );
-      HidD_GetPhysicalDescriptor( file_pointer , physical , string_size );
+      HidD_GetAttributes         ( file_pointer , & attributes );
+      HidD_GetManufacturerString ( file_pointer , manufacturer , string_size );//manufacturer.data() , string_size );
+      HidD_GetProductString      ( file_pointer , product      , string_size );
+      HidD_GetPhysicalDescriptor ( file_pointer , physical     , string_size );
 
-      vector< HIDP_LINK_COLLECTION_NODE > nodes{};
+      vector< HIDP_LINK_COLLECTION_NODE > nodes {};
 
       nodes.resize( item_amount );
 
-      HidP_GetLinkCollectionNodes( nodes.data() , &item_amount , data );
+      HidP_GetLinkCollectionNodes( nodes.data() , & item_amount , data );
 
       items.resize( item_amount );
 
@@ -147,16 +104,14 @@ namespace hid
 
          //using  link = vector< item >::window_ptr;
 
-         if( node.Parent )
-            new_item.origin = &items.at( node.Parent - 1 );
+         if( node.Parent ) // one parent , above
+            new_item.origin = & items.at( node.Parent - 1 );
 
-         if( node.NextSibling )
-            new_item.next   = &items.at( node.NextSibling - 1 );
+         if( node.NextSibling ) // to right
+            new_item.next   = & items.at( node.NextSibling - 1 );
 
-         if( node.FirstChild )
-         {
-            new_item.first  = &items.at( node.FirstChild - 1 );
-         }
+         if( node.FirstChild ) // left-most
+            new_item.first  = & items.at( node.FirstChild - 1 );
 
          items.at( index ) = move( new_item );
 
@@ -177,31 +132,38 @@ namespace hid
       vector< value_item >  value_features{};
 
       button_input_items.resize( input.button_amount );
-      HidP_GetButtonCaps( HidP_Input , button_input_items.data() , &input.button_amount , data );
+      HidP_GetButtonCaps( HidP_Input   , button_input_items.data() , & input.button_amount   , data );
 
       button_output_items.resize( output.button_amount );
-      HidP_GetButtonCaps( HidP_Output , button_input_items.data() , &input.button_amount , data );
+      HidP_GetButtonCaps( HidP_Output  , button_input_items.data() , & input.button_amount   , data );
 
       button_features.resize( feature.button_amount );
-      HidP_GetButtonCaps( HidP_Feature , button_features.data() , &feature.button_amount , data );
+      HidP_GetButtonCaps( HidP_Feature , button_features.data()    , & feature.button_amount , data );
 
 
       value_input_items.resize( input.value_amount );
-      HidP_GetValueCaps( HidP_Input , value_input_items.data() , &input.value_amount , data );
+      HidP_GetValueCaps(  HidP_Input   , value_input_items.data()  , & input.value_amount    , data );
 
       value_output_items.resize( output.value_amount );
-      HidP_GetValueCaps( HidP_Output , value_output_items.data() , &output.value_amount , data );
+      HidP_GetValueCaps(  HidP_Output  , value_output_items.data() , & output.value_amount   , data );
 
       value_features.resize( feature.value_amount );
-      HidP_GetValueCaps( HidP_Feature , value_features.data() , &output.value_amount , data );
+      HidP_GetValueCaps(  HidP_Feature , value_features.data()     , & output.value_amount   , data );
 
-      //for( auto & input_item : button_input_items )
+      for( auto & input_item : button_input_items )
+      {
+
+      }
                   //for each cap
       // id = cap.
    }
 
 } // namespace hid
 
+// move constructor
+      //hid_device( hid_device && destination ) //noexcept
+
+      //~hid_device() { delete [] manufacturer }
 
 
             //uint collection_id = 0;
@@ -390,3 +352,13 @@ namespace hid
 
 //collection_text += format( L"manufacturer : {}" , manufacturer );//  endl;
 //collection_text += format( L"\nproduct      : {}" , product );// << endl;
+
+   /*
+            case physical:
+            case application:
+            case logical:
+            case report:
+            case named_array:
+            case usage_switch:
+            case usage_modifier:
+            */

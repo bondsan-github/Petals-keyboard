@@ -21,16 +21,14 @@ namespace hid
       hid_devices input;
 
       bool        display_information { true };
-
-      /*
-      uint      row            {};
-      uint      column         {};
-      uint      index          {};
-      uint      spacer_row { 20 };
-      uint      spacer_column { 20 };
-      */
       
-      public:
+      float      row           {};
+      float      column        {};
+      uint       index         {};
+      float      spacer_row    { 20 };
+      float      spacer_column { 20 };
+     
+     public:
 
          // multi_touch(
 
@@ -38,6 +36,9 @@ namespace hid
          {
             main_window.initialise( instance , parameters , show_flags );
          }
+
+         //point placement( float column , float row )
+           // return point { column * 100 , row * 100 };
 
          int start()
          {
@@ -51,9 +52,26 @@ namespace hid
                {
                   for( auto & device : input.devices() )
                   {
-                     wstring device_text( device.text( item_type::device ) );
+                     wstring device_text { device.text_device() };
+                     point   placement   { 40 , 40 };
 
-                     main_window.paint.text.add( device_text , point { 40 , 0 } , 15 , colours::White );
+                     main_window.paint.text.add( device_text , placement , 15 , colours::White);
+
+                     vector< wstring > item_texts { device.text_items() };
+
+                     placement = { placement.x , placement.y += 140};
+
+                     for( auto & text : item_texts )
+                     {              
+                        //if( item->next ) // item->next.placement.
+                        //   placement = { placement.x += 200, placement.y };
+
+                        placement ={ placement.x, placement.y += 150 };
+
+                        // first is parent
+                        main_window.paint.text.add( text , placement , 15 , colours::White );
+
+                     }
                   }
                }
             }

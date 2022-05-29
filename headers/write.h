@@ -29,7 +29,7 @@ namespace hid
 
    class text //: public write_factory
    {
-      ComPtr< write_factory >     factory {};
+      ComPtr< write_factory >      factory {};
       ComPtr< render_target >      sheet   {};
       ComPtr< text_format >        format  {}; // simple version of text_layout
       ComPtr< brush_solid_colour > brush   {};
@@ -42,8 +42,11 @@ namespace hid
       wstring                      content {};
 
       // area.
-      float width  { 200.0f };
-      float height { 200.0f };
+      float width  { 300.0f };
+      float height { 110.0f };
+      float radius { 5.0f };
+
+      D2D1_ROUNDED_RECT rrectangle {};
 
       public:
 
@@ -79,12 +82,12 @@ namespace hid
                                                      L"en-us" , // locale       
                                                      format.ReleaseAndGetAddressOf() );
 
-         // format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
+         //format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
          format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
 
-         trimming trim{};
-         trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;
-         format->SetTrimming( &trim , 0 );
+         //trimming trim{};
+         //trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;
+         //format->SetTrimming( & trim , 0 );
       }
 
       void reset_layout()
@@ -110,9 +113,14 @@ namespace hid
          {
            sheet->DrawTextLayout( origin, layout.Get() , brush.Get() );
 
-           D2D1_ROUNDED_RECT rectangle {};
+           rrectangle.radiusX = rrectangle.radiusY = radius;
 
-           sheet->DrawRoundedRectangle( rectangle , brush.Get() );
+           rrectangle.rect.left   = origin.x - 5;
+           rrectangle.rect.top    = origin.y + 5;
+           rrectangle.rect.right  = origin.x + width;
+           rrectangle.rect.bottom = origin.y + height;
+
+           sheet->DrawRoundedRectangle( rrectangle , brush.Get() );
          }
       }
    };
@@ -120,7 +128,7 @@ namespace hid
    class write //: public write_factory
    {
          ComPtr< write_factory > factory {};
-         ComPtr< render_target > sheet   {}; //unique_ptr
+         ComPtr< render_target > sheet   {};
          vector< text >          texts   {};
       
       public:
@@ -144,14 +152,7 @@ namespace hid
 
          void draw()
          {
-            if( sheet ) 
-            {
-               for( auto & _text : texts )
-               {
-                  _text.draw();
-                  
-               }
-            }
+            if( sheet ) for( auto & _text : texts ) _text.draw();
          }
 
    }; // class direct_write

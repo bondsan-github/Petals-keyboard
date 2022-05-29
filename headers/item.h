@@ -10,29 +10,31 @@ namespace hid
    using namespace std;
 
    struct item;
-   using link = vector< item >::pointer;
+   using  link = vector< item >::pointer;
 
    enum class item_type : unsigned long
    {
-      null ,
-      physical , //= 0x00 ,
-      application , //= 0x01 ,
-      logical , //= 0x02 ,
-      report , //= 0x03 ,
-      named_array , //= 0x04 ,
-      usage_switch , //= 0x05 ,
-      usage_modifier , //= 0x06 ,
-      reserved_start , //= 0x07 ,
-      reserved_end , //= 0x7F ,
-      device , //= 0x80 , // vendor defined
-      vendor_defined , //= 0xFF ,
+      undefined          , //
+      physical           , // 0x00
+      application        , // 0x01
+      logical            , // 0x02
+      report             , // 0x03
+      named_array        , // 0x04
+      usage_switch       , // 0x05
+      usage_modifier     , // 0x06
+      reserved_start     , // 0x07
+      // ...
+      reserved_end       , // 0x7F
+      device             , // 0x80 // vendor_defined_start , // 0x80
+      // ...
+      vendor_defined_end , // 0xFF ,
    };
 
    // HID Usage Tables FOR Universal Serial Bus( USB ) Version 1.3
    // usb.org/sites/default/files/hut1_3_0.pdf
    const vector< wstring > item_type_text
    {
-      L"null"           , //
+      L"undefined"      , //
       L"physical"       , //
       L"application"    , // 
       L"logical"        , // 
@@ -43,18 +45,15 @@ namespace hid
       L"reserved start" , //
       L"reserved end"   , //
       L"device"         , //
-      L"vendor defined" , //
+      L"vendor defined end" , //
    };
 
-   // vector< report > input;
+   // vector< button > input;
    // vector< report > output;
 
-   //class item
-   struct item
+   struct item //
    {
-      //private:
-
-      item_type type{ item_type::vendor_defined };
+      item_type type { item_type::undefined };
 
       ushort page   {};
       ushort usage  {};
@@ -69,7 +68,12 @@ namespace hid
       // public information
       // public drawable()
 
-      wstring text()
+      public:
+
+      bool is_parent();
+      //bool 
+
+      wstring text() const
       {
          wstring text;
 
@@ -79,6 +83,7 @@ namespace hid
          text += usages.page( page );
          text += L"\nusage\t: ";
          text += usages.usage( page , usage );
+
          if( amount )
          {
             text += L"\nlink amount : ";
@@ -87,6 +92,7 @@ namespace hid
 
          return text;
       }
+
    }; // struct item
 
    struct main_item : public item
@@ -95,8 +101,8 @@ namespace hid
       vector< ushort >  _usages   {};
       vector< wstring > types     {}; // item_type::
       ushort            bit_field {};
-      //ushort            origin_page{};
-      //ushort            origin_usage{};
+      ushort            origin_page{};
+      ushort            origin_usage{};
       bool              range{};
       bool              string{};
       bool              designator{};
@@ -109,19 +115,21 @@ namespace hid
       vector< pair< long , long > > logical_limits{};
       vector< pair< long , long > > physical_limits{};
 
-      //text += L"\nreport id\t: ";
-      //text += report_id;
+      wstring text()
+      {
+        //text += L"\nreport id\t: ";
+        //text += report_id;
+      }
       
-
    }; // struct main_item    
 
-   struct button : public item {};
-   struct value  : public item
+   struct button : public main_item {};
+   struct value  : public main_item
    {
-      bool   has_null{};
-      ushort bit_amount{};
-      ulong  units_exponent{};
-      ulong  units{};
+      bool   has_null       {};
+      ushort bit_amount     {};
+      ulong  units_exponent {};
+      ulong  units          {};
    };
    
 } // namespace hid

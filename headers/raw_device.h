@@ -15,8 +15,7 @@ namespace hid
    {
       protected:
 
-         HANDLE           window_ptr      {};
-
+         HANDLE           device   {};
          ushort           page         {};
          ushort           usage        {};
 
@@ -53,16 +52,16 @@ namespace hid
 
       public:
 
-         raw_device( HANDLE in_pointer )
-         : window_ptr( in_pointer )
+         raw_device( HANDLE in_device )
+         : device( in_device )
          {
             uint data_size {};
 
-            GetRawInputDeviceInfo( window_ptr , requests.data , nullptr , & data_size );
+            GetRawInputDeviceInfo( device , requests.data , nullptr , & data_size );
 
             data_vector.resize( data_size );
 
-            GetRawInputDeviceInfo( window_ptr , requests.data , data_vector.data() , & data_size );
+            GetRawInputDeviceInfo( device , requests.data , data_vector.data() , & data_size );
 
             data = reinterpret_cast< PHIDP_PREPARSED_DATA >( data_vector.data() );
 
@@ -91,11 +90,11 @@ namespace hid
 
             uint path_char_amount {};
 
-            GetRawInputDeviceInfo( window_ptr , requests.path , nullptr     , & path_char_amount );
+            GetRawInputDeviceInfo( device , requests.path , nullptr     , & path_char_amount );
 
             path.resize( path_char_amount );
 
-            GetRawInputDeviceInfo( window_ptr , requests.path , path.data() , & path_char_amount );  // wchar_t
+            GetRawInputDeviceInfo( device , requests.path , path.data() , & path_char_amount );  // wchar_t
 
             // open i_o device for query 
             file_pointer = CreateFileW( path.data() ,
@@ -114,34 +113,3 @@ namespace hid
    }; // class raw_device_base
 
 } // namespace hid
-
-
-         //     new_device = old_device
-         // int i          = 1;
-
-         // copy from source to this , constructor // do inherited classes need to call base class constructor - 
-         /*
-         raw_device_base( const raw_device_base & source )
-         {
-            type  = source.type;
-            page  = source.page;
-            usage = source.usage;
-
-            window_ptr = source.window_ptr;
-
-            //preparsed_data.window_ptr = source.preparsed_data.window_ptr;
-            //preparsed_data.size = source.preparsed_data.size;
-
-            if( data ) HidD_FreePreparsedData( data );
-
-            data_size = source.data_size;
-
-            memcpy( data , source.data , data_size );
-
-            item_amount = source.item_amount;
-
-            input   = source.input;
-            output  = source.output;
-            feature = source.feature;
-         }
-         */
