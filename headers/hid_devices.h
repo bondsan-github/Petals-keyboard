@@ -11,13 +11,14 @@ namespace hid
 {
    class hid_devices
    {
-         vector< hid_device > _input; // multi-touch devices
+         vector< hid_device > input; // multi-touch devices
 
       public:
 
         hid_devices()
         {
-           using                     raw_device_list = RAWINPUTDEVICELIST;
+           using raw_device_list = RAWINPUTDEVICELIST;
+
            uint                      amount          {};
            vector< raw_device_list > raw_list        {};
 
@@ -32,13 +33,13 @@ namespace hid
               hid_device new_device( device.hDevice );
 
               if( new_device.is_multi_touch() )
-                 _input.emplace_back( move( new_device ) );
+                 input.emplace_back( move( new_device ) );
            }
         }
 
         const vector<hid_device> & devices()
         {
-           return  _input;
+           return input;
         }
 
    }; // class hid_devices

@@ -16,14 +16,14 @@ namespace hid
    using namespace Microsoft::WRL;
 
    //using com_ptr = ComPtr<>;
-   using write_factory = IDWriteFactory;
-   using text_format = IDWriteTextFormat;
-   using text_layout = IDWriteTextLayout;
+   using write_factory      = IDWriteFactory;
+   using text_format        = IDWriteTextFormat;
+   using text_layout        = IDWriteTextLayout;
    using brush_solid_colour = ID2D1SolidColorBrush;
-   using render_target = ID2D1RenderTarget;
-   using colours      = ColorF;
-   using point        = D2D1_POINT_2F;
-   using trimming     = DWRITE_TRIMMING;
+   
+   using colours            = ColorF;
+   using point              = D2D1_POINT_2F;
+   using trimming           = DWRITE_TRIMMING;
 
    //struct write_factory { inline static ComPtr< IDWriteFactory > factory {}; };
 

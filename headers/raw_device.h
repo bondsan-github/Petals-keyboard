@@ -15,10 +15,10 @@ namespace hid
    {
       protected:
 
-         HANDLE           device   {};
+         HANDLE           device       {};
          ushort           page         {};
          ushort           usage        {};
-
+         
          HANDLE           file_pointer {};
          wstring          path         {}; // or std::filesystem::wpath
 

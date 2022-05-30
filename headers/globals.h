@@ -6,6 +6,8 @@
 #include < vector >
 #include < string >
 
+#include < d2d1.h >
+
 namespace hid // human interface device
 {
    using namespace std;
@@ -15,6 +17,9 @@ namespace hid // human interface device
    using ushort = unsigned short; // 16 bits
    using uint   = unsigned int;   // 32 bits
    using ulong  = unsigned long;  //    long same as int
+
+   using        render_target = ID2D1RenderTarget;
+   using window_render_target = ID2D1HwndRenderTarget;
 
    // Microsoft windows input types
    enum class raw_device_type { mouse , keyboard , hid };

@@ -22,11 +22,11 @@ namespace hid
 
       bool        display_information { true };
       
-      float      row           {};
-      float      column        {};
-      uint       index         {};
-      float      spacer_row    { 20 };
-      float      spacer_column { 20 };
+      float       text_size   { 15.0f };
+      ColorF      text_colour { ColorF::White };
+      float       column      {};
+      float       row         {};
+      uint        index       {};
      
      public:
 
@@ -50,27 +50,33 @@ namespace hid
                }
                else
                {
+                  main_window.paint.grid( 10 , 5 );
+
+                  auto & grid_ = main_window.paint.sheet_grid;
+                  auto & text_ = main_window.paint.text;
+
+                  column = 1;
+                  row    = 0;
+                  
+                  point placement = grid_.cell( column , row );
+
                   for( auto & device : input.devices() )
                   {
-                     wstring device_text { device.text_device() };
-                     point   placement   { 40 , 40 };
-
-                     main_window.paint.text.add( device_text , placement , 15 , colours::White);
+                     text_.add( device.text_device() , placement , text_size , text_colour );
 
                      vector< wstring > item_texts { device.text_items() };
 
-                     placement = { placement.x , placement.y += 140};
+                     placement = grid_.cell( column , row );
 
                      for( auto & text : item_texts )
                      {              
                         //if( item->next ) // item->next.placement.
                         //   placement = { placement.x += 200, placement.y };
 
-                        placement ={ placement.x, placement.y += 150 };
+                        placement = grid_.cell( column , row += 1 );
 
                         // first is parent
-                        main_window.paint.text.add( text , placement , 15 , colours::White );
-
+                        text_.add( text , placement , text_size , text_colour );
                      }
                   }
                }
