@@ -34,10 +34,12 @@ namespace hid
 
       public:
 
-         line( ComPtr< render_target > in_sheet , point in_a , point in_b ,
-               float in_width = 1.0f , ColorF in_colour = ColorF::Yellow )
-            : sheet( in_sheet ) , a( in_a ) , b( in_b ) ,
-              width( in_width ) , colour( in_colour )
+         line( ComPtr< render_target > in_sheet                        , 
+               point in_a                                              , 
+               point in_b                                              ,
+               float in_width = 1.0f                                   ,
+               colours in_colour = colours( 0.4f, 0.4f , 0.2f , 0.2f ) )
+         : sheet( in_sheet /*lol*/) , a( in_a ) , b( in_b ) , width( in_width ) , colour( in_colour )
          {
             sheet->CreateSolidColorBrush( colour , brush.ReleaseAndGetAddressOf() );
             //factory->createStrokeStyle
@@ -55,12 +57,16 @@ namespace hid
       private:
        
          using point = D2D1_POINT_2F;
+         //ID2D1LinearGradientBrush
+         //ID2D1RadialGradientBrush
 
-         ComPtr< render_target > sheet {};
-         D2D1_SIZE_F             size  {};
-         D2D1_SIZE_F             cell_amount {};
+         using target = ComPtr< render_target >;
 
-         vector< line >          lines {};
+         target    sheet       {};
+         area      sheet_size  {};
+         divisions cell_amount {};
+
+         vector< line > lines {};
 
       public:
 
@@ -68,29 +74,30 @@ namespace hid
          {
             sheet       = in_sheet;
             cell_amount = in_cell_amount;
-            size        = sheet->GetSize(); // size in dips
+            sheet_size        = sheet->GetSize(); // size in dips
 
-            float cell_width  = size.width  / cell_amount.width;
-            float cell_height = size.height / cell_amount.height;
+            float cell_width  = sheet_size.width  / cell_amount.width;
+            float cell_height = sheet_size.height / cell_amount.height;
 
-            for( float x {} ; x <= size.width ; x += cell_width )
-               for( float y {} ; y <= size.height ; y += cell_height )
+            for( float x {} ; x <= sheet_size.width ; x += cell_width )
+               for( float y {} ; y <= sheet_size.height ; y += cell_height )
                {
                   // horizontal
-                  lines.emplace_back( sheet.Get() , point{ 0 , y } , point{ size.width , y } , 2.0f );
+                  lines.emplace_back( sheet.Get() , point{ 0 , y } , point{ sheet_size.width , y } , 1.0f );
                   // vertical
-                  lines.emplace_back( sheet.Get() , point{ x , 0 } , point{ x , size.height } , 2.0f );
+                  lines.emplace_back( sheet.Get() , point{ x , 0 } , point{ x , sheet_size.height } , 1.0f );
                }
          };
 
          point cell( const uint column , const uint row )
          {
-            float cell_width  = size.width  / cell_amount.width;
-            float cell_height = size.height / cell_amount.height;
+            return { column * cell_size().width , row * cell_size().height };
+         }
 
-            point origin { column * cell_width , row * cell_height };
-
-            return origin;
+         dimensions cell_size() const
+         {
+            return { sheet_size.width  / cell_amount.width ,
+                     sheet_size.height / cell_amount.height };
          }
 
          void draw()
@@ -168,9 +175,9 @@ namespace hid
                   sheet->SetTransform( Matrix3x2F::Identity() );
 
                   sheet->Clear( colour_clear );
-
-                  text.draw();
+                                    
                   sheet_grid.draw();
+                  text.draw();
 
                   sheet->EndDraw();
                }

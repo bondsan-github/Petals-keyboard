@@ -7,11 +7,12 @@
 #include < string >
 
 #include < d2d1.h >
+#include < dwrite.h >
 
 namespace hid // human interface device
 {
    using namespace std;
-   //using namespace D2D1;
+   using namespace D2D1;
 
    using uchar  = unsigned char;  //  8 bits
    using ushort = unsigned short; // 16 bits
@@ -21,6 +22,30 @@ namespace hid // human interface device
    using        render_target = ID2D1RenderTarget;
    using window_render_target = ID2D1HwndRenderTarget;
 
+   using write_factory      = IDWriteFactory;
+   using text_format        = IDWriteTextFormat;
+   using text_layout        = IDWriteTextLayout;
+   using brush_solid_colour = ID2D1SolidColorBrush;
+
+   using colours            = ColorF;
+   using point              = D2D_POINT_2F;
+   using area               = D2D_SIZE_F;
+   using dimensions         = D2D_SIZE_F;
+   using divisions          = D2D_SIZE_F;
+
+   using trimming           = DWRITE_TRIMMING;
+
+   using rectangle          = D2D_RECT_F;
+   using rounded_rectangle  = D2D1_ROUNDED_RECT;
+
+   struct rectangle_middles
+   {
+      point top    {};
+      point right  {};
+      point bottom {};
+      point left   {};
+   };
+   
    // Microsoft windows input types
    enum class raw_device_type { mouse , keyboard , hid };
 

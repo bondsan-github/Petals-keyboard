@@ -22,12 +22,11 @@ namespace hid
       wchar_t                    manufacturer [ string_size ];
       wchar_t                    product      [ string_size ];
       wchar_t                    physical     [ string_size ];
-
-         //wstring::size_type       string_size       { 127 };
-         //wstring                  manufacturer      ( string_size , ' ' );
+      //wstring::size_type       string_size  { 127 };
+      //wstring                  manufacturer ( string_size , ' ' );
          
-      vector< item >             items {};
-         
+      vector< item >             items_main {};
+      
       void information();
          // data
          // concurrent points
@@ -39,7 +38,7 @@ namespace hid
       {
          vector< wstring > texts{};
 
-         for( auto & item : items )
+         for( auto & item : items_main )
          texts.emplace_back( item.text() );
 
          return texts;         
@@ -54,13 +53,13 @@ namespace hid
       {
          wstring text {};
 
-         text =  L"manufacturer\t: ";
+         text =  L"manufacturer : ";
          text += manufacturer;
-         text += L"\nproduct   \t: ";
+         text += L"\nproduct    : ";
          text += product;
-         text += L"\npage      \t: ";
+         text += L"\npage       : ";
          text += usages.page( page );
-         text += L"\nusage     \t: ";
+         text += L"\nusage      : ";
          text += usages.usage( page , usage );
 
          // += 
@@ -88,7 +87,7 @@ namespace hid
 
       HidP_GetLinkCollectionNodes( nodes.data() , & item_amount , data );
 
-      items.resize( item_amount );
+      items_main.resize( item_amount );
 
       uint index{};
 
@@ -105,15 +104,15 @@ namespace hid
          //using  link = vector< item >::window_ptr;
 
          if( node.Parent ) // one parent , above
-            new_item.origin = & items.at( node.Parent - 1 );
+            new_item.origin = & items_main.at( node.Parent - 1 );
 
          if( node.NextSibling ) // to right
-            new_item.next   = & items.at( node.NextSibling - 1 );
+            new_item.next   = & items_main.at( node.NextSibling - 1 );
 
          if( node.FirstChild ) // left-most
-            new_item.first  = & items.at( node.FirstChild - 1 );
+            new_item.first  = & items_main.at( node.FirstChild - 1 );
 
-         items.at( index ) = move( new_item );
+         items_main.at( index ) = move( new_item );
 
          index++;
       }
@@ -121,40 +120,71 @@ namespace hid
       using button_item = HIDP_BUTTON_CAPS;
       using value_item  = HIDP_VALUE_CAPS;
 
-      ushort                button_amount{};
-      vector< button_item > button_input_items{};
-      vector< button_item > button_output_items{};
-      vector< button_item > button_features{};
+      vector< button_item > input_buttons   {};
+      vector< value_item >  input_values    {};
 
-      uint                  value_amount{};
-      vector< value_item >  value_input_items{};
-      vector< value_item >  value_output_items{};
-      vector< value_item >  value_features{};
+      vector< button_item > output_buttons  {};
+      vector< value_item >  output_values   {};
 
-      button_input_items.resize( input.button_amount );
-      HidP_GetButtonCaps( HidP_Input   , button_input_items.data() , & input.button_amount   , data );
+      vector< button_item > button_features {};
+      vector< value_item >  value_features  {};
+      
+      input_buttons.resize( input.button_amount );
+      HidP_GetButtonCaps( HidP_Input   , input_buttons.data() , & input.button_amount   , data );
 
-      button_output_items.resize( output.button_amount );
-      HidP_GetButtonCaps( HidP_Output  , button_input_items.data() , & input.button_amount   , data );
+      input_values.resize( input.value_amount );
+      HidP_GetValueCaps( HidP_Input , input_values.data() , &input.value_amount , data );
+
+
+      output_buttons.resize( output.button_amount );
+      HidP_GetButtonCaps( HidP_Output  , input_buttons.data() , & input.button_amount   , data );
+
+      output_values.resize( output.value_amount );
+      HidP_GetValueCaps( HidP_Output , output_values.data() , &output.value_amount , data );
+
 
       button_features.resize( feature.button_amount );
-      HidP_GetButtonCaps( HidP_Feature , button_features.data()    , & feature.button_amount , data );
-
-
-      value_input_items.resize( input.value_amount );
-      HidP_GetValueCaps(  HidP_Input   , value_input_items.data()  , & input.value_amount    , data );
-
-      value_output_items.resize( output.value_amount );
-      HidP_GetValueCaps(  HidP_Output  , value_output_items.data() , & output.value_amount   , data );
+      HidP_GetButtonCaps( HidP_Feature , button_features.data() , & feature.button_amount , data );
 
       value_features.resize( feature.value_amount );
-      HidP_GetValueCaps(  HidP_Feature , value_features.data()     , & output.value_amount   , data );
+      HidP_GetValueCaps(  HidP_Feature , value_features.data() , & output.value_amount   , data );
 
-      for( auto & input_item : button_input_items )
+      for( auto & button : input_buttons )
       {
+         button.BitField;
+         button.IsAbsolute;
+         button.IsAlias;
+         button.IsDesignatorRange;
+         button.IsRange;
+         button.IsStringRange;
+         button.LinkCollection;
+         button.LinkUsage;
+         button.LinkUsagePage;
 
+         button.NotRange.DataIndex;
+
+         button.UsagePage;
+         button.ReportID;
+         button.ReportCount;   // Available in API version >= 2 only.
+
+         //Range;
+         button.Range.UsageMin;
+         button.Range.UsageMax;
+         button.Range.StringMin;
+         button.Range.StringMax;
+         button.Range.DesignatorMin;
+         button.Range.DesignatorMax;
+         button.Range.DataIndexMin;
+         button.Range.DataIndexMax;
+         
+         button.NotRange.Usage;
+         button.NotRange.StringIndex;
+         button.NotRange.DesignatorIndex;
+         button.NotRange.DataIndex;
+      
       }
-                  //for each cap
+
+      //for each cap
       // id = cap.
    }
 

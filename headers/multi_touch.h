@@ -17,76 +17,89 @@ namespace hid
    // one or more mutli-touch inputs for example touchpad , touchscreen. 
    class multi_touch //: public window , public hid_devices
    {
-      window      main_window;
-      hid_devices input;
+         window      main_window;
+         hid_devices input;
 
-      bool        display_information { true };
-      
-      float       text_size   { 15.0f };
-      ColorF      text_colour { ColorF::White };
-      float       column      {};
-      float       row         {};
-      uint        index       {};
+         bool        display_information { true };
+
+         wstring     text_font     { L"Sitka" };
+         float       text_size     { 10.0f };
+         colours     text_colour   { colours::White };
+         area        text_area     {};
+         float       column        {};
+         ushort      column_amount {};
+         float       row           {};
+         ushort      row_amount    {};
+
+         uint        index         {};
      
-     public:
+      public:
 
-         // multi_touch(
+        void initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
+        {
+           main_window.initialise( instance , parameters , show_flags );
+        }
 
-         void initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
-         {
-            main_window.initialise( instance , parameters , show_flags );
-         }
+        int start()
+        {
+           if( display_information )
+           {
+              if( input.devices().empty() )
+              {
+                 main_window.paint.text.add( L"no precision multi-touch devices found" );
+              }
+              else
+              {
+                 column_amount = 15;
+                 row_amount    = 12;
 
-         //point placement( float column , float row )
-           // return point { column * 100 , row * 100 };
+                 main_window.paint.grid( column_amount , row_amount );
 
-         int start()
-         {
-            if( display_information )
-            {
-               if( input.devices().empty() )
-               {
-                  main_window.paint.text.add( L"no precision multi-touch devices found" );
-               }
-               else
-               {
-                  main_window.paint.grid( 10 , 5 );
+                 auto & grid_ = main_window.paint.sheet_grid;
+                 auto & write = main_window.paint.text;
 
-                  auto & grid_ = main_window.paint.sheet_grid;
-                  auto & text_ = main_window.paint.text;
-
-                  column = 1;
-                  row    = 0;
+                 text_area    = grid_.cell_size();
                   
-                  point placement = grid_.cell( column , row );
+                 column = 1;
+                 row    = 1;
 
-                  for( auto & device : input.devices() )
-                  {
-                     text_.add( device.text_device() , placement , text_size , text_colour );
+                 point device_position    = grid_.cell( column , row ); 
+                 
+                 row += 2;
+                 point item_head_position = grid_.cell( column , row ); 
+                 
+                 column += 2;
+                 point item_main_position = grid_.cell( column , row );
 
-                     vector< wstring > item_texts { device.text_items() };
+                 for( auto & device : input.devices() )
+                 {
+                    // device
+                    write.add( device.text_device() , device_position , text_size , text_colour , text_area , text_font );
 
-                     placement = grid_.cell( column , row );
+                    // items
+                    vector< wstring > item_texts { device.text_items() };
+                    
+                    // head_item
+                    write.add( item_texts.front() , item_head_position , text_size , text_colour , text_area , text_font );
+                    
+                    vector< wstring >::const_iterator text = item_texts.begin();
+                    
+                    // second item
+                    text++;
 
-                     for( auto & text : item_texts )
-                     {              
-                        //if( item->next ) // item->next.placement.
-                        //   placement = { placement.x += 200, placement.y };
+                    for( ; text != item_texts.end() ; text++ )
+                    {  
+                       write.add( * text , grid_.cell( column , row ) , text_size , text_colour , text_area );
+                       row+=2;
+                    }
+                 }
+              }
+           }
 
-                        placement = grid_.cell( column , row += 1 );
+           return main_window.message_loop();
+        }
 
-                        // first is parent
-                        text_.add( text , placement , text_size , text_colour );
-                     }
-                  }
-               }
-            }
-
-            return main_window.message_loop();
-         }
-
-   }; // class multi_touch
-
+   }; //class multi_touch
 
 } // namespace hid
 
@@ -113,26 +126,3 @@ namespace hid
                   // delay after press for context 
                   // combined movement is mouse // 
                   // 
-//class value  {};
-
-//class button
-//{
-//   private: // variables
-//      HANDLE           device_pointer{};
-//
-//   public:
-//
-//      button( const HANDLE in_device_pointer ) : device_pointer( in_device_pointer )
-//};
-
-//class collection
-//{
-//   public:
-//      collection( const PHIDP_PREPARSED_DATA in_data , const uint in_ammount )
-//     // : preparsed_pointer( in_data ) , collection_amount( in_ammount )
-//
-//   private: // variables
-//     
-//      //HIDP_LINK_COLLECTION_NODE node {};
-//      //PHIDP_PREPARSED_DATA                preparsed_pointer {};
-//};

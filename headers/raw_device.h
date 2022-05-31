@@ -25,20 +25,23 @@ namespace hid
          //NTSTATUS       hid_result   { HIDP_STATUS_NULL };
          //hidp_status    status       {};
 
-         struct report
-         {
-            ushort byte_amount            {};
-            ushort button_amount          {};
-            ushort value_amount           {};
-            ushort data_identifier_amount {};
-         };
-
          const struct
          {
             uint data = ( 1 << 29 ) | 0x5;
             uint path = ( 1 << 29 ) | 0x7; // return value in character amount, not byte size
             uint info = ( 1 << 29 ) | 0xB;
-         } requests;
+         } requests; // instantiates here
+
+         struct report // type
+         {
+            ushort byte_amount            {};
+            ushort button_amount          {};
+            ushort value_amount           {};
+            ushort data_identifier_amount {};
+
+            vector< button > buttons {};
+            vector< value  > values  {};
+         };
 
          PHIDP_PREPARSED_DATA data        {};
          vector< char >       data_vector {};

@@ -37,7 +37,7 @@ namespace hid
            }
         }
 
-        const vector<hid_device> & devices()
+        const vector< hid_device > & devices()
         {
            return input;
         }

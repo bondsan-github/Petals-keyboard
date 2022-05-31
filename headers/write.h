@@ -16,15 +16,7 @@ namespace hid
    using namespace Microsoft::WRL;
 
    //using com_ptr = ComPtr<>;
-   using write_factory      = IDWriteFactory;
-   using text_format        = IDWriteTextFormat;
-   using text_layout        = IDWriteTextLayout;
-   using brush_solid_colour = ID2D1SolidColorBrush;
    
-   using colours            = ColorF;
-   using point              = D2D1_POINT_2F;
-   using trimming           = DWRITE_TRIMMING;
-
    //struct write_factory { inline static ComPtr< IDWriteFactory > factory {}; };
 
    class text //: public write_factory
@@ -35,34 +27,57 @@ namespace hid
       ComPtr< brush_solid_colour > brush   {};
       ComPtr< text_layout >        layout  {};
 
-      point                        origin  { 10.0f , 10.0f }; // top left
-      wstring                      name    { L"Times New Roman" };
-      float                        size    { 15.0f }; // MS "size * 96.0f/72.0f"
-      colours                      colour  { ColorF::DarkSlateGray };
-      wstring                      content {};
-
-      // area.
-      float width  { 300.0f };
-      float height { 110.0f };
-      float radius { 5.0f };
-
-      D2D1_ROUNDED_RECT rrectangle {};
+      wstring                      content    {};
+      point                        origin     {}; // top left
+      wstring                      font       { L"Times New Roman" }; // font family
+      float                        size       { 15.0f }; // MS "size * 96.0f/72.0f"
+      colours                      colour     { colours::DarkSlateGray };
+      area                         dimensions {};
+      rounded_rectangle            rrectangle {};
+      float                        radius     { 5.0f };
 
       public:
 
-      text( ComPtr< write_factory >     in_factory           ,
-            ComPtr< render_target >     in_sheet             ,
-            const wstring               in_content = {}      ,
-            const point                 in_origin  = {}      ,
-            const float                 in_size    = { 15u } ,
-            const colours               in_colour  = { ColorF::DarkSlateGray }
-          )
+      text( ComPtr< write_factory > in_factory                                ,
+            ComPtr< render_target > in_sheet                                  ,
+            wstring                 in_content    = {}                        ,
+            point                   in_origin     = { 10.0f , 10.0f }         ,
+            float                   in_size       = { 15u }                   ,
+            colours                 in_colour     = { ColorF::DarkSlateGray } ,
+            area                    in_dimensions = { 150.0f , 100.0f }       ,
+            wstring                 in_font       = { L"Times New Roman" }    )
       : factory( in_factory.Get() ) , sheet( in_sheet.Get() ) , content( in_content ) , 
-        origin( in_origin) , size( in_size ) , colour( in_colour )
+        origin( in_origin) , size( in_size ) , colour( in_colour ) , dimensions( in_dimensions )
       {
          reset_format();
          reset_layout();
          reset_brush();
+      }
+
+      rectangle mid_points() const
+      {
+         rectangle         temp {};
+         rectangle_middles mid  {};
+
+         temp.left   = origin.x - 5;
+         temp.top    = origin.y - 5;
+         temp.right  = origin.x + dimensions.width + 5;
+         temp.bottom = origin.y + dimensions.height + 5;
+
+         float mid_horizontal = ( temp.right - temp.left ) / 2.0f; // fabs()
+         float mid_vertical   = ( temp.bottom - temp.top ) / 2.0f;
+
+         mid.top.x    = temp.left + mid_horizontal;
+         mid.top.y    = temp.top;
+
+         mid.right.x  = temp.right;
+         mid.right.y  = temp.top + mid_vertical;
+
+         mid.bottom.x = mid.top.x;
+         mid.bottom.y = temp.bottom;
+
+         mid.left.x   = temp.left;
+         mid.left.y   = mid.right.y;
       }
 
       void reset_brush()
@@ -73,7 +88,7 @@ namespace hid
       void reset_format()
       {
           //result_win
-         HRESULT result = factory->CreateTextFormat( name.c_str() ,
+         HRESULT result = factory->CreateTextFormat( font.c_str() ,
                                                      0 ,
                                                      DWRITE_FONT_WEIGHT_REGULAR ,
                                                      DWRITE_FONT_STYLE_NORMAL ,
@@ -92,11 +107,11 @@ namespace hid
 
       void reset_layout()
       {
-         factory->CreateTextLayout( content.c_str() ,
-                                    content.size() ,
-                                    format.Get() ,
-                                    width ,
-                                    height ,
+         factory->CreateTextLayout( content.c_str()   ,
+                                    content.size()    ,
+                                    format.Get()      ,
+                                    dimensions.width  ,
+                                    dimensions.height ,
                                     layout.ReleaseAndGetAddressOf() );
       }
 
@@ -116,9 +131,9 @@ namespace hid
            rrectangle.radiusX = rrectangle.radiusY = radius;
 
            rrectangle.rect.left   = origin.x - 5;
-           rrectangle.rect.top    = origin.y + 5;
-           rrectangle.rect.right  = origin.x + width;
-           rrectangle.rect.bottom = origin.y + height;
+           rrectangle.rect.top    = origin.y - 5;
+           rrectangle.rect.right  = origin.x + dimensions.width  + 5;
+           rrectangle.rect.bottom = origin.y + dimensions.height + 5;
 
            sheet->DrawRoundedRectangle( rrectangle , brush.Get() );
          }
@@ -142,12 +157,15 @@ namespace hid
                                  & factory );
          }
 
-         void add( const wstring in_text , 
-                   const point   in_origin = { 100.0f ,100.0f } ,
-                   const float   in_size   = { 15u } ,
-                   const colours in_colour = { ColorF::DarkSlateGray } )
+         void add(  wstring in_text                                   , 
+                   point   in_origin     = { 100.0f ,100.0f }         ,
+                   float   in_size       = { 15u }                    ,
+                   colours in_colour     = { colours::DarkSlateGray } ,
+                   area    in_dimensions = { 150.0f , 100.0f }        ,
+                   wstring in_font       = { L"Times New Roman" }     )
          {            
-            texts.emplace_back( factory , sheet , in_text , in_origin , in_size , in_colour);
+            texts.emplace_back( factory , sheet , 
+                                in_text , in_origin , in_size , in_colour , in_dimensions , in_font );
          }
 
          void draw()

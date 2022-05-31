@@ -51,7 +51,7 @@ namespace hid
    // vector< button > input;
    // vector< report > output;
 
-   struct item //
+   struct main_item //
    {
       item_type type { item_type::undefined };
 
@@ -70,7 +70,7 @@ namespace hid
 
       public:
 
-      bool is_parent();
+      //bool is_parent();
       //bool 
 
       wstring text() const
@@ -95,27 +95,33 @@ namespace hid
 
    }; // struct item
 
-   struct main_item : public item
+   struct item : public main_item
    {
-      uchar             report_id {};
-      vector< ushort >  _usages   {};
-      vector< wstring > types     {}; // item_type::
-      ushort            bit_field {};
-      ushort            origin_page{};
-      ushort            origin_usage{};
-      bool              range{};
-      bool              string{};
-      bool              designator{};
-      bool              absolute{};
-      ushort            report_amount{};
-      vector< ushort >  string_idents{};
-      vector< ushort >  designator_idents{};
-      vector< ushort >  data_idents{};
+      uchar             report_id         {};
+      vector< ushort >  _usages           {};
+      vector< wstring > types             {}; // item_type::
+      ushort            bit_field         {};
+      ushort            origin_page       {};
+      ushort            origin_usage      {};
+      bool              range             {};
+      bool              string            {};
+      bool              designator        {};
+      bool              absolute          {};
+      ushort            report_amount     {};
+      vector< ushort >  string_idents     {};
+      vector< ushort >  designator_idents {};
+      vector< ushort >  data_idents       {};
 
-      vector< pair< long , long > > logical_limits{};
-      vector< pair< long , long > > physical_limits{};
+      struct limits
+      {
+         long minumum {};
+         long maximum {};
+      };
 
-      wstring text()
+      vector< limits > limits_logical  {};
+      vector< limits > limits_physical {};
+
+      wstring text() const
       {
         //text += L"\nreport id\t: ";
         //text += report_id;
@@ -123,13 +129,14 @@ namespace hid
       
    }; // struct main_item    
 
-   struct button : public main_item {};
-   struct value  : public main_item
+   struct button : public item {};
+   struct value  : public item
    {
       bool   has_null       {};
       ushort bit_amount     {};
       ulong  units_exponent {};
       ulong  units          {};
    };
-   
+   struct features : public item {};
+
 } // namespace hid
