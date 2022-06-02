@@ -144,6 +144,9 @@
     <Manifest Include="resources\DeclareDPIAware.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h" />
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h" />
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h" />
     <ClInclude Include="headers\graphics.h" />
     <ClInclude Include="headers\write.h" />
     <ClInclude Include="headers\globals.h" />

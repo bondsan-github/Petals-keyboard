@@ -25,7 +25,7 @@ namespace hid
       //wstring::size_type       string_size  { 127 };
       //wstring                  manufacturer ( string_size , ' ' );
          
-      vector< item >             items_main {};
+      vector< item >             items {};
       
       void information();
          // data
@@ -36,85 +36,100 @@ namespace hid
          
       vector< wstring > text_items() const
       {
-         vector< wstring > texts{};
+         vector< wstring > texts {};
 
-         for( auto & item : items_main )
-         texts.emplace_back( item.text() );
+         for( auto & item : items )
+            texts.emplace_back( item.text() );
 
          return texts;         
       }
 
       hid_device( HANDLE in_pointer ) : raw_device( in_pointer )
       {     
-         if( is_multi_touch() ) information();
+          if( is_multi_touch() ) information();
       }
 
       wstring text_device() const
       {
-         wstring text {};
+          wstring text {};
 
-         text =  L"manufacturer : ";
-         text += manufacturer;
-         text += L"\nproduct    : ";
-         text += product;
-         text += L"\npage       : ";
-         text += usages.page( page );
-         text += L"\nusage      : ";
-         text += usages.usage( page , usage );
+          text =  L"manufacturer : ";
+          text += manufacturer;
+          text += L"\nproduct    : ";
+          text += product;
+          text += L"\npage       : ";
+          text += usages.page( page );
+          text += L"\nusage      : ";
+          text += usages.usage( page , usage );
 
-         // += 
-         //attributes.VendorID;
-         //attributes.ProductID;
-         //attributes.VersionNumber;
+          // += 
+          //attributes.VendorID;
+          //attributes.ProductID;
+          //attributes.VersionNumber;
 
-         // += physical
+          // += physical
 
-         return text;
+          return text;
+      }
+
+      vector< wstring > text_input() const
+      {
+          vector< wstring > texts{};
+
+          for( auto & input : input.buttons )
+              texts.push_back( input.text() );
+
+          return texts;
       }
 
    }; // class device
 
    void hid_device::information()
    {
-      HidD_GetAttributes         ( file_pointer , & attributes );
-      HidD_GetManufacturerString ( file_pointer , manufacturer , string_size );//manufacturer.data() , string_size );
-      HidD_GetProductString      ( file_pointer , product      , string_size );
-      HidD_GetPhysicalDescriptor ( file_pointer , physical     , string_size );
+       HidD_GetAttributes( file_pointer , &attributes );
+       HidD_GetManufacturerString( file_pointer , manufacturer , string_size );//manufacturer.data() , string_size );
+       HidD_GetProductString( file_pointer , product , string_size );
+       HidD_GetPhysicalDescriptor( file_pointer , physical , string_size );
 
-      vector< HIDP_LINK_COLLECTION_NODE > nodes {};
+       vector< HIDP_LINK_COLLECTION_NODE > nodes{};
 
-      nodes.resize( item_amount );
+       nodes.resize( item_amount );
 
-      HidP_GetLinkCollectionNodes( nodes.data() , & item_amount , data );
+       HidP_GetLinkCollectionNodes( nodes.data() , &item_amount , data );
 
-      items_main.resize( item_amount );
+       items.resize( item_amount );
 
-      uint index{};
+       uint index{};
 
-      for( const auto & node : nodes )
-      {
-         item new_item;
+       for( const auto & node : nodes )
+       {
+           item new_item;
 
-         new_item.type   = item_type{ node.CollectionType };
-         new_item.page   = node.LinkUsagePage; // usages
-         new_item.usage  = node.LinkUsage;
-         new_item.alias  = node.IsAlias;
-         new_item.amount = node.NumberOfChildren;
+           new_item.type   = item_type { node.CollectionType };
+           new_item.page   = node.LinkUsagePage; // usages
+           new_item.usage  = node.LinkUsage;
+           new_item.alias  = node.IsAlias;
+           new_item.amount = node.NumberOfChildren;
 
-         //using  link = vector< item >::window_ptr;
+           new_item.origin = node.Parent;
+           new_item.next   = node.NextSibling;
+           new_item.first  = node.FirstChild;
 
-         if( node.Parent ) // one parent , above
-            new_item.origin = & items_main.at( node.Parent - 1 );
+           //using link = vector< item >::reference;
+           
+           /* 
+           if( node.Parent ) // one parent , above
+              new_item.origin = & items.at( node.Parent - 1 );
 
-         if( node.NextSibling ) // to right
-            new_item.next   = & items_main.at( node.NextSibling - 1 );
+           if( node.NextSibling ) // to right
+              new_item.next   = & items.at( node.NextSibling - 1 );
 
-         if( node.FirstChild ) // left-most
-            new_item.first  = & items_main.at( node.FirstChild - 1 );
+           if( node.FirstChild ) // left-most
+              new_item.first  = & items.at( node.FirstChild - 1 );
+           */
+           items.at( index ) = move( new_item );
 
-         items_main.at( index ) = move( new_item );
-
-         index++;
+           index++;
       }
 
       using button_item = HIDP_BUTTON_CAPS;
@@ -149,40 +164,86 @@ namespace hid
       value_features.resize( feature.value_amount );
       HidP_GetValueCaps(  HidP_Feature , value_features.data() , & output.value_amount   , data );
 
-      for( auto & button : input_buttons )
+
+      for( auto & input_button : input_buttons )
       {
-         button.BitField;
-         button.IsAbsolute;
-         button.IsAlias;
-         button.IsDesignatorRange;
-         button.IsRange;
-         button.IsStringRange;
-         button.LinkCollection;
-         button.LinkUsage;
-         button.LinkUsagePage;
-
-         button.NotRange.DataIndex;
-
-         button.UsagePage;
-         button.ReportID;
-         button.ReportCount;   // Available in API version >= 2 only.
-
-         //Range;
-         button.Range.UsageMin;
-         button.Range.UsageMax;
-         button.Range.StringMin;
-         button.Range.StringMax;
-         button.Range.DesignatorMin;
-         button.Range.DesignatorMax;
-         button.Range.DataIndexMin;
-         button.Range.DataIndexMax;
+         button new_button {};
          
-         button.NotRange.Usage;
-         button.NotRange.StringIndex;
-         button.NotRange.DesignatorIndex;
-         button.NotRange.DataIndex;
-      
+         new_button.page              = input_button.UsagePage;
+         new_button.report_identifier = input_button.ReportID;
+         new_button.bit_field         = input_button.BitField;
+         new_button.report_amount     = input_button.ReportCount; // Available in API version >= 2 only.
+
+         new_button.origin_page       = input_button.LinkUsagePage;
+         new_button.origin_usage      = input_button.LinkUsage;
+         
+         new_button.absolute          = input_button.IsAbsolute;
+
+         
+         new_button.alias             = input_button.IsAlias;
+
+         if( new_button.alias )
+         {
+             new_button.identifiers_usage.minumum = input_button.Range.UsageMin;
+             new_button.identifiers_usage.maximum = input_button.Range.UsageMax;
+         }
+         else
+         {
+             new_button.usage = input_button.NotRange.Usage;
+         }
+
+
+         new_button.range = input_button.IsRange;
+
+         if( new_button.range )
+         {
+             new_button.identifiers_data.maximum = input_button.Range.DataIndexMin;
+             new_button.identifiers_data.minumum = input_button.Range.DataIndexMax;
+         }
+         else
+         {
+             new_button.identifier_data = input_button.NotRange.DataIndex;
+         }
+         
+
+         new_button.strings = input_button.IsStringRange;
+
+         if( new_button.strings )
+         {
+             new_button.identifiers_string.minumum = input_button.Range.StringMin;
+             new_button.identifiers_string.maximum = input_button.Range.StringMax;
+               //HidD_GetIndexedString
+         }
+         else
+         {
+             new_button.string = input_button.NotRange.StringIndex;
+         }
+         
+
+         new_button.designators       = input_button.IsDesignatorRange;
+
+         if( new_button.designators )
+         {
+             new_button.identifiers_designator.minumum = input_button.Range.DesignatorMin;
+             new_button.identifiers_designator.maximum = input_button.Range.DesignatorMax;
+         }
+         else
+         {
+             new_button.designator      = input_button.NotRange.DesignatorIndex;
+         }
+         
+         input.buttons.emplace_back( move( new_button ) );
       }
+
+       for( auto & input_value : input_values )
+       {
+         //value new_value {};
+
+         //new value
+         //input_value.BitField;
+      }
+
+      //new_button.origin = input_button.LinkCollection; vector<main_item>::reference
 
       //for each cap
       // id = cap.

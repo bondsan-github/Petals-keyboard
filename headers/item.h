@@ -9,9 +9,6 @@ namespace hid
 {
    using namespace std;
 
-   struct item;
-   using  link = vector< item >::pointer;
-
    enum class item_type : unsigned long
    {
       undefined          , //
@@ -51,22 +48,22 @@ namespace hid
    // vector< button > input;
    // vector< report > output;
 
+   //struct item;
+   //using  link = vector< item >::const_reference;
+   using link = ushort;
+
    struct main_item //
    {
       item_type type { item_type::undefined };
 
       ushort page   {};
       ushort usage  {};
-      bool   alias  {};
 
       ushort amount {}; // children
 
       link   origin {}; // parent
       link   next   {}; // sibling
       link   first  {}; // child
-
-      // public information
-      // public drawable()
 
       public:
 
@@ -97,20 +94,23 @@ namespace hid
 
    struct item : public main_item
    {
-      uchar             report_id         {};
-      vector< ushort >  _usages           {};
-      vector< wstring > types             {}; // item_type::
-      ushort            bit_field         {};
-      ushort            origin_page       {};
-      ushort            origin_usage      {};
-      bool              range             {};
-      bool              string            {};
-      bool              designator        {};
-      bool              absolute          {};
-      ushort            report_amount     {};
-      vector< ushort >  string_idents     {};
-      vector< ushort >  designator_idents {};
-      vector< ushort >  data_idents       {};
+      ushort origin_page       {};
+      ushort origin_usage      {};
+
+      ushort identifier_data   {};
+      ushort designator        {};
+      ushort string            {};
+
+      uchar  report_identifier {};
+      ushort report_amount     {};
+
+      ushort bit_field         {};
+      
+      bool   alias             {};
+      bool   range             {};
+      bool   absolute          {}; // or relative
+      bool   strings           {};
+      bool   designators       {};
 
       struct limits
       {
@@ -118,13 +118,43 @@ namespace hid
          long maximum {};
       };
 
-      vector< limits > limits_logical  {};
-      vector< limits > limits_physical {};
+      limits identifiers_usage      {};
+      limits identifiers_string     {};
+      limits identifiers_designator {};
+      limits identifiers_data       {};
+
+      //vector< limits > limits_logical  {};
+      //vector< limits > limits_physical {};
 
       wstring text() const
       {
-        //text += L"\nreport id\t: ";
-        //text += report_id;
+         wstring text {};
+
+         text += main_item::text();
+
+
+         // uint usages = identifiers_usage.maximum - identifiers_usage.minumum;
+         //for( int index{} ; index < usages ; index++ )
+
+         /*
+         text += origin_page{};
+         text += origin_usage{};
+
+         text += index{};
+         text += designator{};
+         text += string{};
+
+         text += report_identifier{};
+         text += report_amount{};
+
+         text += bit_field{};
+
+         bool   range{};
+         bool   absolute{}; // or relative
+         bool   strings{};
+         bool   designators{};
+         */
+        return text;
       }
       
    }; // struct main_item    

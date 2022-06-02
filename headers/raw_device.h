@@ -6,16 +6,18 @@
 #include < hidpi.h >
 
 #include "..\headers\globals.h"
+#include "..\headers\item.h"
 
 namespace hid
 {
    using namespace std;
 
-   class raw_device abstract
+   class raw_device abstract // item
    {
       protected:
 
          HANDLE           device       {};
+
          ushort           page         {};
          ushort           usage        {};
          
@@ -49,9 +51,9 @@ namespace hid
 
          ulong                item_amount {};
 
-         struct : public report {} input;
-         struct : public report {} output;
-         struct : public report {} feature;
+         struct report_input   : public report {} input;
+         struct report_output  : public report {} output;
+         struct report_feature : public report {} feature;
 
       public:
 

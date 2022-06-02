@@ -64,5 +64,14 @@
     <ClInclude Include="headers\write.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

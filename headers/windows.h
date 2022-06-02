@@ -65,7 +65,7 @@ namespace hid
       window_class.cbClsExtra    = 0; // extra bytes after structure
       window_class.cbWndExtra    = 0; // extra bytes following the window instance.
       window_class.hbrBackground = ( HBRUSH ) ( COLOR_WINDOW + 1 ); //( HBRUSH ) ( COLOR_GRAYTEXT + 1 );		//brush_background;
-      window_class.hCursor       = 0;
+      window_class.hCursor       = LoadCursor( nullptr , IDC_ARROW );
       window_class.hIcon         = 0;
       window_class.hIconSm       = 0;
       window_class.lpszMenuName  = 0;

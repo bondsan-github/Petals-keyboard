@@ -71,8 +71,10 @@ namespace hid
                  column += 2;
                  point item_main_position = grid_.cell( column , row );
 
-                 for( auto & device : input.devices() )
-                 {
+                 vector< hid_device >::const_reference device = input.devices().front();
+
+                 //for( auto & device : input.devices() )
+                 //{
                     // device
                     write.add( device.text_device() , device_position , text_size , text_colour , text_area , text_font );
 
@@ -89,12 +91,25 @@ namespace hid
 
                     for( ; text != item_texts.end() ; text++ )
                     {  
-                       write.add( * text , grid_.cell( column , row ) , text_size , text_colour , text_area );
-                       row+=2;
+                        write.add( * text , grid_.cell( column , row ) , text_size , text_colour , text_area );
+                        row+=2;
                     }
-                 }
-              }
-           }
+
+                    column = 5;
+                    row    = 3;
+                    //point item_input_position = grid_.cell( column , item_head_position.y );
+
+                    for( auto & text : device.text_input() )
+                    {
+                        write.add( text , grid_.cell( column , row ) , text_size , text_colour , text_area );
+                        row+=2;
+                    }
+
+                 //} if devices input empty
+
+              } 
+
+           }// if display information
 
            return main_window.message_loop();
         }
