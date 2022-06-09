@@ -148,6 +148,11 @@
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h" />
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h" />
     <ClInclude Include="headers\graphics.h" />
+    <ClInclude Include="headers\grid.h" />
+    <ClInclude Include="headers\line.h" />
+    <ClInclude Include="headers\shared_sheet.h" />
+    <ClInclude Include="headers\text.h" />
+    <ClInclude Include="headers\window_pointer.h" />
     <ClInclude Include="headers\write.h" />
     <ClInclude Include="headers\globals.h" />
     <ClInclude Include="headers\hidp_status.h" />
@@ -159,6 +164,7 @@
     <ClInclude Include="headers\raw_device.h" />
     <ClInclude Include="headers\usages.h" />
     <ClInclude Include="headers\windows.h" />
+    <ClInclude Include="headers\shared_write_factory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

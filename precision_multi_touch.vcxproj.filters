@@ -73,5 +73,23 @@
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="headers\text.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\shared_sheet.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\shared_write_factory.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\window_pointer.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\grid.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\line.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

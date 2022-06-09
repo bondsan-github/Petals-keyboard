@@ -1,12 +1,12 @@
 #pragma once
 
-#include < Windows.h >
-
 #include < hidsdi.h >
 #include < hidpi.h >
 
 #include "..\headers\globals.h"
 #include "..\headers\item.h"
+
+#include < Windows.h >
 
 namespace hid
 {
@@ -34,15 +34,16 @@ namespace hid
             uint info = ( 1 << 29 ) | 0xB;
          } requests; // instantiates here
 
-         struct report // type
+         struct report
          {
             ushort byte_amount            {};
+
             ushort button_amount          {};
             ushort value_amount           {};
             ushort data_identifier_amount {};
 
-            vector< button > buttons {};
-            vector< value  > values  {};
+            vector< local_item >  buttons {}; // local_items
+            vector< global_item > values  {}; // global_items
          };
 
          PHIDP_PREPARSED_DATA data        {};
@@ -62,7 +63,7 @@ namespace hid
          {
             uint data_size {};
 
-            GetRawInputDeviceInfo( device , requests.data , nullptr , & data_size );
+            GetRawInputDeviceInfo( device , requests.data , nullptr            , & data_size );
 
             data_vector.resize( data_size );
 

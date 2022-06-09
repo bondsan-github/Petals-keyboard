@@ -19,13 +19,18 @@ namespace hid // human interface device
    using uint   = unsigned int;   // 32 bits
    using ulong  = unsigned long;  //    long same as int
 
+   //using com_ptr = ComPtr<>;
    using        render_target = ID2D1RenderTarget;
    using window_render_target = ID2D1HwndRenderTarget;
 
-   using write_factory      = IDWriteFactory;
-   using text_format        = IDWriteTextFormat;
-   using text_layout        = IDWriteTextLayout;
-   using brush_solid_colour = ID2D1SolidColorBrush;
+   using ms_write_factory      = IDWriteFactory;
+   using ms_text_format        = IDWriteTextFormat;
+   using ms_text_layout        = IDWriteTextLayout;
+   using ms_brush_solid_colour = ID2D1SolidColorBrush;
+   using ms_stroke_style       = ID2D1StrokeStyle;
+          //ID2D1LinearGradientBrush
+           //ID2D1RadialGradientBrush
+
 
    using colours            = ColorF;
    using point              = D2D_POINT_2F;
@@ -38,7 +43,7 @@ namespace hid // human interface device
    using rectangle          = D2D_RECT_F;
    using rounded_rectangle  = D2D1_ROUNDED_RECT;
 
-   struct rectangle_middles
+   struct rectangle_midpoints
    {
       point top    {};
       point right  {};

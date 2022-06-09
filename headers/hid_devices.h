@@ -9,39 +9,40 @@
 
 namespace hid
 {
-   class hid_devices
-   {
-         vector< hid_device > input; // multi-touch devices
+    using namespace std;
+    using namespace D2D1;
+    using namespace Microsoft::WRL;
 
-      public:
+    class hid_devices
+    {
+        protected:
 
-        hid_devices()
-        {
-           using raw_device_list = RAWINPUTDEVICELIST;
+            vector< hid_device > input; // multi-touch devices
 
-           uint                      amount          {};
-           vector< raw_device_list > raw_list        {};
+        public:
 
-           GetRawInputDeviceList( nullptr         , & amount , sizeof( raw_device_list ) );
+            hid_devices()
+            {
+                using raw_device_list = RAWINPUTDEVICELIST;
 
-           raw_list.resize( amount );
+                uint                      amount   {};
+                vector< raw_device_list > raw_list {};
 
-           GetRawInputDeviceList( raw_list.data() , & amount , sizeof( raw_device_list ) );
+                GetRawInputDeviceList( nullptr         , & amount , sizeof( raw_device_list ) );
 
-           for( auto & device : raw_list )
-           { 
-              hid_device new_device( device.hDevice );
+                raw_list.resize( amount );
 
-              if( new_device.is_multi_touch() )
-                 input.emplace_back( move( new_device ) );
-           }
-        }
+                GetRawInputDeviceList( raw_list.data() , & amount , sizeof( raw_device_list ) );
 
-        const vector< hid_device > & devices()
-        {
-           return input;
-        }
+                for( auto & device : raw_list )
+                {
+                    hid_device new_device( device.hDevice );
 
-   }; // class hid_devices
+                    if( new_device.is_multi_touch() )
+                        input.emplace_back( move( new_device ) );
+                }
+            }
+
+    }; // class hid_devices
 
 } // namespace hid

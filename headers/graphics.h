@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include < string >
 #include < vector >
@@ -10,6 +10,7 @@
 
 #include "..\headers\globals.h"
 #include "..\headers\write.h"
+#include "..\headers\shared_sheet.h"
 
 namespace hid
 {
@@ -17,147 +18,61 @@ namespace hid
    using namespace D2D1;
    using namespace Microsoft::WRL;
 
-   class line
-   {
-      private:
-      
-         using point = D2D1_POINT_2F;
-      
-         D2D1_POINT_2F              a      {};
-         D2D1_POINT_2F              b      {};
-      
-         float                      width  {};
-         ColorF                     colour { ColorF::Yellow };
-         ComPtr< render_target >    sheet  {};
-         ComPtr< ID2D1SolidColorBrush  >  brush  {};
-         ComPtr< ID2D1StrokeStyle >       style  {};
-
-      public:
-
-         line( ComPtr< render_target > in_sheet                        , 
-               point in_a                                              , 
-               point in_b                                              ,
-               float in_width = 1.0f                                   ,
-               colours in_colour = colours( 0.4f, 0.4f , 0.2f , 0.2f ) )
-         : sheet( in_sheet /*lol*/) , a( in_a ) , b( in_b ) , width( in_width ) , colour( in_colour )
-         {
-            sheet->CreateSolidColorBrush( colour , brush.ReleaseAndGetAddressOf() );
-            //factory->createStrokeStyle
-         };
-
-         void draw()
-         {
-            if( sheet.Get() )
-               sheet->DrawLine( a, b, brush.Get() , width , style.Get() );
-         }
-   };
-
-   class grid // : public drawable
-   {
-      private:
-       
-         using point = D2D1_POINT_2F;
-         //ID2D1LinearGradientBrush
-         //ID2D1RadialGradientBrush
-
-         using target = ComPtr< render_target >;
-
-         target    sheet       {};
-         area      sheet_size  {};
-         divisions cell_amount {};
-
-         vector< line > lines {};
-
-      public:
-
-         void initialise( ComPtr< render_target > in_sheet , D2D1_SIZE_F in_cell_amount )
-         {
-            sheet       = in_sheet;
-            cell_amount = in_cell_amount;
-            sheet_size        = sheet->GetSize(); // size in dips
-
-            float cell_width  = sheet_size.width  / cell_amount.width;
-            float cell_height = sheet_size.height / cell_amount.height;
-
-            for( float x {} ; x <= sheet_size.width ; x += cell_width )
-               for( float y {} ; y <= sheet_size.height ; y += cell_height )
-               {
-                  // horizontal
-                  lines.emplace_back( sheet.Get() , point{ 0 , y } , point{ sheet_size.width , y } , 1.0f );
-                  // vertical
-                  lines.emplace_back( sheet.Get() , point{ x , 0 } , point{ x , sheet_size.height } , 1.0f );
-               }
-         };
-
-         point cell( const uint column , const uint row )
-         {
-            return { column * cell_size().width , row * cell_size().height };
-         }
-
-         dimensions cell_size() const
-         {
-            return { sheet_size.width  / cell_amount.width ,
-                     sheet_size.height / cell_amount.height };
-         }
-
-         void draw()
-         {
-            for( auto & line : lines ) line.draw();
-         }
-   };
-
-   class graphics
+   class graphics : public shared_sheet
    {
       private:
          
          HWND                    window        {};
          ComPtr< ID2D1Factory >  factory       {};
-         ComPtr< window_render_target > sheet  {};
          D2D1_SIZE_U             size          {};
          RECT                    rectangle     {};
          PAINTSTRUCT             paint         {};
-         ColorF                  colour_clear  { 0.2f , 0.2f , 0.2f , 0.0f };
+         colours                 colour_clear  { 0.2f , 0.2f , 0.2f , 0.0f };
          HRESULT                 result        { E_FAIL };
 
       public:
       
-         write text;
-         grid  sheet_grid;
+          //using ✎ = write;
 
-         void grid( D2D1_SIZE_F in_cell_amount )
-         {
-            sheet_grid.initialise(sheet.Get() , in_cell_amount );
-         }
+          write text; 
+          /*
+          void add_line( point a , point b , float width , colours colour )
+          {
+              lines.emplace_back( sheet.Get() , a , b , width , colour );
+          }
 
-         void grid( float in_column_amount , float in_row_amount )
-         {
-            D2D1_SIZE_F cell_amounts { in_column_amount , in_row_amount };
+          void grid( D2D1_SIZE_F in_cell_amount )
+          {
+              sheet_grid.initialise( sheet.Get() , in_cell_amount );
+          }
 
-            sheet_grid.initialise( sheet.Get() , cell_amounts );
-         }
+          void grid( float in_column_amount , float in_row_amount )
+          {
+              D2D1_SIZE_F cell_amounts{ in_column_amount , in_row_amount };
 
-         void initialise( const HWND in_window )
-         {
-            window = in_window;
+              sheet_grid.initialise( sheet.Get() , cell_amounts );
+          }
+          */
+          void initialise( const HWND in_window )
+          {
+              window = in_window;
               //using no = !;
 
-            D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory.ReleaseAndGetAddressOf() );
+              D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory.ReleaseAndGetAddressOf() );
 
-            GetClientRect( window , & rectangle );
+              reset();
+          }
 
-            size = SizeU( rectangle.right , rectangle.bottom );
+          void reset()
+          {
+              GetClientRect( window , &rectangle );
 
-            result = factory->CreateHwndRenderTarget( RenderTargetProperties() ,
-                                                      HwndRenderTargetProperties( window , size ) ,
-                                                      sheet.ReleaseAndGetAddressOf() );
+              size = SizeU( rectangle.right , rectangle.bottom );
 
-            text.initialise( sheet.Get() );
-         }
-
-         void reset( )
-         {
-           
-         }
+              result = factory->CreateHwndRenderTarget( RenderTargetProperties() ,
+                                                        HwndRenderTargetProperties( window , size ) ,
+                                                        sheet.ReleaseAndGetAddressOf() );
+          }
 
          //void set_sheet( const ID2D1HwndRenderTarget * in_sheet )
             //sheets.emplace_back( window_ptr , size );
@@ -176,8 +91,11 @@ namespace hid
 
                   sheet->Clear( colour_clear );
                                     
-                  sheet_grid.draw();
+                  //sheet_grid.draw();
                   text.draw();
+
+                  //for( auto & line : lines )
+                  //   line.draw();
 
                   sheet->EndDraw();
                }

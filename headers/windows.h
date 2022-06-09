@@ -4,13 +4,14 @@
 #include < string >
 
 #include "..\headers\globals.h"
+#include "..\headers\window_pointer.h"
 #include "..\headers\graphics.h"
 
 namespace hid
 {
    using namespace std;
 
-   class window
+   class window : public shared_window_pointer
    {
       private:
          
@@ -18,16 +19,14 @@ namespace hid
          LPWSTR    parameters   {};
          int       show_flags   {};
 
-         HRESULT  result        { E_FAIL };
+         HRESULT  result         { E_FAIL };
 
-         HWND     window_ptr    {};
-         
-         HWND     parent_window {};
-         HMENU    menu          {};
-         PCWSTR   title_text    { L"Precision multi-touch input" };
-         DWORD    style         { WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_MAXIMIZE };
-         DWORD    style_extra   { WS_EX_COMPOSITED | WS_EX_TRANSPARENT };
-         WNDCLASSEX window_class  {};
+         HWND     parent_window  {};
+         HMENU    menu           {};
+         PCWSTR   title_text     { L"Precision multi-touch input" };
+         DWORD    style          { WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_MAXIMIZE };
+         DWORD    style_extra    { WS_EX_COMPOSITED | WS_EX_TRANSPARENT };
+         WNDCLASSEX window_class {};
          
          int      x      { CW_USEDEFAULT };
          int      y      { CW_USEDEFAULT };
@@ -37,7 +36,7 @@ namespace hid
          MSG      message       {};
 
          // long * ( uint , uint , uint )
-         LRESULT message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
+         virtual LRESULT message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
          inline static const wchar_t class_name[] = { L"Precision input" };
 
          static LRESULT CALLBACK main_window_process( HWND window , UINT message , WPARAM w_param , LPARAM l_param );
@@ -48,7 +47,7 @@ namespace hid
          void initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags );
          int message_loop();
 
-         graphics paint;
+         graphics paint; //
    };
 
    void window::initialise( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags )
@@ -57,7 +56,7 @@ namespace hid
 
       window_class.cbSize = sizeof( WNDCLASSEX );
 
-      window_class.style = CS_HREDRAW | CS_VREDRAW;
+      window_class.style         = CS_HREDRAW | CS_VREDRAW;
       window_class.lpfnWndProc   = window::main_window_process;
       window_class.hInstance     = in_instance;//instance;//GetModuleHandle( 0 ); //instance that contains the window procedure for the class.
       window_class.lpszClassName = L"Precision input";//class_name;
@@ -151,8 +150,6 @@ namespace hid
          {
          } break;
 
-         //WM_NCDESTROY
-
          case WM_DESTROY:
          {
             PostQuitMessage( 0 );
@@ -162,8 +159,6 @@ namespace hid
          {
             paint.draw();
          } break;
-         
-         // Other messages not shown...
 
          case WM_SIZE:
          {
@@ -176,7 +171,8 @@ namespace hid
             {
                case VK_ESCAPE:
                {
-                  PostQuitMessage( 0 );//DestroyWindow( in_window );
+                  PostQuitMessage( 0 );
+                  //DestroyWindow( in_window );
                } break;
 
             }
