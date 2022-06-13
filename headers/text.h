@@ -8,8 +8,9 @@
 #include < dwrite.h >
 
 #include "..\headers\globals.h"
-#include "..\headers\shared_write_factory.h"
-#include "..\headers\shared_sheet.h"
+#include "..\headers\shared_write.h"
+#include "..\headers\shared_graphics.h"
+#include "..\headers\graphics.h"
 
 namespace hid
 {
@@ -17,7 +18,7 @@ namespace hid
     using namespace D2D1;
     using namespace Microsoft::WRL;
 
-    class text : public shared_sheet , public shared_write_factory
+    class text : public shared_write , public shared_graphics
     {
         ComPtr< ms_text_format >        format{}; // simple version of text_layout
         ComPtr< ms_brush_solid_colour > brush{};
@@ -42,9 +43,7 @@ namespace hid
               wstring                 in_font       ={ L"Times New Roman" } )
             : content( in_content ) , origin( in_origin ) , size( in_size ) , colour( in_colour ) , dimensions( in_dimensions )
         {
-            reset_format();
-            reset_layout();
-            reset_brush();
+            //reset();
         }
 
         rectangle_midpoints mid_points() const
@@ -75,15 +74,26 @@ namespace hid
             return mid;
         }
 
+        void reset()
+        {
+            reset_format();
+            reset_layout();
+            reset_brush();
+        }
+
         void reset_brush()
         {
-            sheet->CreateSolidColorBrush( colour , brush.ReleaseAndGetAddressOf() );
+            graphics_ptr->sheet_pointer()->CreateSolidColorBrush( colour , brush.ReleaseAndGetAddressOf() );
         }
 
         void reset_format()
         {
-            //result_win
-            HRESULT result = write_factory->CreateTextFormat( font.c_str() ,
+            
+            enum class text_style { normal , oblique , italic };
+            enum class text_weight { light = 300 , regular = 400 , bold = 700 };
+
+            //write::factory()->CreateText
+            HRESULT result = write_ptr->factory()->CreateTextFormat(font.c_str() ,
                                                               0 ,
                                                               DWRITE_FONT_WEIGHT_REGULAR ,
                                                               DWRITE_FONT_STYLE_NORMAL ,
@@ -92,7 +102,7 @@ namespace hid
                                                               L"en-us" , // locale       
                                                               format.ReleaseAndGetAddressOf() );
 
-                  //format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
+            //format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
             format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
 
             //trimming trim{};
@@ -102,7 +112,7 @@ namespace hid
 
         void reset_layout()
         {
-            write_factory->CreateTextLayout( content.c_str() ,
+            write_ptr->factory()->CreateTextLayout(content.c_str() ,
                                              content.size() ,
                                              format.Get() ,
                                              dimensions.width ,
@@ -114,14 +124,17 @@ namespace hid
         {
             content += in_string;
 
-            reset_layout();
+            reset();
         }
 
         void draw()
         {
-            if( sheet.Get() )
+            // render_target_window / sheet
+            window_render_target * sheet_ptr = graphics_ptr->sheet_pointer();
+
+            if( sheet_ptr )
             {
-                sheet->DrawTextLayout( origin , layout.Get() , brush.Get() );
+                sheet_ptr->DrawTextLayout( origin , layout.Get() , brush.Get() );
 
                 rrectangle.radiusX = rrectangle.radiusY = radius;
 
@@ -130,7 +143,7 @@ namespace hid
                 rrectangle.rect.right  = origin.x + dimensions.width + 5;
                 rrectangle.rect.bottom = origin.y + dimensions.height + 5;
 
-                sheet->DrawRoundedRectangle( rrectangle , brush.Get() );
+                sheet_ptr->DrawRoundedRectangle( rrectangle , brush.Get() );
             }
         }
     };

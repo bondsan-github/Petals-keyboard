@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="hid::graphics" Collapsed="true">
+    <Position X="11.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAEAAAgAAAQBIMAACAAAAAAAAAIAQAAAAAAAAA=</HashCode>
+      <FileName>headers\graphics.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::window" Collapsed="true">
+    <Position X="14.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAAEAAAAgAAAAAQERAEAAggAAABEAAgAAABgEICAACA=</HashCode>
+      <FileName>headers\windows.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::hid_device" Collapsed="true">
+    <Position X="8.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgIAggAAQAAqCBAAkAoAAEACQAIAEAAAAAAAQAABABA=</HashCode>
+      <FileName>headers\hid_device.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::hid_devices" Collapsed="true">
+    <Position X="15" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAIAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>headers\hid_devices.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::multi_touch" Collapsed="true">
+    <Position X="12.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>headers\multi_touch.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::raw_device" Collapsed="true">
+    <Position X="8.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAACAAAASAAAEAQCAAgACAAAABAYEAAQAQAAAAA=</HashCode>
+      <FileName>headers\raw_device.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::text" Collapsed="true">
+    <Position X="9.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GCICAACACgAAAAAAIoIACgAAgAAAAAAIAAAACAACAAA=</HashCode>
+      <FileName>headers\text.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::write" Collapsed="true">
+    <Position X="10.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAMAAgAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>headers\write.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="hid::shared_sheet" Collapsed="true">
+    <Position X="10.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>headers\shared_sheet.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="hid::shared_window_pointer" Collapsed="true">
+    <Position X="14.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>headers\window_pointer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

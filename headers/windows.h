@@ -5,7 +5,7 @@
 
 #include "..\headers\globals.h"
 #include "..\headers\window_pointer.h"
-#include "..\headers\graphics.h"
+//#include "..\headers\graphics.h"
 
 namespace hid
 {
@@ -47,7 +47,7 @@ namespace hid
          void initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags );
          int message_loop();
 
-         graphics paint; //
+         //graphics paint; //
    };
 
    void window::initialise( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags )
@@ -88,8 +88,6 @@ namespace hid
 
 
       if( window_ptr == nullptr ) error( L"create window ex" );
-
-      paint.initialise( window_ptr );
 
       //ShowWindow( hWnd,SW_SHOWDEFAULT );
       //UpdateWindow( hWnd );
@@ -157,7 +155,7 @@ namespace hid
 
          case WM_PAINT:
          {
-            paint.draw();
+            //paint.draw();
          } break;
 
          case WM_SIZE:

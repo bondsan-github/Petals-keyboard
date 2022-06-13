@@ -5,6 +5,7 @@
 
 #include "..\headers\globals.h"
 #include "..\headers\usages.h"
+//#include "..\headers\text.h"
 
 namespace hid
 {
@@ -52,7 +53,7 @@ namespace hid
     //using ⛓   = link;
 
     // HIDP_CAPS
-    struct main_item //: public sheet_shared
+    struct main_item //: public write
     {
         item_type type     { item_type::undefined };
 

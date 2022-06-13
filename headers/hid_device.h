@@ -5,13 +5,13 @@
 #include < hidsdi.h >
 #include < hidpi.h >
 
+#include "..\headers\shared_graphics.h"
+#include "..\headers\shared_write.h"
+
 #include "..\headers\globals.h"
 #include "..\headers\raw_device.h"
-#include "..\headers\shared_sheet.h"
 #include "..\headers\item.h"
-#include "..\headers\grid.h"
-
-//#include < windows.h >
+#include "..\headers\line.h"
 
 namespace hid
 {
@@ -19,7 +19,7 @@ namespace hid
     using namespace D2D1;
     using namespace Microsoft::WRL;
 
-    class hid_device : public raw_device , public shared_sheet
+    class hid_device : public raw_device , public shared_graphics , public shared_write
     {
         HIDD_ATTRIBUTES            attributes { .Size = sizeof( HIDD_ATTRIBUTES ) };
         HIDP_EXTENDED_ATTRIBUTES   attributes_extra {};
@@ -35,15 +35,14 @@ namespace hid
 
         vector< main_item > items{};
 
-        void information();
+        void gather_information();
          // data
          // concurrent points
          // x,y points x 5 + 3 buttons
 
-        grid           sheet_grid;
         vector< line > lines{};
 
-        bool        display_information{ true };
+        bool        draw_information{ true };
 
         wstring     text_font{ L"Cascasia code" }; // { L"Sitka" };
         float       text_size{ 10.0f };
@@ -60,38 +59,46 @@ namespace hid
 
         hid_device( HANDLE in_device ) : raw_device( in_device )
         {
-            if( is_multi_touch() ) information();
+            if( is_multi_touch() ) 
+            {
+                gather_information();
 
-            column_amount = 12;
-            row_amount    = 12;
+                write_ptr->add( text_device() );
 
-            //sheet_grid.initialise( column_amount , row_amount );
+                // graphics // screen_width * position_x [ 0.000000..1.0000000 ]
+                column_amount = 12;
+                row_amount    = 12;
 
-            //text_area = sheet_grid.cell_size();
-            column    = 1;
-            row       = 1;
+                //sheet_grid.initialise( column_amount , row_amount );
+
+                //text_area = sheet_grid.cell_size();
+                column    = 1;
+                row       = 1;
+            }
         }
 
-        vector< wstring > texts_items_main() const
+        void texts_items_main()
         {
-            vector< wstring > texts{};
+            //for( auto & item : items )
+              //  write_ptr->add( item.text() );
+        }
 
-            for( auto & item : items )
-                texts.emplace_back( item.text() );
-
-            return texts;
+        void display_information()
+        {
+            draw_information = ! draw_information;  // switch
         }
 
         void draw()
         {
-            if( display_information )
+            if( draw_information )
             {
+                //write::draw();
 
-
+                //graphics_ptr.
             }
         }
 
-        wstring text_device() const
+        wstring text_device()
         {
             wstring text{};
 
@@ -114,19 +121,15 @@ namespace hid
             return text;
         }
 
-        vector< wstring > texts_items_input() const
+        void texts_items_input()
         {
-            vector< wstring > texts{};
-
             for( auto & input : input.buttons )
-                texts.push_back( input.text() );
-
-            return texts;
+                write_ptr->add( input.text() );
         }
 
     }; // class device
 
-    void hid_device::information()
+    void hid_device::gather_information()
     {
         HidD_GetAttributes( file_pointer , &attributes );
         HidD_GetManufacturerString( file_pointer , manufacturer , string_size );//manufacturer.data() , string_size );
@@ -141,7 +144,7 @@ namespace hid
 
         items.resize( item_amount );
 
-        uint index{};
+        uint index {};
 
         for( const auto & node : nodes )
         {
@@ -276,7 +279,7 @@ namespace hid
 
             //items.push_back( move( new_item ) );
             this->input.buttons.emplace_back( move( new_item ) );
-        }
+        } 
 
         for( auto & input_value : input_values )
         {

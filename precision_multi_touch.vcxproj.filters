@@ -76,10 +76,10 @@
     <ClInclude Include="headers\text.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\shared_sheet.h">
+    <ClInclude Include="headers\shared_graphics.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\shared_write_factory.h">
+    <ClInclude Include="headers\shared_write.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\window_pointer.h">
@@ -91,5 +91,11 @@
     <ClInclude Include="headers\line.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="headers\locate.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="headers\ClassDiagram.cd" />
   </ItemGroup>
 </Project>

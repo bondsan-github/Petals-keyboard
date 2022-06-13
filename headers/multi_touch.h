@@ -2,6 +2,8 @@
 
 #include "..\headers\windows.h"
 #include "..\headers\hid_devices.h"
+#include "..\headers\graphics.h"
+#include "..\headers\write.h"
 
 // 1. transparent full screen draw contacts
 
@@ -10,7 +12,7 @@ namespace hid
    using namespace std;
 
    // one or more mutli-touch inputs for example touchpad , touchscreen. 
-    class multi_touch : public window , public hid_devices
+    class multi_touch : public window , public graphics , public write , public hid_devices
     {
         virtual LRESULT message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter ) override;
 
@@ -19,19 +21,19 @@ namespace hid
         void initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
         {
             window::initialise( instance , parameters , show_flags );
+            graphics::initialise( window_ptr );
+            write::initialise();
+            hid_devices::initialise();
         }
 
         int begin()
         {
             if( input.empty() )
             {
-                paint.text.add( L"no precision multi-touch devices found" );
+                add( L"no precision multiple touch devices found" );
             }
-            else
-            {
-                //
-                return message_loop();
-            }
+
+            return message_loop();
         }
 
     }; //class multi_touch
@@ -47,7 +49,9 @@ namespace hid
 
             case WM_PAINT:
             {
-                paint.draw();
+                graphics::draw();
+                write::draw();
+                hid_devices::draw();
             } break;
 
             case WM_SIZE:
@@ -65,6 +69,11 @@ namespace hid
                         //DestroyWindow( in_window );
                     } break;
 
+                    case VK_SPACE:
+                    {
+                        for( auto & device : input )
+                            device.display_information();
+                    }
                 }
             }
 

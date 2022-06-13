@@ -150,7 +150,8 @@
     <ClInclude Include="headers\graphics.h" />
     <ClInclude Include="headers\grid.h" />
     <ClInclude Include="headers\line.h" />
-    <ClInclude Include="headers\shared_sheet.h" />
+    <ClInclude Include="headers\locate.h" />
+    <ClInclude Include="headers\shared_graphics.h" />
     <ClInclude Include="headers\text.h" />
     <ClInclude Include="headers\window_pointer.h" />
     <ClInclude Include="headers\write.h" />
@@ -164,7 +165,10 @@
     <ClInclude Include="headers\raw_device.h" />
     <ClInclude Include="headers\usages.h" />
     <ClInclude Include="headers\windows.h" />
-    <ClInclude Include="headers\shared_write_factory.h" />
+    <ClInclude Include="headers\shared_write.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="headers\ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

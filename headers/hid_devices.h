@@ -21,7 +21,7 @@ namespace hid
 
         public:
 
-            hid_devices()
+            void initialise()
             {
                 using raw_device_list = RAWINPUTDEVICELIST;
 
@@ -41,6 +41,12 @@ namespace hid
                     if( new_device.is_multi_touch() )
                         input.emplace_back( move( new_device ) );
                 }
+            }
+
+            void draw()
+            {
+                for( auto & device : input  )
+                    device.draw();
             }
 
     }; // class hid_devices

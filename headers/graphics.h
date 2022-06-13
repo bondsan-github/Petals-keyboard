@@ -2,15 +2,14 @@
 
 #include < string >
 #include < vector >
+#include < memory >
 
 #include < wrl.h >
-
 #include < d2d1.h >
-#include < dwrite.h >
 
 #include "..\headers\globals.h"
-#include "..\headers\write.h"
-#include "..\headers\shared_sheet.h"
+//#include "..\headers\shared_graphics.h"
+#include "..\headers\locate.h"
 
 namespace hid
 {
@@ -18,12 +17,13 @@ namespace hid
    using namespace D2D1;
    using namespace Microsoft::WRL;
 
-   class graphics : public shared_sheet
+   class graphics
    {
       private:
          
          HWND                    window        {};
          ComPtr< ID2D1Factory >  factory       {};
+         ComPtr< ID2D1HwndRenderTarget > sheet {};
          D2D1_SIZE_U             size          {};
          RECT                    rectangle     {};
          PAINTSTRUCT             paint         {};
@@ -34,7 +34,7 @@ namespace hid
       
           //using ✎ = write;
 
-          write text; 
+          //write text; 
           /*
           void add_line( point a , point b , float width , colours colour )
           {
@@ -53,25 +53,34 @@ namespace hid
               sheet_grid.initialise( sheet.Get() , cell_amounts );
           }
           */
+
           void initialise( const HWND in_window )
           {
               window = in_window;
-              //using no = !;
 
-              D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory.ReleaseAndGetAddressOf() );
+              locate::provide(this);
+              //graphics_ptr = make_shared<graphics>( this );
+              //graphics_ptr = this;
+
+              D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory.ReleaseAndGetAddressOf() ); //
 
               reset();
           }
 
           void reset()
           {
-              GetClientRect( window , &rectangle );
+              GetClientRect( window , & rectangle );
 
               size = SizeU( rectangle.right , rectangle.bottom );
 
-              result = factory->CreateHwndRenderTarget( RenderTargetProperties() ,
-                                                        HwndRenderTargetProperties( window , size ) ,
-                                                        sheet.ReleaseAndGetAddressOf() );
+              factory->CreateHwndRenderTarget( RenderTargetProperties() ,
+                                               HwndRenderTargetProperties( window , size ) ,
+                                               sheet.ReleaseAndGetAddressOf() );
+          }
+
+          ID2D1HwndRenderTarget * sheet_pointer()
+          {
+              return sheet.Get();
           }
 
          //void set_sheet( const ID2D1HwndRenderTarget * in_sheet )
@@ -92,7 +101,7 @@ namespace hid
                   sheet->Clear( colour_clear );
                                     
                   //sheet_grid.draw();
-                  text.draw();
+                  //text.draw();
 
                   //for( auto & line : lines )
                   //   line.draw();
