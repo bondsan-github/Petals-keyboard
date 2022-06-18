@@ -1,44 +1,30 @@
-#pragma once
+#include "..\headers\hid_multi_touch.h"
 
-#include "..\headers\windows.h"
-#include "..\headers\hid_devices.h"
-#include "..\headers\graphics.h"
-#include "..\headers\write.h"
-
-// 1. transparent full screen draw contacts
-
-namespace hid 
+namespace hid
 {
-   using namespace std;
+    using namespace std;
 
-   // one or more mutli-touch inputs for example touchpad , touchscreen. 
-    class multi_touch : public window , public graphics , public write , public hid_devices
+    void hid_multi_touch::initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
     {
-        virtual LRESULT message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter ) override;
+        gui_windows_ms::initialise( instance , parameters , show_flags );
+        graphics.initialise();
+        write.initialise();
 
-        public:
+        usages.initialise();
+        hid_devices::initialise();
+    }
 
-        void initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
+    int hid_multi_touch::begin()
+    {
+        if( input.empty() )
         {
-            window::initialise( instance , parameters , show_flags );
-            graphics::initialise( window_ptr );
-            write::initialise();
-            hid_devices::initialise();
+            write.add( L"no precision multiple touch devices found" );
         }
 
-        int begin()
-        {
-            if( input.empty() )
-            {
-                add( L"no precision multiple touch devices found" );
-            }
+        return message_loop();
+    }
 
-            return message_loop();
-        }
-
-    }; //class multi_touch
-
-    LRESULT multi_touch::message_handler( HWND in_window , UINT message , WPARAM wParam , LPARAM lParam )
+    LRESULT hid_multi_touch::message_handler( HWND in_window , UINT message , WPARAM wParam , LPARAM lParam )
     {
         switch( message )
         {
@@ -49,8 +35,8 @@ namespace hid
 
             case WM_PAINT:
             {
-                graphics::draw();
-                write::draw();
+                graphics.draw();
+                write.draw();
                 hid_devices::draw();
             } break;
 

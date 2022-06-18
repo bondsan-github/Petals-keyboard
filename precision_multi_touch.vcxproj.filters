@@ -21,6 +21,48 @@
     <ClCompile Include="implementations\main.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="sources\graphics_d2d.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\gui_windows_ms.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\locate.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\text_d2d.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\write_d2d.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\hid_multi_touch.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\globals.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\hid_device.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\hid_usages.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\line_d2d.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\hid_raw_device.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\hid_main_item.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\hid_local_item.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\hid_devices.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="resources\DeclareDPIAware.manifest">
@@ -40,58 +82,43 @@
     <ClInclude Include="headers\hidp_status.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\includes.h">
+    <ClInclude Include="headers\hid_item.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\item.h">
+    <ClInclude Include="headers\hid_multi_touch.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\multi_touch.h">
+    <ClInclude Include="headers\hid_raw_device.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\raw_device.h">
+    <ClInclude Include="headers\hid_usages.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\usages.h">
+    <ClInclude Include="headers\gui_windows_ms.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\windows.h">
+    <ClInclude Include="headers\graphics_d2d.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\graphics.h">
+    <ClInclude Include="headers\write_d2d.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\write.h">
+    <ClInclude Include="headers\text_d2d.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h">
+    <ClInclude Include="headers\line_d2d.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h">
+    <ClInclude Include="headers\hid_usage_text.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h">
+    <ClInclude Include="headers\hid_main_item.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\text.h">
+    <ClInclude Include="headers\hid_local_item.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\shared_graphics.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\shared_write.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\window_pointer.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\grid.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\line.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\locate.h">
+    <ClInclude Include="headers\hid_global_item.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,7 +5,7 @@
 #include < d2d1.h >
 
 #include "..\headers\globals.h"
-#include "..\headers\shared_graphics.h"
+#include "..\headers\locate.h"
 #include "..\headers\line.h"
 
 namespace hid
@@ -14,7 +14,7 @@ namespace hid
     using namespace D2D1;
     using namespace Microsoft::WRL;
 
-    class grid : public shared_graphics
+    class grid
     {
         private:
     
@@ -28,7 +28,7 @@ namespace hid
         {
             dimensions.width  = in_column_amount;
             dimensions.height = in_row_amount;
-            sheet_size        = graphics_ptr->sheet_pointer()->GetSize(); // size in dips
+            sheet_size        = locate::graphics_ptr().sheet_ptr()->GetSize(); // size in dips
 
             float cell_width  = sheet_size.width / dimensions.width;
             float cell_height = sheet_size.height / dimensions.height;

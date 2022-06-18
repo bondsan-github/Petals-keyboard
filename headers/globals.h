@@ -1,94 +1,82 @@
-#pragma once
-
-#include < windows.h >
-#include < strsafe.h >
-
-#include < vector >
-#include < string >
-
-#include < d2d1.h >
-#include < dwrite.h >
+﻿#pragma once
 
 namespace hid // human interface device
 {
-   using namespace std;
-   using namespace D2D1;
-
    using uchar  = unsigned char;  //  8 bits
    using ushort = unsigned short; // 16 bits
    using uint   = unsigned int;   // 32 bits
    using ulong  = unsigned long;  //    long same as int
 
-   //using com_ptr = ComPtr<>;
-   using        render_target = ID2D1RenderTarget;
-   using window_render_target = ID2D1HwndRenderTarget;
+   struct                           HIDP_LINK_COLLECTION_NODE;
+   using  node =                    HIDP_LINK_COLLECTION_NODE;
+   struct                           HIDD_ATTRIBUTES;
+   using  hid_attributes          = HIDD_ATTRIBUTES;
+   struct                           HIDP_EXTENDED_ATTRIBUTES;
+   using  hid_attributes_extended = HIDP_EXTENDED_ATTRIBUTES;
+   // sheet window_sheet() // ( / canvas / target )
+   //using com_ptr = ComPtr;
+   //struct                           ID2D1Factory;
+   
+   //struct                           PAINTSTRUCT;
+   
+   //struct                           ID2D1RenderTarget;
+   using  render_target           = ID2D1RenderTarget;
+   //struct                           ID2D1HwndRenderTarget;
+   
+   // sheet window_sheet() // ( / canvas / target )
+   //struct                           IDWriteFactory;
+   using  ms_write_factory        = IDWriteFactory;
+   //using ✎ = write;
+   //struct                           IDWriteTextFormat;
+   using  ms_text_format          = IDWriteTextFormat;
+   //struct                           IDWriteTextLayout;
+   using  ms_text_layout          = IDWriteTextLayout;
+   //struct                           ID2D1SolidColorBrush;
+   using  ms_brush_solid_colour   = ID2D1SolidColorBrush;
+   //struct                           ID2D1StrokeStyle;
+   using  ms_stroke_style         = ID2D1StrokeStyle;
+   //struct                           ID2D1LinearGradientBrush;
+   using  brush_gradient          = ID2D1LinearGradientBrush;
+  // struct                           ID2D1RadialGradientBrush;
+   using  brush_radial            = ID2D1RadialGradientBrush;
+//   class                            ColorF;
+   //using  colours                 = ColorF;
+   //struct                           D2D_SIZE_F; 
+   using  area                    = D2D_SIZE_F;
+   using  dimensions              = D2D_SIZE_F;
+   using  divisions               = D2D_SIZE_F;
+   //struct                           DWRITE_TRIMMING;
+   using  trimming                = DWRITE_TRIMMING;
+   // RECT = longs
+  // struct                           D2D_RECT_F;
+   using  rectangle               = D2D_RECT_F;
+  // struct                           D2D1_ROUNDED_RECT;
+   using  rounded_rectangle       = D2D1_ROUNDED_RECT;
+   using  rrect                   = rounded_rectangle;
 
-   using ms_write_factory      = IDWriteFactory;
-   using ms_text_format        = IDWriteTextFormat;
-   using ms_text_layout        = IDWriteTextLayout;
-   using ms_brush_solid_colour = ID2D1SolidColorBrush;
-   using ms_stroke_style       = ID2D1StrokeStyle;
-          //ID2D1LinearGradientBrush
-           //ID2D1RadialGradientBrush
-
-
-   using colours            = ColorF;
-   using point              = D2D_POINT_2F;
-   using area               = D2D_SIZE_F;
-   using dimensions         = D2D_SIZE_F;
-   using divisions          = D2D_SIZE_F;
-
-   using trimming           = DWRITE_TRIMMING;
-
-   using rectangle          = D2D_RECT_F;
-   using rounded_rectangle  = D2D1_ROUNDED_RECT;
-
-   struct rectangle_midpoints
+   struct vertex
    {
-      point top    {};
-      point right  {};
-      point bottom {};
-      point left   {};
+       float x {};
+       float y {};
    };
+
+   struct rectangle_points_middle_edge // bounds_intersections_planes;
+   {
+       vertex top    {};
+       vertex right  {};
+       vertex bottom {};
+       vertex left   {};
+   };
+
+   using rect_points_mid = rectangle_points_middle_edge;
    
    // Microsoft windows input types
    enum class raw_device_type { mouse , keyboard , hid };
 
-   const vector< wstring > raw_device_type_text{ L"mouse" , L"keyboard" , L"human interface device" , L"unknown type" };
+   //const vector< wstring > raw_device_type_text{ L"mouse" , L"keyboard" , L"human interface device" , L"unknown type" };
    
    // wchar_t ~ unsigned short
-   void error( const wchar_t * title_text )
-   {
-       // Retrieve the system error message for the last-error code
-
-      const uint char_amount {200};
-
-      wchar_t message[ char_amount ] {};
-      wchar_t display[ char_amount ] {};
-      ulong   error_id               = GetLastError();
-
-      FormatMessage(// FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                     FORMAT_MESSAGE_FROM_SYSTEM     |   //  search the system message-table resource(s) for the requested message
-                     FORMAT_MESSAGE_IGNORE_INSERTS    , // later formatting
-                     0 ,  // source
-                     error_id ,
-                     MAKELANGID( LANG_NEUTRAL , SUBLANG_DEFAULT ) ,
-                     //( LPTSTR ) & message ,
-                     message ,
-                     char_amount ,  // amount of characters
-                     0 ); // ... va_list
-
-     // Display the error message and exit the process
-      //display = LocalAlloc( LMEM_ZEROINIT , ( lstrlen( message ) + lstrlen( title_text ) + 40 ) * sizeof( wchar_t ) );
-
-      StringCchPrintf( display ,
-                       char_amount  ,
-                       L"%s : error %d: %s" , title_text , error_id , message );
-
-      MessageBox( 0 , display , L"error" , MB_OK );
-
-      ExitProcess( error_id );
-   }
+   void error( const wchar_t * title_text );
 
    /*
    using write_format   = IDWriteTextFormat;

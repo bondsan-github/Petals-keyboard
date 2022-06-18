@@ -139,33 +139,42 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="implementations\main.cpp" />
+    <ClCompile Include="sources\globals.cpp" />
+    <ClCompile Include="sources\graphics_d2d.cpp" />
+    <ClCompile Include="sources\hid_device.cpp" />
+    <ClCompile Include="sources\hid_devices.cpp" />
+    <ClCompile Include="sources\hid_main_item.cpp" />
+    <ClCompile Include="sources\hid_raw_device.cpp" />
+    <ClCompile Include="sources\line_d2d.cpp" />
+    <ClCompile Include="sources\locate.cpp" />
+    <ClCompile Include="sources\hid_multi_touch.cpp" />
+    <ClCompile Include="sources\hid_local_item.cpp" />
+    <ClCompile Include="sources\text_d2d.cpp" />
+    <ClCompile Include="sources\hid_usages.cpp" />
+    <ClCompile Include="sources\gui_windows_ms.cpp" />
+    <ClCompile Include="sources\write_d2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="resources\DeclareDPIAware.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h" />
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h" />
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h" />
-    <ClInclude Include="headers\graphics.h" />
-    <ClInclude Include="headers\grid.h" />
-    <ClInclude Include="headers\line.h" />
-    <ClInclude Include="headers\locate.h" />
-    <ClInclude Include="headers\shared_graphics.h" />
-    <ClInclude Include="headers\text.h" />
-    <ClInclude Include="headers\window_pointer.h" />
-    <ClInclude Include="headers\write.h" />
+    <ClInclude Include="headers\graphics_d2d.h" />
+    <ClInclude Include="headers\hid_global_item.h" />
+    <ClInclude Include="headers\hid_local_item.h" />
+    <ClInclude Include="headers\hid_main_item.h" />
+    <ClInclude Include="headers\line_d2d.h" />
+    <ClInclude Include="headers\text_d2d.h" />
+    <ClInclude Include="headers\hid_usage_text.h" />
+    <ClInclude Include="headers\write_d2d.h" />
     <ClInclude Include="headers\globals.h" />
     <ClInclude Include="headers\hidp_status.h" />
     <ClInclude Include="headers\hid_device.h" />
     <ClInclude Include="headers\hid_devices.h" />
-    <ClInclude Include="headers\includes.h" />
-    <ClInclude Include="headers\item.h" />
-    <ClInclude Include="headers\multi_touch.h" />
-    <ClInclude Include="headers\raw_device.h" />
-    <ClInclude Include="headers\usages.h" />
-    <ClInclude Include="headers\windows.h" />
-    <ClInclude Include="headers\shared_write.h" />
+    <ClInclude Include="headers\hid_item.h" />
+    <ClInclude Include="headers\hid_multi_touch.h" />
+    <ClInclude Include="headers\hid_raw_device.h" />
+    <ClInclude Include="headers\hid_usages.h" />
+    <ClInclude Include="headers\gui_windows_ms.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="headers\ClassDiagram.cd" />
