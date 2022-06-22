@@ -1,15 +1,20 @@
 #pragma once
 
-#include "..\headers\hid_raw_device.h"
+#include "..\headers\hid_main_item.h"
+#include "..\headers\hid_local_item.h"
 
+#include "..\headers\hid_raw_device.h"
 #include "..\headers\text_d2d.h"
 
 namespace hid
 {
     using namespace std;
 
-    class hid_main_item;
-    //class line_d2d;
+    using hid_attributes          = HIDD_ATTRIBUTES;
+    using hid_attributes_extended = HIDP_EXTENDED_ATTRIBUTES;
+    using area                    = D2D_SIZE_F;
+    using colours                 = D2D1::ColorF;
+
 
     class hid_device : public hid_raw_device
     {
@@ -50,11 +55,14 @@ namespace hid
         public:
 
                  hid_device( HANDLE in_device );
-            void texts_items_main();
+            
             void display_information();
-            void draw();
+
+            void texts_items_main();
             void initialise_text_device();
             void texts_items_input();
+
+            void draw();
 
     }; // class device
 

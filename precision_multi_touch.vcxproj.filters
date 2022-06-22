@@ -39,7 +39,7 @@
     <ClCompile Include="sources\hid_multi_touch.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="sources\globals.cpp">
+    <ClCompile Include="sources\utility.cpp">
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="sources\hid_device.cpp">
@@ -63,6 +63,9 @@
     <ClCompile Include="sources\hid_devices.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="sources\hid_global_item.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="resources\DeclareDPIAware.manifest">
@@ -70,7 +73,7 @@
     </Manifest>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="headers\globals.h">
+    <ClInclude Include="headers\constants.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\hid_device.h">
@@ -119,6 +122,9 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\hid_global_item.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\locate.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

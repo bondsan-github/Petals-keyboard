@@ -1,7 +1,5 @@
 #include "..\headers\hid_raw_device.h"
 
-//#include "..\headers\globals.h"
-
 namespace hid
 {
     using namespace std;
@@ -66,4 +64,4 @@ namespace hid
         return page == HID_USAGE_PAGE_DIGITIZER && usage == HID_USAGE_DIGITIZER_TOUCH_PAD;
     }
 
-} // namespace hid
+}

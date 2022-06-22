@@ -1,4 +1,7 @@
 #include "..\headers\hid_multi_touch.h"
+#include "..\headers\hid_device.h"
+
+#include "..\headers\locate.h"
 
 namespace hid
 {
@@ -28,6 +31,30 @@ namespace hid
     {
         switch( message )
         {
+            case WM_CREATE:
+            {
+                
+               
+            } break;
+
+            /*
+            * https://docs.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged
+            case WM_DPICHANGED:
+            {
+                g_dpi = HIWORD( wParam );
+                UpdateDpiDependentFontsAndResources();
+
+                RECT * const prcNewWindow = ( RECT * ) lParam;
+                SetWindowPos( hWnd ,
+                              NULL ,
+                              prcNewWindow->left ,
+                              prcNewWindow->top ,
+                              prcNewWindow->right - prcNewWindow->left ,
+                              prcNewWindow->bottom - prcNewWindow->top ,
+                              SWP_NOZORDER | SWP_NOACTIVATE );
+                break;
+            }
+            */
             case WM_DESTROY:
             {
                 PostQuitMessage( 0 );
@@ -35,9 +62,15 @@ namespace hid
 
             case WM_PAINT:
             {
+                PAINTSTRUCT paint;
+                BeginPaint( locate::window() , & paint);
+
                 graphics.draw();
                 write.draw();
                 hid_devices::draw();
+
+                long result = EndPaint( locate::window() , & paint );
+                //if( result < 0 ) discard_resources();
             } break;
 
             case WM_SIZE:

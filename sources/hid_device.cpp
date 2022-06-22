@@ -1,14 +1,12 @@
 #include "..\headers\hid_device.h"
 
-//#include "..\headers\hid_local_item.h"
-
-//#include "..\headers\locate.h"
-//#include "..\headers\hid_usages.h"
+#include "..\headers\locate.h"
+#include "..\headers\hid_usages.h"
 
 namespace hid
 {
     using namespace std;
-    using namespace D2D1;
+    //using namespace D2D1;
 
     hid_device::hid_device( HANDLE in_device ) : hid_raw_device( in_device )
     {
@@ -27,6 +25,8 @@ namespace hid
             //text_area = sheet_grid.cell_size();
             column    = 1;
             row       = 1;
+
+            initialise_text_device();
         }
     }
 
@@ -56,7 +56,7 @@ namespace hid
     void hid_device::initialise_text_device()
     {
         wstring text     {};
-        point   position { 0.15 , 0.15 };
+        vertex  position { 0.15f , 0.15f };
 
         text =  L"manufacturer : ";
         text += manufacturer;
@@ -68,7 +68,7 @@ namespace hid
         text += locate::usages().usage(page , usage);
 
         text_device.set_content( text );
-        //text_device.position( position );
+        text_device.position( position );
         
         // += attributes.VendorID;
         // += attributes.ProductID;

@@ -14,25 +14,24 @@ namespace hid
     using display     = PAINTSTRUCT;
     using colours     = ColorF;
 
-    class factory_d2d;
     using window_render_target = ID2D1HwndRenderTarget;
 
     class graphics_d2d
     {
         private:
 
-            ComPtr< factory_d2d >          factory      {};
-            ComPtr< window_render_target > sheet        {};
+            ComPtr< factory_d2d >          factory_ptr  {};
+            ComPtr< window_render_target > sheet_ptr    {};
             RECT                           dimensions   {};
             display                        client_area  {};
-            colours                        colour_clear { 0.2f , 0.2f , 0.2f , 0.0f };
+            colours                        colour_clear { 0.2f , 0.2f , 0.2f , 0.5f };
             //HRESULT                        result       { E_FAIL };
 
         public:
 
             void                   initialise();
             void                   reset();
-            window_render_target * sheet_ptr();
+            window_render_target * sheet();
             void                   draw();
             void                   resize();
 

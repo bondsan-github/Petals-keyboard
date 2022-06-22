@@ -1,6 +1,9 @@
 ﻿#pragma once
 
-#include "..\headers\globals.h"
+#include "..\headers\constants.h"
+
+#include < vector >
+#include < string >
 
 namespace hid
 {

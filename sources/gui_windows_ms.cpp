@@ -1,11 +1,9 @@
 #include "..\headers\gui_windows_ms.h"
 
 #include < cassert >
-//#include < windows.h >
-//#include < string >
+#include < windows.h >
 
-//#include "..\headers\globals.h"
-//#include "..\headers\locate.h"
+#include "..\headers\locate.h"
 
 namespace hid
 {
@@ -17,8 +15,8 @@ namespace hid
 
         window_class.style         = CS_HREDRAW | CS_VREDRAW;
         window_class.lpfnWndProc   = gui_windows_ms::main_window_process;
-        window_class.hInstance     = in_instance;//instance;//GetModuleHandle( 0 ); //instance that contains the window procedure for the class.
-        window_class.lpszClassName = L"Precision input";//class_name;
+        window_class.hInstance     = instance;//GetModuleHandle( 0 ); //instance that contains the window procedure for the class.
+        window_class.lpszClassName = class_name;
 
         window_class.cbClsExtra    = 0; // extra bytes after structure
         window_class.cbWndExtra    = 0; // extra bytes following the window instance.
@@ -29,20 +27,66 @@ namespace hid
         window_class.lpszMenuName  = 0;
 
         ATOM atom{};
-
-        atom = RegisterClassEx( &window_class );
-
+        atom = RegisterClassEx( & window_class );
         //error( L"register class ex" );
+        
+        RECT desktop {};
+        RECT size    {};
 
-        window_principle = CreateWindowEx( WS_EX_COMPOSITED | WS_EX_TRANSPARENT ,//style_extra ,
-                                           L"Precision input" ,//class_name ,
-                                           L"application" ,//title_text ,
-                                           WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_MAXIMIZE ,//style ,
-                                           0 , 0 ,//x , y , 
-                                           200 , 200 ,//CW_USEDEFAULT, CW_USEDEFAULT,//width , height ,
-                                           0 ,//parent_window , 
-                                           0 ,//menu ,
-                                           in_instance ,//instance ,
+        GetWindowRect( GetDesktopWindow() , & desktop );
+
+        int result = GetDpiForWindow( GetDesktopWindow() );
+
+        enum class dpi_aware : int { invalid = -1 , unaware , system , per_monitor };
+        // (UINT) -1
+
+        if( result > 2 )
+        {
+            window_dpi = result;
+        }
+        else
+        {
+            //if( result == -1 ) PostQuitMessage(0);
+            if( result == 0 ) 
+            {
+            window_dpi = 96;
+            }
+            else if( result == 1)
+            { }
+                UINT GetDpiForSystem();
+
+
+        }
+
+        desktop_size.width  = desktop.right;
+        desktop_size.height = desktop.bottom;
+
+        desktop_center.x = desktop_size.width  / 2.0f;
+        desktop_center.y = desktop_size.height / 2.0f;
+
+        client_size_half.width  = client_size.width  / 2.0f;
+        client_size_half.height = client_size.height / 2.0f;
+
+        position_center.x = desktop_center.x;// - client_size_half.width;
+        position_center.y = desktop_center.y;// - client_size_half.height;
+
+        position_top_left.x = position_center.x - client_size_half.width;
+        position_top_left.y = position_center.y - client_size_half.height;
+
+        //size = { 0l, 0l, static_cast< long >( width ), static_cast< long >( height ) };
+        //AdjustWindowRect( & size , WS_OVERLAPPEDWINDOW , FALSE );
+
+        window_principle = CreateWindowEx( style_extra ,
+                                           class_name ,
+                                           title_text ,
+                                           style ,
+                                           position_top_left.x ,
+                                           position_top_left.y ,
+                                           client_size.width ,
+                                           client_size.height ,
+                                           parent_window , 
+                                           menu ,
+                                           instance ,
                                            this );
 
         assert( window_principle != nullptr );
@@ -51,24 +95,23 @@ namespace hid
 
         //if( window_principle == nullptr ) error( L"create window ex" );
 
-        //UpdateWindow( hWnd );
+        //ShowWindow( window_principle , SW_MAXIMIZE );
+        //UpdateWindow( window_principle );
     }
 
     int gui_windows_ms::message_loop()
     {
-        while( GetMessage( &message , 0 , 0 , 0 ) )
+        while( GetMessage( & message , 0 , 0 , 0 ) )
         {
-            TranslateMessage( &message );
-            DispatchMessage( &message );
+            TranslateMessage( & message );
+            DispatchMessage( & message );
         }
 
         return message.message;
     }
 
-    // This is just used to forward Windows messages from a global window
-    // procedure to our member function window procedure because we cannot
-    // assign a member function to WNDCLASS::lpfnWndProc.
-
+    // to forward Windows messages from a global window procedure to member function window procedure
+    // because we cannot assign a member function to WNDCLASS::lpfnWndProc.
     LRESULT CALLBACK gui_windows_ms::main_window_process( HWND in_window , UINT message , WPARAM w_param , LPARAM l_param )
     {
         // If we are creating the window, set the window_ptr to the instance of CAppWindow associated with the window as the HWND's user data.
@@ -101,23 +144,9 @@ namespace hid
     {
         switch( message )
         {
-            case WM_CREATE:
-            {
-            } break;
-
             case WM_DESTROY:
             {
-                PostQuitMessage( 0 );
-            } break;
-
-            case WM_PAINT:
-            {
-               //paint.draw();
-            } break;
-
-            case WM_SIZE:
-            {
-               //paint.resize();
+                //PostQuitMessage( 0 );
             } break;
 
             case WM_KEYDOWN:
@@ -127,9 +156,7 @@ namespace hid
                     case VK_ESCAPE:
                     {
                         PostQuitMessage( 0 );
-                        //DestroyWindow( in_window );
                     } break;
-
                 }
             }
 

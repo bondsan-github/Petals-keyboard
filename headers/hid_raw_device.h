@@ -1,18 +1,21 @@
 #pragma once
 
-//#include "..\headers\hid_local_item.h"
-//#include "..\headers\hid_global_item.h"
-
 #include < string >
-
+#include < vector >
+#include < Windows.h >
 #include < hidsdi.h >
+
+#include "..\headers\constants.h"
+
+#include "..\headers\hid_local_item.h"
+#include "..\headers\hid_global_item.h"
 
 namespace hid
 {
    using namespace std;
 
-   class hid_local_item;
-   class hid_global_item;
+   //class hid_local_item;
+   //class hid_global_item;
 
    class hid_raw_device abstract 
    {

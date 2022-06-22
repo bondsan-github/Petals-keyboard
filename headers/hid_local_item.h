@@ -1,7 +1,11 @@
 #pragma once
 
+#include "..\headers\constants.h"
+
 #include "..\headers\hid_item.h"
 #include "..\headers\hid_main_item.h"
+
+#include < string >
 
 namespace hid
 {

@@ -1,7 +1,8 @@
 #include "..\headers\hid_local_item.h"   
-//#include "..\headers\locate.h"
-//#include "..\headers\hid_usages.h"
-//#include < bitset >
+
+#include "..\headers\locate.h"
+#include "..\headers\hid_usages.h"
+#include < bitset >
 
 namespace hid
 {

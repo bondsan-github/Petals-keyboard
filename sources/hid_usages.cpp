@@ -1,10 +1,10 @@
 #include "..\headers\hid_usages.h"
 
-//#include < stdexcept >
-#//include < format >
+#include < stdexcept >
+#include < format >
 
-//#include "..\headers\locate.h"
-//#include "..\headers\hid_usage_text.h"
+#include "..\headers\locate.h"
+#include "..\headers\hid_usage_text.h"
 
 namespace hid
 {
@@ -35,9 +35,9 @@ namespace hid
         {
             pages.at( in_page );
         }
-        catch( out_of_range const & exception ) //out_of_range & error 
+        catch( out_of_range const & exception )
         {
-            return format( L"{:x} usage" , in_usage ); // hex string               
+            return format( L"{:x} usage" , in_usage ); // hex string
         }
 
         try

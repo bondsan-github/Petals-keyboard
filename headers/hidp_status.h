@@ -12,11 +12,20 @@ namespace hid
 
          string message( long in_code ) const
          {
-            if( ( in_code >> 28 ) == 0x08 ) return "null"; //0x80004400001
-            else if( ( in_code & 0xff ) == 0x20 ) return "not implemented"; // 
-            else if( ( in_code & 0xff ) == 0x21 ) return "not button array";
-            else if( ( in_code & 0xff ) >= 0x00 && ( in_code & 0xff ) <= 0x20 ) return messages[ in_code & 0xff ];
-            else return "unknown code";
+            if( ( in_code >> 28 ) == 0x08 ) //0x80004400001
+                return "null"; 
+
+            else if( ( in_code & 0xff ) == 0x20 ) 
+                return "not implemented"; // 
+
+            else if( ( in_code & 0xff ) == 0x21 ) 
+                return "not button array";
+
+            else if( ( in_code & 0xff ) >= 0x00 && ( in_code & 0xff ) <= 0x20 ) 
+                return messages[ in_code & 0xff ];
+
+            else 
+                return "unknown code";
          };
 
       private: // variables

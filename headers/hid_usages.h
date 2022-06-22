@@ -1,5 +1,9 @@
 #pragma once
 
+#include "..\headers\constants.h"
+#include < string >
+#include < vector >
+
 namespace hid
 {
    using namespace std;
@@ -17,7 +21,7 @@ namespace hid
 
          //stringstream stream;
 
-         vector< wstring > pages // up to 0xFFFF
+         vector< wstring > pages  =// up to 0xFFFF
          {
             L"undefined" ,               // 0x00
             L"generic desktop" ,         // 0x01
@@ -56,9 +60,9 @@ namespace hid
              collection_application ,
          };
        
-   }; // usages ;// class usages;
+   };
 
-} // namespace hid
+}
 
 
 

@@ -1,22 +1,15 @@
 #include "..\headers\write_d2d.h"
 
-//#include < string >
-//#include < vector >
+#include < d2d1.h >
+#include < dwrite.h >
 
-//#include < wrl.h >
-//#include < memory >
-
-//#include < d2d1.h >
-//#include < dwrite.h >
-
-//#include "..\headers\globals.h"
-//#include "..\headers\locate.h"
-//#include "..\headers\text_d2d.h"
+#include "..\headers\constants.h"
+#include "..\headers\locate.h"
+#include "..\headers\text_d2d.h"
 
 namespace hid
 {
-    using namespace D2D1;
-    using namespace Microsoft::WRL;
+    //using namespace D2D1;
 
     void write_d2d::initialise()
     {
@@ -28,24 +21,24 @@ namespace hid
         locate::provide_write( this );
     }
 
-    IDWriteFactory * write_d2d::factory()
+    IDWriteFactory & write_d2d::factory()
     {
-        return write_factory.Get();
+        return ** write_factory.GetAddressOf();
     }
 
     void write_d2d::add( wstring in_text       ,
-                     point   in_origin     ,
-                     float   in_size       ,
-                     colours in_colour     ,
-                     area    in_dimensions ,
-                     wstring in_font       )
+                         vertex   in_origin    ,
+                         float   in_size       ,
+                         colours in_colour     ,
+                         area    in_dimensions ,
+                         wstring in_font       )
     {
         texts.emplace_back( in_text , in_origin , in_size , in_colour , in_dimensions , in_font );
     }
 
-    rect_points_mid write_d2d::middle_points( uint index )
+    rect_vertex_mid write_d2d::middle_vertices( uint index )
     {
-        return texts.at( index ).middle_points();
+        return texts.at( index ).middle_vertices();
     }
 
     void write_d2d::draw()

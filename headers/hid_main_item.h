@@ -1,6 +1,8 @@
 #pragma once
 
+#include "..\headers\constants.h"
 #include "..\headers\hid_item.h"
+#include < string >
 
 namespace hid
 {
@@ -19,6 +21,6 @@ namespace hid
 
         wstring text();
 
-    }; // struct_main_item
+    }; // struct hid_main_item
 
 } // namespace hid

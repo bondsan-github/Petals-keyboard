@@ -139,10 +139,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="implementations\main.cpp" />
-    <ClCompile Include="sources\globals.cpp" />
+    <ClCompile Include="sources\utility.cpp" />
     <ClCompile Include="sources\graphics_d2d.cpp" />
     <ClCompile Include="sources\hid_device.cpp" />
     <ClCompile Include="sources\hid_devices.cpp" />
+    <ClCompile Include="sources\hid_global_item.cpp" />
     <ClCompile Include="sources\hid_main_item.cpp" />
     <ClCompile Include="sources\hid_raw_device.cpp" />
     <ClCompile Include="sources\line_d2d.cpp" />
@@ -163,10 +164,11 @@
     <ClInclude Include="headers\hid_local_item.h" />
     <ClInclude Include="headers\hid_main_item.h" />
     <ClInclude Include="headers\line_d2d.h" />
+    <ClInclude Include="headers\locate.h" />
     <ClInclude Include="headers\text_d2d.h" />
     <ClInclude Include="headers\hid_usage_text.h" />
     <ClInclude Include="headers\write_d2d.h" />
-    <ClInclude Include="headers\globals.h" />
+    <ClInclude Include="headers\constants.h" />
     <ClInclude Include="headers\hidp_status.h" />
     <ClInclude Include="headers\hid_device.h" />
     <ClInclude Include="headers\hid_devices.h" />

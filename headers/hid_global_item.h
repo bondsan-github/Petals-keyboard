@@ -1,5 +1,7 @@
 #pragma once
 
+#include "..\headers\constants.h"
+
 #include "..\headers\hid_item.h"
 #include "..\headers\hid_local_item.h"
 

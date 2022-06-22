@@ -1,8 +1,8 @@
 #pragma once
 
-#include "..\headers\hid_device.h"
-
 #include < vector >
+
+#include "..\headers\hid_device.h"
 
 namespace hid
 {

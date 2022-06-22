@@ -33,18 +33,18 @@ namespace hid
         return window_pointer;
     }
 
-    graphics_d2d * locate::graphics()
+    graphics_d2d & locate::graphics()
     {
         assert( graphics_pointer != nullptr );
 
-        return graphics_pointer;
+        return * graphics_pointer;
     }
 
-    write_d2d * locate::write()
+    write_d2d & locate::write()
     {
         assert( write_pointer != nullptr );
 
-        return write_pointer;
+        return * write_pointer;
     }
 
     hid_usages & locate::usages()

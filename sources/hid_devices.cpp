@@ -1,5 +1,6 @@
 #include "..\headers\hid_devices.h"
-
+#include "..\headers\constants.h"
+#include "..\headers\hid_device.h"
 #include < windows.h >
 
 namespace hid

@@ -12,12 +12,13 @@ int WINAPI wWinMain( _In_ HINSTANCE instance , _In_opt_ HINSTANCE instance_previ
 
    // Initialize COM apartment threaded. This is the recommended way to initialize COM for the UI thread.
    //CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED );
-
-   //application
-   int         result {};
+   
    hid_multi_touch input;
 
    input.initialise( instance , parameters , show_flags );
+
+   int result {};
+
    result = input.begin();
    
    //CoUninitialize();

@@ -1,4 +1,9 @@
-#include "..\headers\globals.h"
+// utility.cpp
+
+#include "..\headers\constants.h" 
+
+#include < windows.h >
+#include < strsafe.h >
 
 namespace hid
 {

@@ -16,22 +16,22 @@ namespace hid
     {
         public:
 
-            static void       provide_window   ( HWND in_window );
-            static void       provide_graphics ( graphics_d2d * in_graphics );
-            static void       provide_write    ( write_d2d * in_write );
-            static void       provide_usages   ( hid_usages * in_usages );
+            static void provide_window  ( HWND           in_window );
+            static void provide_graphics( graphics_d2d * in_graphics );
+            static void provide_write   ( write_d2d    * in_write );
+            static void provide_usages  ( hid_usages   * in_usages );
 
-            static HWND           window   ();
-            static graphics_d2d * graphics ();
-            static write_d2d *    write    ();
-            static hid_usages &   usages   ();
+            static HWND           window  ();
+            static graphics_d2d & graphics();
+            static write_d2d    & write   ();
+            static hid_usages   & usages  ();
             
         private:
 
-            static HWND           window_pointer;
-            static graphics_d2d * graphics_pointer;
-            static write_d2d    * write_pointer;
-            static hid_usages   * usages_pointer;
+            static inline HWND           window_pointer {};
+            static inline graphics_d2d * graphics_pointer {};
+            static inline write_d2d    * write_pointer {};
+            static inline hid_usages   * usages_pointer {};
     };
 } // namespace hid
           

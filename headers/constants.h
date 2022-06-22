@@ -6,70 +6,25 @@ namespace hid // human interface device
    using ushort = unsigned short; // 16 bits
    using uint   = unsigned int;   // 32 bits
    using ulong  = unsigned long;  //    long same as int
-
-   struct                           HIDP_LINK_COLLECTION_NODE;
-   using  node =                    HIDP_LINK_COLLECTION_NODE;
-   struct                           HIDD_ATTRIBUTES;
-   using  hid_attributes          = HIDD_ATTRIBUTES;
-   struct                           HIDP_EXTENDED_ATTRIBUTES;
-   using  hid_attributes_extended = HIDP_EXTENDED_ATTRIBUTES;
-   // sheet window_sheet() // ( / canvas / target )
-   //using com_ptr = ComPtr;
-   //struct                           ID2D1Factory;
    
-   //struct                           PAINTSTRUCT;
-   
-   //struct                           ID2D1RenderTarget;
-   using  render_target           = ID2D1RenderTarget;
-   //struct                           ID2D1HwndRenderTarget;
-   
-   // sheet window_sheet() // ( / canvas / target )
-   //struct                           IDWriteFactory;
-   using  ms_write_factory        = IDWriteFactory;
-   //using ✎ = write;
-   //struct                           IDWriteTextFormat;
-   using  ms_text_format          = IDWriteTextFormat;
-   //struct                           IDWriteTextLayout;
-   using  ms_text_layout          = IDWriteTextLayout;
-   //struct                           ID2D1SolidColorBrush;
-   using  ms_brush_solid_colour   = ID2D1SolidColorBrush;
-   //struct                           ID2D1StrokeStyle;
-   using  ms_stroke_style         = ID2D1StrokeStyle;
-   //struct                           ID2D1LinearGradientBrush;
-   using  brush_gradient          = ID2D1LinearGradientBrush;
-  // struct                           ID2D1RadialGradientBrush;
-   using  brush_radial            = ID2D1RadialGradientBrush;
-//   class                            ColorF;
-   //using  colours                 = ColorF;
-   //struct                           D2D_SIZE_F; 
-   using  area                    = D2D_SIZE_F;
-   using  dimensions              = D2D_SIZE_F;
-   using  divisions               = D2D_SIZE_F;
-   //struct                           DWRITE_TRIMMING;
-   using  trimming                = DWRITE_TRIMMING;
-   // RECT = longs
-  // struct                           D2D_RECT_F;
-   using  rectangle               = D2D_RECT_F;
-  // struct                           D2D1_ROUNDED_RECT;
-   using  rounded_rectangle       = D2D1_ROUNDED_RECT;
-   using  rrect                   = rounded_rectangle;
-
+   /*
    struct vertex
    {
        float x {};
        float y {};
    };
 
-   struct rectangle_points_middle_edge // bounds_intersections_planes;
+   // bounds_intersections_planes
+   struct rectangle_vertices_middle_edge 
    {
        vertex top    {};
        vertex right  {};
        vertex bottom {};
        vertex left   {};
    };
+   using rect_vertex_mid = rectangle_vertices_middle_edge;
+   */
 
-   using rect_points_mid = rectangle_points_middle_edge;
-   
    // Microsoft windows input types
    enum class raw_device_type { mouse , keyboard , hid };
 
@@ -77,6 +32,8 @@ namespace hid // human interface device
    
    // wchar_t ~ unsigned short
    void error( const wchar_t * title_text );
+
+} // namespace hid
 
    /*
    using write_format   = IDWriteTextFormat;
@@ -95,9 +52,33 @@ namespace hid // human interface device
          *ptr_ptr_type = nullptr;
       }
       */
-} // namespace hid
 
-
+/*
+   using  node =                    HIDP_LINK_COLLECTION_NODE;
+   using  hid_attributes          = HIDD_ATTRIBUTES;
+   using  hid_attributes_extended = HIDP_EXTENDED_ATTRIBUTES;
+   // sheet window_sheet() // ( / canvas / target )
+   //using com_ptr = ComPtr;
+   using  render_target           = ID2D1RenderTarget;
+   // sheet window_sheet() // ( / canvas / target )
+   using  ms_write_factory        = IDWriteFactory;
+   //using ✎ = write;
+   using  ms_text_format          = IDWriteTextFormat;
+   using  ms_text_layout          = IDWriteTextLayout;
+   using  ms_brush_solid_colour   = ID2D1SolidColorBrush;
+   using  ms_stroke_style         = ID2D1StrokeStyle;
+   using  brush_gradient          = ID2D1LinearGradientBrush;
+   using  brush_radial            = ID2D1RadialGradientBrush;
+   using  colours                 = ColorF;
+   using  area                    = D2D_SIZE_F;
+   using  dimensions              = D2D_SIZE_F;
+   using  divisions               = D2D_SIZE_F;
+   using  trimming                = DWRITE_TRIMMING;
+   // RECT = longs
+   using  rectangle               = D2D_RECT_F;
+   using  rounded_rectangle       = D2D1_ROUNDED_RECT;
+   using  rrect                   = rounded_rectangle;
+   */
    //using rectangle = D2D_RECT_F;
   /*
    class drawable

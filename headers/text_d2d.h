@@ -1,9 +1,36 @@
 #pragma once
 
+#include "..\headers\constants.h"
+
+#include < string >
+#include < wrl.h >
+
+#include < d2d1.h >
+#include < dwrite.h >
+
 namespace hid
 {
     using namespace std;
+    using namespace D2D1;
     using namespace Microsoft::WRL;
+    
+    using ms_text_format        = IDWriteTextFormat;
+    using ms_brush_solid_colour = ID2D1SolidColorBrush;
+    using ms_text_layout        = IDWriteTextLayout;
+
+    using vertex                = D2D1_POINT_2F;
+    using colours               = ColorF;
+    using rectangle             = D2D_RECT_F;
+    using rounded_rectangle     = D2D1_ROUNDED_RECT;
+    using dimensions            = D2D_SIZE_F;
+
+    struct rect_vertex_mid
+    {
+        vertex top    {};
+        vertex right  {};
+        vertex bottom {};
+        vertex left   {};
+    };
 
     class text
     {
@@ -11,31 +38,31 @@ namespace hid
             ComPtr< ms_brush_solid_colour > brush  {};
             ComPtr< ms_text_layout >        layout {};
 
-            wstring           content    {};
-            point             center     {}; // from top left
-            wstring           font       { L"Times New Roman" }; // font family
-            float             size       { 15.0f }; // MS "size * 96.0f/72.0f"
-            colours           colour     { colours::Yellow };
-            area              dimensions {};
-            float             radius     { 5.0f };
-            rectangle         bounds     {};
-            rounded_rectangle rrectangle {};// .radiusX = raduis , .radiusY = radius };
+            wstring           content           {};
+            vertex            position_center   {};
+            vertex            position_top_left {};
+            wstring           font              {}; // font family
+            float             size              {}; // MS "size * 96.0f/72.0f"
+            colours           colour            { ColorF::Yellow };
+            float             radius            { 5.0f };
+            dimensions        boundry           {};
+            rounded_rectangle rrectangle        {};// .radiusX = raduis , .radiusY = radius };
 
         public:
 
-            text( wstring                 in_content    = {}                     ,
-                  point                   in_center     = { 0.5f , 0.5f }        , // position 0..1
-                  float                   in_size       = { 15u }                ,
-                  colours                 in_colour     = { colours::Yellow }    ,
-                  area                    in_dimensions = { 150.0f , 100.0f }    ,
-                  wstring                 in_font       = { L"Times New Roman" } );
+            text( wstring    in_content = {}                     ,
+                  vertex     in_center  = { 0.5f , 0.5f }        , // position 0..1
+                  float      in_size    = { 15.0f }              ,
+                  colours    in_colour  = { ColorF::Yellow }     ,
+                  dimensions in_boundry = { 350.0f , 350.0f }    ,
+                  wstring    in_font    = { L"Times New Roman" } );
 
             float           width();
             float           width_half();
             float           height();
             float           height_half();
-            //void          position( point in_center );
-            point           top_left();
+            void            position( vertex in_center );
+            vertex          top_left();
 
             void            reset();
             void            reset_brush();
@@ -48,7 +75,7 @@ namespace hid
             void            draw();
             void            draw_text();
 
-            rect_points_mid middle_points();
+            rect_vertex_mid middle_vertices();
             /*
             void reset_bounds()
             void draw_bounds()

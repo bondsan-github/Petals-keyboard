@@ -1,6 +1,7 @@
 #include "..\headers\hid_main_item.h"
-//#include "..\headers\locate.h"
-//#include "..\headers\hid_usages.h"
+
+#include "..\headers\locate.h"
+#include "..\headers\hid_usages.h"
 
 namespace hid
 {
@@ -9,7 +10,7 @@ namespace hid
         wstring text;
 
         text  = L"type\t: ";
-        text += hid_item_type_text.at( to_underlying( type ) );
+        text += hid_item_type_text.at( std::to_underlying( type ) ); // c++23
         text += L"\npage\t: ";
         text += locate::usages().page( page );
         text += L"\nusage\t: ";

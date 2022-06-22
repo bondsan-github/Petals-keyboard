@@ -8,7 +8,7 @@ namespace hid
     {
         locate::provide_graphics( this );
 
-        D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory.ReleaseAndGetAddressOf() );
+        D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory_ptr.ReleaseAndGetAddressOf() );
 
         reset();
     }
@@ -19,40 +19,30 @@ namespace hid
 
         D2D1_SIZE_U client_area = SizeU( dimensions.right , dimensions.bottom );
 
-        factory->CreateHwndRenderTarget( RenderTargetProperties() ,
+        factory_ptr->CreateHwndRenderTarget( RenderTargetProperties() ,
                                          HwndRenderTargetProperties( locate::window() , client_area ) ,
-                                         sheet.ReleaseAndGetAddressOf() );
+                                         sheet_ptr.ReleaseAndGetAddressOf() );
     }
 
-    window_render_target * graphics_d2d::sheet_ptr()
+    window_render_target * graphics_d2d::sheet()
     {
-        return sheet.Get();
+        return sheet_ptr.Get();
     }
 
     //void set_sheet( const ID2D1HwndRenderTarget * in_sheet )
-      //sheets.emplace_back( window_ptr , size );
+        //sheets.emplace_back( window_ptr , size );
 
     void graphics_d2d::draw()
     {
-        HWND window_pointer = nullptr;
-             window_pointer = locate::window();
-
-        if( window_pointer )
+        if( sheet_ptr.Get() )
         {
-            BeginPaint( window_pointer , & client_area );
+            sheet_ptr->BeginDraw();
 
-            if( sheet.Get() )
-            {
-                sheet->BeginDraw();
+            sheet_ptr->SetTransform( Matrix3x2F::Identity() );
 
-                sheet->SetTransform( Matrix3x2F::Identity() );
+            sheet_ptr->Clear( colour_clear );
 
-                sheet->Clear( colour_clear );
-
-                sheet->EndDraw();
-            }
-
-            EndPaint( window_pointer , & client_area );
+            sheet_ptr->EndDraw();
         }
     }
 
@@ -69,7 +59,7 @@ namespace hid
 
             D2D1_SIZE_U size = SizeU( rectangle.right , rectangle.bottom );
 
-            if( sheet.Get() ) sheet->Resize( size );
+            if( sheet_ptr.Get() ) sheet_ptr->Resize( size );
 
             //calculate_layout();
 
