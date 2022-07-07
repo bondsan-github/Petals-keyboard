@@ -1,6 +1,7 @@
 // utility.cpp
 
-#include "..\headers\constants.h" 
+#include "..\headers\utility.h"
+#include "..\headers\direct_2d.h"
 
 #include < windows.h >
 #include < strsafe.h >

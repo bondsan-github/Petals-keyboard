@@ -25,11 +25,17 @@ namespace hid
             if( new_device.is_multi_touch() )
                 input.emplace_back( move( new_device ) );
         }
+
+        //if( input.empty() )
+        //    information.set_content( L"no precision multiple touch devices found" );
+        //else
+        //    information.set_content( L"" );
     }
 
     void hid_devices::draw()
     {
-        for( auto & device : input )
-            device.draw();
+        //information.draw();
+
+        for( auto & device : input ) device.draw();
     }
 }

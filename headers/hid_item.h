@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "..\headers\constants.h"
-
 #include < vector >
 #include < string >
 

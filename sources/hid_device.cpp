@@ -14,9 +14,6 @@ namespace hid
         {
             gather_information();
 
-            //locate::text_ptr()->add( text_device() );
-
-            // graphics // screen_width * position_x [ 0.000000..1.0000000 ]
             column_amount = 12;
             row_amount    = 12;
 
@@ -27,18 +24,26 @@ namespace hid
             row       = 1;
 
             initialise_text_device();
+            initialise_texts_items_main();
         }
     }
 
-    void hid_device::texts_items_main()
+    void hid_device::initialise_texts_items_main()
     {
-        //for( auto & item : items )
-          //  write_ptr->add( item.text() );
+        text main_item;
+
+
+
+        for( auto & item : items )
+        {
+            main_item.set_content( item.text() );
+
+        }
     }
 
     void hid_device::display_information()
     {
-        draw_information = !draw_information;  // switch
+        draw_information = ! draw_information;  // switch
     }
 
     void hid_device::draw()
@@ -55,21 +60,29 @@ namespace hid
 
     void hid_device::initialise_text_device()
     {
-        wstring text     {};
-        vertex  position { 0.15f , 0.15f };
+        string     text           {};
+        vertex     position       { 200.0f , 100.0f };//0.15f , 0.15f };
+        dimensions boundry        { 350.0f , 100.0f };
+        colours    colour         { colours::DarkGray };
+        colours    boundry_colour { colours::DarkCyan };
+        float      boundry_width  { 2.0f };
 
-        text =  L"manufacturer : ";
+        text =  L"manufacturer\t: ";
         text += manufacturer;
-        text += L"\nproduct    : ";
+        text += L"\nproduct\t\t: ";
         text += product;
-        text += L"\npage       : ";
+        text += L"\npage\t\t: ";
         text += locate::usages().page( page );
-        text += L"\nusage      : ";
-        text += locate::usages().usage(page , usage);
+        text += L"\nusage\t\t: ";
+        text += locate::usages().usage( page , usage );
 
         text_device.set_content( text );
         text_device.position( position );
-        
+        text_device.set_colour( colour );
+        text_device.set_boundry( boundry );
+        text_device.set_boundry_width( boundry_width );
+        text_device.set_boundry_colour( boundry_colour );
+
         // += attributes.VendorID;
         // += attributes.ProductID;
         // += attributes.VersionNumber;
@@ -78,19 +91,20 @@ namespace hid
 
     void hid_device::texts_items_input()
     {
-       // for( auto & input : input.buttons )
-
+        //for( auto & input : input.buttons )
            // write_ptr->add( input.text() );
     }
 
     void hid_device::gather_information()
     {
+        NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
+
         HidD_GetAttributes         ( file_pointer , & attributes );
         HidD_GetManufacturerString ( file_pointer , manufacturer , string_size );//manufacturer.data() , string_size );
         HidD_GetProductString      ( file_pointer , product      , string_size );
         HidD_GetPhysicalDescriptor ( file_pointer , physical     , string_size );
 
-        vector< HIDP_LINK_COLLECTION_NODE > nodes {};
+        vector< node > nodes {};
 
         nodes.resize( item_amount );
 
@@ -134,23 +148,23 @@ namespace hid
         using button_item = HIDP_BUTTON_CAPS;
         using value_item  = HIDP_VALUE_CAPS;
 
-        vector< button_item > inputs{};
-        vector< value_item >  input_values{};
+        vector< button_item > input_buttons   {};
+        vector< value_item >  input_values    {};
 
-        vector< button_item > output_buttons{};
-        vector< value_item >  output_values{};
+        vector< button_item > output_buttons  {};
+        vector< value_item >  output_values   {};
 
-        vector< button_item > button_features{};
-        vector< value_item >  value_features{};
-
-        inputs.resize          ( input.button_amount );
-        HidP_GetButtonCaps     ( HidP_Input   , inputs.data()          , & input.button_amount   , data );
+        vector< button_item > button_features {};
+        vector< value_item >  value_features  {};
+        
+        input_buttons.resize   ( input.button_amount );
+        HidP_GetButtonCaps     ( HidP_Input   , input_buttons.data()   , & input.button_amount   , data );
 
         input_values.resize    ( input.value_amount );
         HidP_GetValueCaps      ( HidP_Input   , input_values.data()    , & input.value_amount    , data );
 
         output_buttons.resize  ( output.button_amount );
-        HidP_GetButtonCaps     ( HidP_Output  , inputs.data()          , & input.button_amount   , data );
+        HidP_GetButtonCaps     ( HidP_Output  , output_buttons.data()  , & input.button_amount   , data );
 
         output_values.resize   ( output.value_amount );
         HidP_GetValueCaps      ( HidP_Output  , output_values.data()   , & output.value_amount   , data );
@@ -161,19 +175,17 @@ namespace hid
         value_features.resize  ( feature.value_amount );
         HidP_GetValueCaps      ( HidP_Feature , value_features.data()  , & output.value_amount   , data );
 
-        for( auto & input : inputs )
+        for( auto & input : input_buttons )
         {
             hid_local_item new_item {};
 
             // type = input
-            new_item.page          = input.UsagePage;
+            new_item.page            = input.UsagePage;
 
-            new_item.report        = input.ReportID;
-            new_item.report_amount = input.ReportCount; // Available in API version >= 2 only.
+            new_item.report          = input.ReportID;
+            new_item.report_amount   = input.ReportCount; // Available in API version >= 2 only.
 
-            new_item.bit_field     = input.BitField;
-
-            new_item.is_alias      = input.IsAlias;
+            new_item.bit_field       = input.BitField;
 
             new_item.origin          = input.LinkCollection;
             new_item.origin_page     = input.LinkUsagePage;
@@ -181,6 +193,7 @@ namespace hid
 
             new_item.is_range        = input.IsRange;
             new_item.is_absolute     = input.IsAbsolute;
+            new_item.is_alias        = input.IsAlias;
 
             new_item.has_designators = input.IsDesignatorRange;
             new_item.has_strings     = input.IsStringRange;
@@ -195,19 +208,10 @@ namespace hid
             }
             else
             {
-                new_item.usage = input.NotRange.Usage;
-                new_item.data  = input.NotRange.DataIndex;
+                new_item.usage        = input.NotRange.Usage;
+                new_item.data         = input.NotRange.DataIndex;
             }
-
-            if( new_item.is_alias )
-            {
-
-            }
-            else
-            {
-
-            }
-
+            
             if( new_item.has_strings )
             {
                 new_item.strings.begin = input.Range.StringMin;
@@ -224,6 +228,7 @@ namespace hid
             {
                 new_item.designators.begin = input.Range.DesignatorMin;
                 new_item.designators.end   = input.Range.DesignatorMax;
+                // physical descriptor
             }
             else
             {
@@ -245,7 +250,7 @@ namespace hid
         //for each cap
         // id = cap.
 
-    } // void gather_information() 
+    }
 
 } // namespace hid
 

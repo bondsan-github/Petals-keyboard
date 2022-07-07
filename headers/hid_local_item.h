@@ -1,11 +1,9 @@
 #pragma once
 
-#include "..\headers\constants.h"
+#include "..\headers\direct_2d.h"
 
 #include "..\headers\hid_item.h"
 #include "..\headers\hid_main_item.h"
-
-#include < string >
 
 namespace hid
 {
@@ -38,7 +36,5 @@ namespace hid
         //void page( const ushort in_page ) { page = in_page; }
 
         wstring text();
-
-    }; // struct hid_local_item
-
-} // namespace hid
+    };
+}

@@ -1,21 +1,15 @@
 #pragma once
 
+#include "..\headers\direct_2d.h"
+
 #include "..\headers\hid_main_item.h"
 #include "..\headers\hid_local_item.h"
-
 #include "..\headers\hid_raw_device.h"
+
 #include "..\headers\text_d2d.h"
 
 namespace hid
 {
-    using namespace std;
-
-    using hid_attributes          = HIDD_ATTRIBUTES;
-    using hid_attributes_extended = HIDP_EXTENDED_ATTRIBUTES;
-    using area                    = D2D_SIZE_F;
-    using colours                 = D2D1::ColorF;
-
-
     class hid_device : public hid_raw_device
     {
         private:
@@ -37,20 +31,25 @@ namespace hid
              // data
              // concurrent points
              // x,y points x 5 + 3 buttons
+            
+            vector< hid_main_item > items            {};
+            vector< text >          item_texts       {};
 
             text                    text_device;
-            vector< hid_main_item > items            {};
-            //vector< line_d2d >      lines            {};
+            
             bool                    draw_information { true };
             wstring                 text_font        { L"Cascasia code" }; // { L"Sitka" };
             float                   text_size        { 10.0f };
             colours                 text_colour      { colours::White };
-            area                    text_area        {};
+            dimensions              text_area        {};
+            
             float                   column           {};
             ushort                  column_amount    {};
             float                   row              {};
             ushort                  row_amount       {};
             uint                    index            {};
+
+            //vector< line_d2d >      lines            {};
 
         public:
 
@@ -58,7 +57,7 @@ namespace hid
             
             void display_information();
 
-            void texts_items_main();
+            void initialise_texts_items_main();
             void initialise_text_device();
             void texts_items_input();
 

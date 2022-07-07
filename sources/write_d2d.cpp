@@ -1,11 +1,6 @@
 #include "..\headers\write_d2d.h"
-
-#include < d2d1.h >
-#include < dwrite.h >
-
-#include "..\headers\constants.h"
+#include "..\headers\graphics_d2d.h"
 #include "..\headers\locate.h"
-#include "..\headers\text_d2d.h"
 
 namespace hid
 {
@@ -14,36 +9,93 @@ namespace hid
     void write_d2d::initialise()
     {
 
-        HRESULT result = DWriteCreateFactory( DWRITE_FACTORY_TYPE_SHARED ,
-                                              __uuidof( IDWriteFactory ) ,
-                                              & write_factory );
+        HRESULT result = DWriteCreateFactory( static_cast< DWRITE_FACTORY_TYPE >( write_factory_type::shared ),
+                                              __uuidof( write_factory ) ,
+                                              & write );
+
 
         locate::provide_write( this );
+
+        //  translated using local system local language identifiers
     }
 
-    IDWriteFactory & write_d2d::factory()
+    text_format_pointer write_d2d::format( string       in_font ,
+                                           font_collection_pointer in_collection ,
+                                           text_weight  in_weight  ,
+                                           text_style   in_style   ,
+                                           text_stretch in_stretch ,
+                                           float        in_size    ,
+                                           string       in_locale  )
     {
-        return ** write_factory.GetAddressOf();
+        text_format_pointer format {};
+
+        HRESULT result = write->CreateTextFormat( in_font.c_str() ,
+                                                  in_collection.Get() ,
+                                                  static_cast< font_weight  >( in_weight  ),
+                                                  static_cast< font_style   >( in_style  ) ,
+                                                  static_cast< font_stretch >( in_stretch ) ,
+                                                  in_size ,
+                                                  in_locale.c_str() ,
+                                                  format.ReleaseAndGetAddressOf() );
+
+        //format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
+        format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
+
+        //trimming trim{};
+        //trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;
+        //format->SetTrimming( & trim , 0 );
+
+        return format;
     }
 
-    void write_d2d::add( wstring in_text       ,
-                         vertex   in_origin    ,
-                         float   in_size       ,
-                         colours in_colour     ,
-                         area    in_dimensions ,
-                         wstring in_font       )
+    text_layout_pointer write_d2d::layout( string              in_content ,
+                                           text_format_pointer in_format ,
+                                           dimensions          in_dimensions ) // pixels * dpi
     {
-        texts.emplace_back( in_text , in_origin , in_size , in_colour , in_dimensions , in_font );
+        text_layout_pointer layout {};
+
+        write->CreateTextLayout( in_content.c_str() ,
+                                 in_content.size() ,
+                                 in_format.Get() ,
+                                 in_dimensions.width ,
+                                 in_dimensions.height ,
+                                 layout.ReleaseAndGetAddressOf() );
+
+        return layout;
     }
 
-    rect_vertex_mid write_d2d::middle_vertices( uint index )
+    void write_d2d::add_text( string                in_content         ,
+                               vertex                in_position_center ,
+                               float                 in_size            ,
+                               text_weight           in_weight          ,
+                               text_style            in_style           ,
+                               text_stretch          in_stretch         ,
+                               colours               in_colour          ,
+                               dimensions            in_dimensions      ,
+                               string                in_font )
     {
-        return texts.at( index ).middle_vertices();
+        font_collection_pointer collection  {};
+        page_window_pointer     page        = locate::graphics().get_page();
+        brush_pointer           brush       = locate::graphics().brush_solid( in_colour );
+        text_format_pointer     text_format = format( in_font , 
+                                                      collection.Get() ,
+                                                      in_weight ,
+                                                      in_style ,
+                                                      in_stretch ,
+                                                      in_size ,
+                                                      locale );
+        text_layout_pointer    text_layout = layout( in_content , text_format , in_dimensions );
+        rectangle              area { 100.0f , 100.0f , 300.0f , 300.0f }; // page.center() +- 100.0f
+
+        //texts.emplace_back()
+        /*
+        page->DrawTextLayout( in_position_center ,
+                              text_layout.Get() ,
+                              brush.Get() );
+                         /* text_options ,
+                         measuring_mode /*
+        */
     }
 
-    void write_d2d::draw()
-    {
-        for( auto & _text : texts ) _text.draw();
-    }
 
 } // namespace hid

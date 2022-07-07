@@ -10,40 +10,56 @@ namespace hid
     using namespace D2D1;
     using namespace Microsoft::WRL;
 
-    text::text( wstring    in_content ,
-                vertex     in_center  , // position 0..1
-                float      in_size    ,
-                colours    in_colour  ,
-                dimensions in_boundry ,
-                wstring    in_font    )
-              : content( in_content )        ,
-                position_center( in_center ) ,
-                size( in_size )              ,
-                colour( in_colour )          ,
-                boundry( in_boundry )        ,
-                font( in_font )
+    text::text( string  in_content ,
+                vertex  in_position_center ,
+                float   in_size ,
+                colours in_colour )
+                : content( in_content ) , position_center( in_position_center ) , size( in_size ) , colour( in_colour )
     {
         reset();
     }
 
-    float text::width()       { return boundry.width; }
-    float text::width_half()  { return boundry.width / 2.0f; }
-    float text::height()      { return boundry.height; }
+    float text::width()       { return boundry.width;         }
+    float text::width_half()  { return boundry.width  / 2.0f; }
+    float text::height()      { return boundry.height;        }
     float text::height_half() { return boundry.height / 2.0f; }
     
     void text::position( vertex in_center )
     {
-        //center = in_center; // x,y = 0..1
+        page_dpi        dpi         = locate::graphics().get_dpi();
+        dimensions      size_dips   = locate::graphics().get_size_dips();
+        page_dimensions size_pixels = locate::graphics().get_size_pixels();
 
-        float dpi_x{};
-        float dpi_y{};
+        position_center.x = in_center.x;// * size_dips.width;
+        position_center.y = in_center.y;// * size_dips.height;
 
-        // screen_width / position.x
-        //window_render_target * sheet_ptr = locate::graphics_ptr()->sheet_ptr();
-        //sheet_ptr->GetDpi( &dpi_x , &dpi_y );
-        //area size = sheet_ptr->GetSize();
+        reset_boundry();
+    }
+
+    void text::set_colour( colours in_colour )
+    {
+        colour = in_colour;
+
+        reset_brush();
+    }
+
+    void text::set_boundry( dimensions in_dimensions )
+    {
+        boundry = in_dimensions;
+
+        reset_boundry();
+    }
+
+    void text::set_boundry_width( float in_width )
+    {
+        boundry_width = in_width;
     }
     
+    void text::set_boundry_colour( colours in_colour )
+    {
+        boundry_colour = in_colour;
+    }
+
     vertex text::top_left()
     {
         vertex top_left {}; // in pixels
@@ -59,51 +75,37 @@ namespace hid
         reset_format();
         reset_layout();
         reset_brush();
+        reset_boundry();
     }
 
     void text::reset_brush()
     {
-        locate::graphics().sheet()->CreateSolidColorBrush( colour , brush.ReleaseAndGetAddressOf() );
+        brush = locate::graphics().brush_solid( colour );
     }
 
     void text::reset_format()
     {
-        //enum class text_style { normal , oblique , italic };
-        //enum class text_weight : int { light = 300 , regular = 400 , bold = 700 };
-        //write().factory().format( wstring , 0 , weight , style , stretch , float size , wstring locale , format *
-
-        HRESULT result = locate::write().factory().CreateTextFormat( font.c_str() ,
-                                                                     0 ,
-                                                                     DWRITE_FONT_WEIGHT_NORMAL , //static_cast< DWRITE_FONT_WEIGHT >( to_underlying( text_weight::regular ) ),
-                                                                     DWRITE_FONT_STYLE_NORMAL ,
-                                                                     DWRITE_FONT_STRETCH_NORMAL ,
-                                                                     size ,
-                                                                     L"en-us" , // locale       
-                                                                     format.ReleaseAndGetAddressOf() );
-
-        //format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
-        format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
-
-        //trimming trim{};
-        //trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;
-        //format->SetTrimming( & trim , 0 );
+        format = locate::write().format( content ,
+                                         collection ,
+                                         weight , 
+                                         style ,
+                                         stretch , 
+                                         size ,
+                                         locale );
     }
 
     void text::reset_layout()
     {
-        locate::write().factory().CreateTextLayout( content.c_str() ,
-                                                    content.size() ,
-                                                    format.Get() ,
-                                                    boundry.width ,
-                                                    boundry.height ,
-                                                    layout.ReleaseAndGetAddressOf() );
+        layout = locate::write().layout( content , format , boundry );
     }
 
     void text::set_content( wstring in_content )
     {
         content = in_content;
 
-        reset();
+        reset_format();
+        reset_layout();
+        reset_boundry();
     }
 
     void text::add( const wstring in_string )
@@ -116,40 +118,62 @@ namespace hid
     void text::draw()
     {
         draw_text();
+
+        if( show_boundry ) draw_boundry();
     }
 
     void text::draw_text()
     {
-        locate::graphics().sheet()->DrawTextLayout( top_left() , layout.Get() , brush.Get() );
+        locate::graphics().get_page()->DrawTextLayout( top_left() ,
+                                                       layout.Get() ,
+                                                       brush.Get() ,
+                                                       static_cast< D2D1_DRAW_TEXT_OPTIONS >( options ) );
+    /*
+        locate::write().draw_text( content ,
+                                   position_center , 
+                                   size ,
+                                   weight ,
+                                   style ,
+                                   stretch ,
+                                   colour ,
+                                   boundry ,
+                                   font );
+    */
     }
 
-    rect_vertex_mid text::middle_vertices()
+    rectangle_edge_middles text::middle_vertices()
     {
-        rect_vertex_mid vertices{};
+        rectangle_edge_middles vertices {};
         return vertices;
     }
+    
+    void text::reset_boundry()
+    {
+        const float width       = boundry.width;
+        const float height      = boundry.height;
+        const float width_half  = width  / 2.0f;
+        const float height_half = height / 2.0f;
+        const float margin      = 5.0f;
+
+        rrectangle.radiusX = rrectangle.radiusY = radius;
+        
+        rrectangle.rect.left   = position_center.x - width_half  - margin;
+        rrectangle.rect.top    = position_center.y - height_half - margin;
+        rrectangle.rect.right  = position_center.x + width_half  + margin;
+        rrectangle.rect.bottom = position_center.y + height_half + margin;
+
+        reset_layout();
+    }
+
+    void text::draw_boundry()
+    {
+        //const float width  = layout->GetMaxWidth();
+        //const float height = layout->GetMaxHeight();
+
+        locate::graphics().draw_rectangle( boundry , position_center , radius , boundry_width , boundry_colour );
+    }
+
     /*
-    void reset_bounds()
-    {
-
-        rect.left   = top_left.x - 5;
-        rect.top    = origin.y - 5;
-        rect.right  = origin.x + dimensions.width + 5;
-        rectangle.bottom = origin.y + dimensions.height + 5;
-
-        temp.left   = center.x - -5;
-        temp.top    = origin.y - 5;
-        temp.right  = origin.x + dimensions.width + 5;
-        temp.bottom = origin.y + dimensions.height + 5;
-    }
-
-    void draw_bounds()
-    {
-        window_render_target * sheet_ptr = locate::graphics_ptr()->sheet_pointer();
-        //if( sheet_ptr )
-        sheet_ptr->DrawRoundedRectangle( rrectangle , brush.Get() );
-    }
-
     struct planes
     {
         float horizontal {};
@@ -200,6 +224,5 @@ namespace hid
         //int []
     }
     */
-    
 
 } // namespace hid

@@ -11,14 +11,16 @@ namespace hid
     {
         instance = in_instance; parameters = in_parameters; show_flags = in_show_flags;
 
+        locate::add_service( service_identifier::window , this );
+
         window_class.cbSize = sizeof( WNDCLASSEX );
 
-        window_class.style         = CS_HREDRAW | CS_VREDRAW;
+        window_class.style         = class_style;
         window_class.lpfnWndProc   = gui_windows_ms::main_window_process;
-        window_class.hInstance     = instance;//GetModuleHandle( 0 ); //instance that contains the window procedure for the class.
+        window_class.hInstance     = instance; //instance that contains the window procedure for the class.
         window_class.lpszClassName = class_name;
 
-        window_class.cbClsExtra    = 0; // extra bytes after structure
+        window_class.cbClsExtra    = 0; // extra memory after structure
         window_class.cbWndExtra    = 0; // extra bytes following the window instance.
         window_class.hbrBackground = ( HBRUSH ) ( COLOR_WINDOW + 1 ); //( HBRUSH ) ( COLOR_GRAYTEXT + 1 );		//brush_background;
         window_class.hCursor       = LoadCursor( nullptr , IDC_ARROW );
@@ -26,7 +28,15 @@ namespace hid
         window_class.hIconSm       = 0;
         window_class.lpszMenuName  = 0;
 
-        ATOM atom{};
+        /*
+        wcx.hIconSm = LoadImage( hinstance , // small class icon 
+                                 MAKEINTRESOURCE( 5 ) ,
+                                 IMAGE_ICON ,
+                                 GetSystemMetrics( SM_CXSMICON ) ,
+                                 GetSystemMetrics( SM_CYSMICON ) ,
+                                 LR_DEFAULTCOLOR );
+        */
+        ATOM atom {};
         atom = RegisterClassEx( & window_class );
         //error( L"register class ex" );
         
@@ -35,11 +45,11 @@ namespace hid
 
         GetWindowRect( GetDesktopWindow() , & desktop );
 
+        /*
         int result = GetDpiForWindow( GetDesktopWindow() );
 
-        enum class dpi_aware : int { invalid = -1 , unaware , system , per_monitor };
-        // (UINT) -1
-
+        enum class dpi_aware : int { invalid = -1 , unaware , system , per_monitor }; // (UINT) -1
+        
         if( result > 2 )
         {
             window_dpi = result;
@@ -54,9 +64,8 @@ namespace hid
             else if( result == 1)
             { }
                 UINT GetDpiForSystem();
-
-
         }
+        */
 
         desktop_size.width  = desktop.right;
         desktop_size.height = desktop.bottom;
@@ -67,8 +76,8 @@ namespace hid
         client_size_half.width  = client_size.width  / 2.0f;
         client_size_half.height = client_size.height / 2.0f;
 
-        position_center.x = desktop_center.x;// - client_size_half.width;
-        position_center.y = desktop_center.y;// - client_size_half.height;
+        position_center.x = desktop_center.x;
+        position_center.y = desktop_center.y;
 
         position_top_left.x = position_center.x - client_size_half.width;
         position_top_left.y = position_center.y - client_size_half.height;
@@ -89,14 +98,19 @@ namespace hid
                                            instance ,
                                            this );
 
-        assert( window_principle != nullptr );
+        //assert( window_principle != nullptr );
 
-        locate::provide_window( window_principle );
+        
 
         //if( window_principle == nullptr ) error( L"create window ex" );
 
         //ShowWindow( window_principle , SW_MAXIMIZE );
         //UpdateWindow( window_principle );
+    }
+
+    HWND gui_windows_ms::get_window()
+    {
+        return window_principle;
     }
 
     int gui_windows_ms::message_loop()

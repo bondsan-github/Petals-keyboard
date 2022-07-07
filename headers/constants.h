@@ -7,40 +7,9 @@ namespace hid // human interface device
    using uint   = unsigned int;   // 32 bits
    using ulong  = unsigned long;  //    long same as int
    
-   /*
-   struct vertex
-   {
-       float x {};
-       float y {};
-   };
-
-   // bounds_intersections_planes
-   struct rectangle_vertices_middle_edge 
-   {
-       vertex top    {};
-       vertex right  {};
-       vertex bottom {};
-       vertex left   {};
-   };
-   using rect_vertex_mid = rectangle_vertices_middle_edge;
-   */
-
-   // Microsoft windows input types
-   enum class raw_device_type { mouse , keyboard , hid };
-
-   //const vector< wstring > raw_device_type_text{ L"mouse" , L"keyboard" , L"human interface device" , L"unknown type" };
    
-   // wchar_t ~ unsigned short
-   void error( const wchar_t * title_text );
 
 } // namespace hid
-
-   /*
-   using write_format   = IDWriteTextFormat;
-   using write_factory  = IDWriteFactory;
-   using window_surface = ID2D1HwndRenderTarget;
-   using size_float     = D2D1_SIZE_F;
-   */
 
    /*
    template< typename type >
@@ -69,15 +38,12 @@ namespace hid // human interface device
    using  ms_stroke_style         = ID2D1StrokeStyle;
    using  brush_gradient          = ID2D1LinearGradientBrush;
    using  brush_radial            = ID2D1RadialGradientBrush;
-   using  colours                 = ColorF;
    using  area                    = D2D_SIZE_F;
    using  dimensions              = D2D_SIZE_F;
    using  divisions               = D2D_SIZE_F;
    using  trimming                = DWRITE_TRIMMING;
    // RECT = longs
-   using  rectangle               = D2D_RECT_F;
-   using  rounded_rectangle       = D2D1_ROUNDED_RECT;
-   using  rrect                   = rounded_rectangle;
+ S  using  rrect                   = rounded_rectangle;
    */
    //using rectangle = D2D_RECT_F;
   /*

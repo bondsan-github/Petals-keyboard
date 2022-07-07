@@ -11,19 +11,15 @@ namespace hid
     {
         gui_windows_ms::initialise( instance , parameters , show_flags );
         graphics.initialise();
+        grid.initialise();
         write.initialise();
-
         usages.initialise();
-        hid_devices::initialise();
+
+        input.initialise();
     }
 
     int hid_multi_touch::begin()
     {
-        if( input.empty() )
-        {
-            write.add( L"no precision multiple touch devices found" );
-        }
-
         return message_loop();
     }
 
@@ -33,8 +29,6 @@ namespace hid
         {
             case WM_CREATE:
             {
-                
-               
             } break;
 
             /*
@@ -62,20 +56,37 @@ namespace hid
 
             case WM_PAINT:
             {
-                PAINTSTRUCT paint;
-                BeginPaint( locate::window() , & paint);
+                //UpdateLayeredWindow
+     
+                /*Hit testing of a layered window is based on the shape and transparency of the window.
+                This means that the areas of the window that are color-keyed or whose alpha value is zero 
+                will let the mouse messages through. 
+                However, if the layered window has the WS_EX_TRANSPARENT extended window style, 
+                the shape of the layered window will be ignored 
+                and the mouse events will be passed to other windows underneath the layered window.*/
+            //https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/december/windows-with-c-layered-windows-with-direct2d
+                page_window_pointer page = locate::graphics().get_page();
 
-                graphics.draw();
-                write.draw();
-                hid_devices::draw();
+                BeginPaint( locate::window() , & paint );
+                
+                page->BeginDraw();
+
+                page->SetTransform( Matrix3x2F::Identity() );
+
+                page->Clear( ColorF( 0.2f , 0.2f , 0.2f , 0.2f ) );
+
+                input.draw();
+
+                page->EndDraw();
 
                 long result = EndPaint( locate::window() , & paint );
                 //if( result < 0 ) discard_resources();
+
             } break;
 
             case WM_SIZE:
             {
-               //paint.resize();
+               //graphics.resize();
             } break;
 
             case WM_KEYDOWN:
@@ -90,9 +101,9 @@ namespace hid
 
                     case VK_SPACE:
                     {
-                        for( auto & device : input )
-                            device.display_information();
-                    }
+                        //for( auto & device : input )
+                          //  device.display_information();
+                    } break;
                 }
             }
 

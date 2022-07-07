@@ -44,5 +44,4 @@ namespace hid
 
         return text;
     };
-
-} // namespace hid
+}

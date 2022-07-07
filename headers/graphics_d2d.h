@@ -1,46 +1,65 @@
 ﻿#pragma once
 
-#include < windows.h >
-#include < wrl.h >
-#include < d2d1.h >
+#include "..\headers\direct_2d.h"
+#include "..\headers\service.h"
 
 namespace hid
 {
-    using namespace std;
-    using namespace D2D1;
-    using namespace Microsoft::WRL;
+    struct monitor
+    {};
 
-    using factory_d2d = ID2D1Factory;
-    using display     = PAINTSTRUCT;
-    using colours     = ColorF;
+    struct page
+    {};
 
-    using window_render_target = ID2D1HwndRenderTarget;
-
-    class graphics_d2d
+    class graphics_d2d : public service
     {
         private:
 
-            ComPtr< factory_d2d >          factory_ptr  {};
-            ComPtr< window_render_target > sheet_ptr    {};
-            RECT                           dimensions   {};
-            display                        client_area  {};
-            colours                        colour_clear { 0.2f , 0.2f , 0.2f , 0.5f };
-            //HRESULT                        result       { E_FAIL };
+            ComPtr< factory_d2d > factory      {};
+            ComPtr< page_window > page         {};
+            
+            paint_structure           paint        {};
+            colours                   colour_clear { 0.2f , 0.2f , 0.2f , 0.5f };
+            page_dimensions           size         { 1024 , 768 };
+            page_dips                 dips         {};
+            page_dpi                  dpi          { .width = 96.0f , .height = 96.0f };
+            //result_win              result            { E_FAIL };
 
         public:
 
-            void                   initialise();
-            void                   reset();
-            window_render_target * sheet();
-            void                   draw();
-            void                   resize();
+            void initialise ();
+            void reset      ();
+            void draw       ();
+            void resize     ();
 
-        //void set_sheet( const ID2D1HwndRenderTarget * in_sheet )
-        //sheets.emplace_back( window_ptr , size );
+            page_window_pointer get_page     ();
+            page_dips           get_size_dips   ();
+            page_dimensions     get_size_pixels ();
+            page_dpi            get_dpi         ();
 
-    }; // class graphics
+            brush_solid_pointer brush_solid( colours in_colour = colours::Yellow );
 
-} // namespace hid
+            stroke_style_pointer stroke_style( stroke_cap_style  in_cap_start   = stroke_cap_style::flat  ,
+                                               stroke_cap_style  in_cap_dash    = stroke_cap_style::flat  ,
+                                               stroke_cap_style  in_cap_end     = stroke_cap_style::flat  ,
+                                               stroke_line_join  in_line_join   = stroke_line_join::round ,
+                                               float             in_miter_limit = 1.0f                    ,
+                                               stroke_dash_style in_dash_style  = stroke_dash_style::dash ,
+                                               float             in_dash_offset = 1.0f                    );
+            
+            void draw_line( vertex in_a        = { 0.0f , 0.0f } , // dips 0..1
+                            vertex in_b        = { 1.0f , 1.0f } ,
+                            float in_width     = 1.0f            ,
+                            colours in_colours = colours::Yellow );
+
+            void draw_rectangle( dimensions in_size            = { 100.0f , 100.0f } ,
+                                 vertex     in_position_center = { 0.5f , 0.5f     } ,
+                                 float      in_radius          = 5.0f                ,
+                                 float      in_width           = 5.0f                ,
+                                 colours    in_colour          = colours::Yellow     );
+    };
+
+}
 
  /*
          class sheet

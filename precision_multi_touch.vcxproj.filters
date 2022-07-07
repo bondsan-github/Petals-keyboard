@@ -66,6 +66,9 @@
     <ClCompile Include="sources\hid_global_item.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="sources\grid_d2d.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="resources\DeclareDPIAware.manifest">
@@ -73,9 +76,6 @@
     </Manifest>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="headers\constants.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="headers\hid_device.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -125,6 +125,24 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\locate.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\direct_2d.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\grid_d2d.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\service.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

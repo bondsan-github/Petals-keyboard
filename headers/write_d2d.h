@@ -1,47 +1,48 @@
 #pragma once
 
-#include "..\headers\constants.h"
-#include "..\headers\text_d2d.h"
-
-#include < string >
-#include < vector >
-#include < wrl.h >
-#include < dwrite.h >
+#include "..\headers\direct_2d.h"
 
 namespace hid
 {
-   using namespace std;
-   using namespace D2D1;
-   using namespace Microsoft::WRL;
-
-   using colours = ColorF;
-   using area    = D2D_SIZE_F;
-
    class write_d2d
    {
        private:
 
-           ComPtr< IDWriteFactory > write_factory {};
-           vector< text >           texts         {};
+           ComPtr< write_factory >         write    {};
+
+           ComPtr< font_collection >       fonts    {};
+           ComPtr< font_family >           family   {};
+           ComPtr< font_collection_names > names    {};
+           ComPtr< text_analyser >         analyser {};
+           string                          locale   { L"en-us" };
+
+           //vector< text > texts {};
       
        public:
 
            void initialise();
          
-         //text_Format format( wstring in_text , text_style , text_weight , size );
+           text_format_pointer format( string        in_font    = L"Times New Roman"   ,
+                                       font_collection_pointer in_collection = nullptr ,
+                                       text_weight   in_weight  = text_weight::regular ,
+                                       text_style    in_style   = text_style::normal   ,
+                                       text_stretch  in_stretch = text_stretch::normal ,
+                                       float         in_size    = 15.0f                ,
+                                       string        in_locale  = L"en-us"             );
 
-           IDWriteFactory & factory();
+           text_layout_pointer layout( string              in_content                         ,
+                                       text_format_pointer in_text_format                     ,
+                                       dimensions          in_dimensions = { 200.0f , 200.0 } ); // pixels
 
-           void add( wstring in_text ,
-                     vertex   in_origin    = { 100.0f ,100.0f }       ,
-                     float   in_size       = { 15u }                  ,
-                     colours in_colour     = { ColorF::Yellow }       ,
-                     area    in_dimensions = { 150.0f , 100.0f }      ,
-                     wstring in_font       = { L"Times New Roman" }   );
-         
-           rect_vertex_mid middle_vertices( uint index );
-         
-           void draw();
+           void add_text( string                in_content         = L"empty"             ,
+                          vertex                in_position_center = { 0.5f , 0.5f }      , // dips 0..1
+                           float                 in_size            = 15.0f                ,
+                           text_weight           in_weight          = text_weight::regular ,
+                           text_style            in_style           = text_style::normal   ,
+                           text_stretch          in_stretch         = text_stretch::normal ,
+                           colours               in_colour          = colours::Yellow      ,
+                           dimensions            in_dimensions      = { 200.0f , 200.0 }   ,
+                           string                in_font            = L"Times New Roman"   );
 
    }; // class write_d2d
 
