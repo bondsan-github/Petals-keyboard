@@ -158,7 +158,7 @@ namespace hid // human interface device
    struct report   : public descriptor
    {
       enum class item_type { main , global , local };
-      enum class main_type { input , output , feature , collection , end_collection };
+      enum class main_type { input , output , feature , hid_collection , end_collection };
 
       struct item
       {

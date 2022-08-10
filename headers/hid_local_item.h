@@ -3,13 +3,13 @@
 #include "..\headers\direct_2d.h"
 
 #include "..\headers\hid_item.h"
-#include "..\headers\hid_main_item.h"
+#include "..\headers\hid_collection.h"
 
 namespace hid
 {
-    struct hid_local_item : public hid_main_item
+    struct hid_local_item : public hid_collection
     {
-        index  report          {};
+        ushort report_index    {};
         ushort report_amount   {};
 
         ushort bit_field       {};
@@ -21,7 +21,7 @@ namespace hid
 
         bool   is_range        {};
         range  usages          {};
-        index  data            {};
+        ushort data            {};
         range  datas           {};
 
         bool   has_strings     {};
@@ -36,5 +36,6 @@ namespace hid
         //void page( const ushort in_page ) { page = in_page; }
 
         wstring text();
+        //void draw()
     };
 }

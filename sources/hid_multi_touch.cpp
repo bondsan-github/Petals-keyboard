@@ -10,7 +10,7 @@ namespace hid
     void hid_multi_touch::initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
     {
         gui_windows_ms::initialise( instance , parameters , show_flags );
-        graphics.initialise();
+        graphics.initialise( get_window() );
         grid.initialise();
         write.initialise();
         usages.initialise();
@@ -65,9 +65,9 @@ namespace hid
                 the shape of the layered window will be ignored 
                 and the mouse events will be passed to other windows underneath the layered window.*/
             //https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/december/windows-with-c-layered-windows-with-direct2d
-                page_window_pointer page = locate::graphics().get_page();
+                page_window_pointer page = locate::graphics()->get_page();
 
-                BeginPaint( locate::window() , & paint );
+                BeginPaint( get_window() , & paint );
                 
                 page->BeginDraw();
 
@@ -79,7 +79,7 @@ namespace hid
 
                 page->EndDraw();
 
-                long result = EndPaint( locate::window() , & paint );
+                long result = EndPaint( get_window() , & paint );
                 //if( result < 0 ) discard_resources();
 
             } break;

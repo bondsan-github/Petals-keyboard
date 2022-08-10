@@ -16,8 +16,6 @@ namespace hid
            ComPtr< text_analyser >         analyser {};
            string                          locale   { L"en-us" };
 
-           //vector< text > texts {};
-      
        public:
 
            void initialise();

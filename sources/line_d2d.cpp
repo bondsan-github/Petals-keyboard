@@ -19,12 +19,12 @@ namespace hid
 
     void line_d2d::reset()
     {
-        brush = locate::graphics().brush_solid( colour );
+        brush = locate::graphics()->brush_solid( colour );
     }
 
     void line_d2d::draw()
     {
-        locate::graphics().draw_line( a , b , width , colour );
+        locate::graphics()->draw_line( a , b , width , colour );
     }
 
 } // namespace hid

@@ -2,12 +2,15 @@
 
 #include < string >
 #include < vector >
+#include < functional >
 #include < windows.h >
 #include < wrl.h >
 #include < d2d1.h >
 #include < dwrite.h >
 #include < hidsdi.h >
 #include < hidpi.h >
+
+#include "vertex.h"
 
 namespace hid // human interface device
 {
@@ -23,29 +26,28 @@ namespace hid // human interface device
 
     using      result_win              = HRESULT;
 
-    using      node = HIDP_LINK_COLLECTION_NODE;
+    using      raw_device_list         = RAWINPUTDEVICELIST;
+    using      node                    = HIDP_LINK_COLLECTION_NODE;
     using      hid_attributes          = HIDD_ATTRIBUTES;
     using      hid_attributes_extended = HIDP_EXTENDED_ATTRIBUTES;
 
     enum class raw_device_type         { mouse , keyboard , hid }; // Microsoft windows input types
-    enum class factory_type            { single_thread , multiple_threads , force_dword };
+    enum class factory_type            { force_dword = -1 , single_thread , multiple_threads };
 
     using      factory_d2d             = ID2D1Factory;
     using      paint_structure         = PAINTSTRUCT;
     // width , height
-    using      dimensions = D2D1_SIZE_F;
+    using      dimensions              = D2D1_SIZE_F;
     using      colours                 = ColorF;
-    using      vertex                  = D2D1_POINT_2F;
-    
+
     using      page_window             = ID2D1HwndRenderTarget;
     using      page_window_pointer     = ComPtr< page_window >;
     using      page_plain              = ID2D1RenderTarget;
-
     using      page_dpi                = D2D1_SIZE_F;
     using      page_dips               = D2D1_SIZE_F;
     using      page_dimensions         = D2D1_SIZE_U;
-    using      divisions               = D2D1_SIZE_U;
-    using      cell_position           = D2D1_SIZE_U;
+    //using      divisions               = D2D1_SIZE_U;
+    //using      cell_position           = D2D1_SIZE_U;
 
     using      brush_d2d               = ID2D1Brush; // base 
     using      brush_pointer           = ComPtr< brush_d2d >;
@@ -99,6 +101,7 @@ namespace hid // human interface device
                                          clip           =  2 ,
                                          colour_font    =  4 ,
                                          no_snap_bitmap =  8 };
+    using text_metrics = DWRITE_TEXT_METRICS;
     using      text_analyser           = IDWriteTextAnalyzer;
 
     using      rectangle               = D2D_RECT_F;
@@ -112,24 +115,13 @@ namespace hid // human interface device
         vertex bottom {};
         vertex left   {};
     };
-}
-/*
-   struct vertex // using vertex = D2D1_POINT_F
-   {
-       float x {};
-       float y {};
-   };
 
-   // bounds_intersections_planes
-   struct rectangle_vertices_middle_edge
-   {
-       vertex top    {};
-       vertex right  {};
-       vertex bottom {};
-       vertex left   {};
-   };
-   using rect_vertex_mid = rectangle_vertices_middle_edge;
-*/
+    struct planes
+    {
+        float horizontal{};
+        float vertical{};
+    };
+}
 
    //const vector< wstring > raw_device_type_text{ L"mouse" , L"keyboard" , L"human interface device" , L"unknown type" };
 

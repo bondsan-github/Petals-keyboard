@@ -14,30 +14,133 @@ namespace hid
         {
             gather_information();
 
-            column_amount = 12;
-            row_amount    = 12;
-
-            //sheet_grid.initialise( column_amount , row_amount );
-
-            //text_area = sheet_grid.cell_size();
-            column    = 1;
-            row       = 1;
-
             initialise_text_device();
-            initialise_texts_items_main();
+            initialise_text_collections();
+            initialise_text_input();
         }
     }
 
-    void hid_device::initialise_texts_items_main()
+    void hid_device::initialise_text_device()
     {
-        text main_item;
+        string content  {};
+        vertex position { 30.0f , 30.0f };
 
+        content =  L"manufacturer\t: ";
+        content += manufacturer;
+        content += L"\nproduct\t\t: ";
+        content += product;
+        content += L"\npage\t\t: ";
+        content += locate::usages()->page( page );
+        content += L"\nusage\t\t: ";
+        content += locate::usages()->usage( page , usage );
 
+        text device( content ,
+                     position ,
+                     text_size ,
+                     text_boundry ,
+                     rectangle_margin ,
+                     text_colour );
 
-        for( auto & item : items )
+        device.set_rectangle_width( rectangle_width );
+        device.set_rectangle_colour( rectangle_colour );
+
+        item_texts.push_back( move( device ) );
+
+        // += attributes.VendorID;
+        // += attributes.ProductID;
+        // += attributes.VersionNumber;
+        // += physical
+    }
+
+    void hid_device::initialise_text_collections()
+    {
+        vector< hid_collection >::reference item         = collection.front();
+        string                             item_content  = item.text();
+
+        float  position_x    = item_texts.at( index ).formated_rectangle().left;
+        float  position_y    = item_texts.at( index ).middle_vertices().bottom.y + spacer.y;
+        vertex item_position = { position_x , position_y };
+
+        text head_item( item_content , item_position , text_size , text_boundry , rectangle_margin );
+             head_item.set_rectangle_colour( rectangle_colour );
+             head_item.set_rectangle_width( rectangle_width );
+
+        item_texts.push_back( head_item );
+         
+        item = collection.at( item.first );
+        
+
+        for( int index { 1 } ; index < collection.size() ; index++ )
         {
-            main_item.set_content( item.text() );
+            item_content     = item.text();
 
+            float position_x = item_texts.at( index ).formated_rectangle().left;
+            float position_y = item_texts.at( index ).middle_vertices().bottom.y + spacer.y;
+            
+            item_position    = { position_x , position_y };
+
+            text new_item( item_content , item_position , text_size , text_boundry , rectangle_margin );
+
+            new_item.set_rectangle_colour( rectangle_colour );
+            new_item.set_rectangle_width( rectangle_width );
+
+            item_texts.push_back( new_item );
+
+            item = collection.at( item.next );
+        }
+
+        // line from device to first main item
+        //vertex a = item.mid_points( 0 ).bottom;
+        //vertex b = item.mid_points( 1 ).top;
+        //main_window.paint.add_line( a , b , 0.5 , colours::White );
+        // items main
+        
+        // second item
+        // column += 2;
+        //item++;
+        // for all other items
+          //      a = text.mid_points
+          //      b = write.mid_points( item->next ).top;
+        //point a = *text;//&text.mid_points( text ).bottom;
+        //point b = write.mid_points( 1 ).top;
+        //main_window.paint.add_line( a , b , 0.5 , colours::White );
+    }
+
+    void hid_device::initialise_text_input()
+    {
+        //find( begin( items ) , end( items ) ,  )
+        
+        index = 0;
+        
+        for( auto & button : input.buttons )
+        {
+            button.index = index; index++;
+
+            string content  = button.text();
+            vertex position {};
+
+           // find if matching collection (page && usage)  , 
+               //  align position.top with collection
+               
+            vector< hid_collection >::iterator item { collection.begin() };
+            
+            item = find_if( collection.begin() ,
+                            collection.end()   ,
+                            [ & button ] ( hid_collection const & collection ) 
+                            { 
+                                return collection.page == button.page; 
+                            } );
+
+            if( item != collection.end() )
+            {
+               // item_texts.at( item->index ).position().y
+                //position.y = 
+            //item_position.y = ;
+            //item_position.x += 100; // main_item//item_texts.back().formated_rectangle(). + spacer;   
+            }
+
+            text button_text( content , position , text_size , text_boundry , rectangle_margin );
+            item_texts.push_back( move( button_text ) );
         }
     }
 
@@ -51,44 +154,11 @@ namespace hid
     // 1. transparent full screen draw contacts
         if( draw_information )
         {
-            text_device.draw();
-            //  main_items.draw
-            //       items.draw
+            for( auto & item : item_texts ) item.draw();            
             //       lines.draw
         }
     }
-
-    void hid_device::initialise_text_device()
-    {
-        string     text           {};
-        vertex     position       { 200.0f , 100.0f };//0.15f , 0.15f };
-        dimensions boundry        { 350.0f , 100.0f };
-        colours    colour         { colours::DarkGray };
-        colours    boundry_colour { colours::DarkCyan };
-        float      boundry_width  { 2.0f };
-
-        text =  L"manufacturer\t: ";
-        text += manufacturer;
-        text += L"\nproduct\t\t: ";
-        text += product;
-        text += L"\npage\t\t: ";
-        text += locate::usages().page( page );
-        text += L"\nusage\t\t: ";
-        text += locate::usages().usage( page , usage );
-
-        text_device.set_content( text );
-        text_device.position( position );
-        text_device.set_colour( colour );
-        text_device.set_boundry( boundry );
-        text_device.set_boundry_width( boundry_width );
-        text_device.set_boundry_colour( boundry_colour );
-
-        // += attributes.VendorID;
-        // += attributes.ProductID;
-        // += attributes.VersionNumber;
-        // += physical
-    }
-
+    
     void hid_device::texts_items_input()
     {
         //for( auto & input : input.buttons )
@@ -110,26 +180,26 @@ namespace hid
 
         HidP_GetLinkCollectionNodes( nodes.data() , & item_amount , data );
 
-        items.resize( item_amount );
-
-        uint index {};
+        //items.resize( item_amount );
+        ushort index {};
 
         for( const auto & node : nodes )
         {
-            hid_main_item new_item;
+            hid_collection new_item;
 
+            new_item.index = index;
             new_item.type     = hid_item_type { node.CollectionType };
             new_item.page     = node.LinkUsagePage;
             new_item.usage    = node.LinkUsage;
             new_item.is_alias = node.IsAlias;
-            new_item.amount   = node.NumberOfChildren;
+            new_item.siblings = node.NumberOfChildren;
 
             new_item.origin   = node.Parent;
             new_item.next     = node.NextSibling;
             new_item.first    = node.FirstChild;
 
+            index++;
             //using link = vector< item >::reference;
-
             /*
             if( node.Parent ) // one parent , above
                new_item.origin = & items.at( node.Parent - 1 );
@@ -140,9 +210,8 @@ namespace hid
             if( node.FirstChild ) // left-most
                new_item.first  = & items.at( node.FirstChild - 1 );
             */
-            items.at( index ) = move( new_item );
+            collection.push_back( new_item );//at( index ) = move( new_item );
 
-            index++;
         }
 
         using button_item = HIDP_BUTTON_CAPS;
@@ -164,7 +233,7 @@ namespace hid
         HidP_GetValueCaps      ( HidP_Input   , input_values.data()    , & input.value_amount    , data );
 
         output_buttons.resize  ( output.button_amount );
-        HidP_GetButtonCaps     ( HidP_Output  , output_buttons.data()  , & input.button_amount   , data );
+        HidP_GetButtonCaps     ( HidP_Output  , output_buttons.data()  , & output.button_amount , data);
 
         output_values.resize   ( output.value_amount );
         HidP_GetValueCaps      ( HidP_Output  , output_values.data()   , & output.value_amount   , data );
@@ -173,7 +242,7 @@ namespace hid
         HidP_GetButtonCaps     ( HidP_Feature , button_features.data() , & feature.button_amount , data );
 
         value_features.resize  ( feature.value_amount );
-        HidP_GetValueCaps      ( HidP_Feature , value_features.data()  , & output.value_amount   , data );
+        HidP_GetValueCaps      ( HidP_Feature , value_features.data()  , & feature.value_amount   , data );
 
         for( auto & input : input_buttons )
         {
@@ -182,7 +251,7 @@ namespace hid
             // type = input
             new_item.page            = input.UsagePage;
 
-            new_item.report          = input.ReportID;
+            new_item.report_index    = input.ReportID;
             new_item.report_amount   = input.ReportCount; // Available in API version >= 2 only.
 
             new_item.bit_field       = input.BitField;
@@ -223,7 +292,6 @@ namespace hid
                 new_item.string = input.NotRange.StringIndex;
             }
 
-
             if( new_item.has_designators )
             {
                 new_item.designators.begin = input.Range.DesignatorMin;
@@ -235,7 +303,6 @@ namespace hid
                 new_item.designator = input.NotRange.DesignatorIndex;
             }
 
-            //items.push_back( move( new_item ) );
             this->input.buttons.emplace_back( move( new_item ) );
         }
 
@@ -246,94 +313,18 @@ namespace hid
         }
 
         //new_item.origin = input.LinkCollection; vector<main_item>::reference
-
-        //for each cap
-        // id = cap.
-
     }
-
-} // namespace hid
-
+}
 /*
-        point text_device_position    = grid_.cell( column , row );
-
-        row += 2;
-        point text_item_main_position = grid_.cell( column , row );
-
-        column += 2;
-        point text_item_local_position = grid_.cell( column , row );
-
-        //for( auto & device : input.devices() )
-        //{
-
-            // device 0
-              hid_device & device = input.devices().front();
-
-              // text device 0
-              write.add( device.text_device() , text_device_position , text_size , text_colour , text_area , text_font );
-
-              // text items 0
-              wstring text_first = device.main_items().begin()->text();
-
-              // first main item
-              write.add( text_first , text_item_main_position , text_size , text_colour , text_area , text_font );
-
-              // line from device to first main item
-              point a = write.mid_points( 0 ).bottom;
-              point b = write.mid_points( 1 ).top;
-
-              main_window.paint.add_line( a , b , 0.5 , colours::White );
-
-              // items main
-              vector< main_item >::const_iterator item = device.main_items().begin();
-
-              // second item
-              item++;
-
-              // for all other items
-              for( ; item != device.main_items().end() ; item++ )
-              {
-                  write.add( item->text() , grid_.cell( column , row ) , text_size , text_colour , text_area );
-
-                  row += 2;
-              }
-
-              for( auto & text : write.texts() )
-              {
-                  if( text.item->next )
-                  {
-                      a = text.mid_points
-                          b = write.mid_points( item->next ).top;
-                  }
-              }
-
-              column = 5;
-              row    = 3;
-
-              for( auto & text : device.texts_items_input() )
-              {
-                  write.add( text , grid_.cell( column , row ) , text_size , text_colour , text_area );
-                  row += 2;
-              }
-              //point a = *text;//&text.mid_points( text ).bottom;
-              //point b = write.mid_points( 1 ).top;
-              //main_window.paint.add_line( a , b , 0.5 , colours::White );
-
-           //} if devices input empty
-           */
-
 // move constructor
       //hid_device( hid_device && destination ) //noexcept
-
       //~hid_device() { delete [] manufacturer }
-
-
             //uint collection_id = 0;
 
-               /*for( auto & collection : collections )
+               /*for( auto & hid_collection : collections )
                {
                   // enum class tree_id { head , a , b , c
-                  // if collection.first
+                  // if hid_collection.first
                   //collection_id += 1;
                }*/
 
@@ -341,146 +332,24 @@ namespace hid
 
              /*
                for( auto & button : button_caps )
-               {
-                  wcout << endl;
-
-                  wcout << "collection : " << dec << button.LinkCollection << endl; // parent
-                  wcout << " report id : " << dec << button.ReportID << endl; // unique data index for control, button or value
-                  wcout << "  link page : " << usages.page( button.LinkUsagePage ).c_str() << endl;
-                  wcout << "  link usage : " << usages.usage( button.LinkUsagePage , button.LinkUsage ).c_str() << endl;
-                  wcout << "   page : " << usages.page( button.UsagePage ).c_str() << endl;
-                  //wcout << "   type       : " << usages.type( button.LinkUsagePage , )
-
-                  if( button.IsRange )
-                  {
-                     wcout << "usage min     : " << button.Range.UsageMin << endl;
-                     wcout << "usage max     : " << button.Range.UsageMax << endl;
-
-                     wcout << "data index min : " << button.Range.DataIndexMin << endl;
-                     wcout << "data index max : " << button.Range.DataIndexMax << endl;
-                  }
-                  else if( button.IsStringRange )
-                  {
-                     wcout << "string min : " << button.Range.UsageMin << endl;
-                     wcout << "string max : " << button.Range.UsageMax << endl;
-
-                     wcout << "data index min : " << button.Range.DataIndexMin << endl;
-                     wcout << "data index max : " << button.Range.DataIndexMax << endl;
-                  }
-                  else if( button.IsDesignatorRange )
-                  {
-                     wcout << "designator min : " << button.Range.DesignatorMin << endl;
-                     wcout << "designator max : " << button.Range.DesignatorMax << endl;
-
-                     wcout << "data index min : " << button.Range.DataIndexMin << endl;
-                     wcout << "data index max : " << button.Range.DataIndexMax << endl;
-                  }
-                  else
-                  {
-                     wcout << "    usage : " << usages.usage( button.UsagePage , button.NotRange.Usage ).c_str() << endl;
-                     //wcout << "type"
-
-                     if( button.NotRange.StringIndex ) // "Do not emit String ID == 0" haftmann
-                        wcout << "    string index : " << dec << button.NotRange.StringIndex << endl; // ushort
-
-                     if( button.NotRange.DesignatorIndex )
-                        wcout << "    designator index : " << button.NotRange.DesignatorIndex << endl; //ushort
-
-                     wcout << "    data index : " << button.NotRange.DataIndex << endl; //ushort
-                  }
-
                   // Array field : The bit field created by an Input , Output , or Feature main item which is declared as an Array.
                   // An array field contains the index of a Usage , not the Usage value.
-                  wcout << "    bit field  : 0b" << std::bitset<16>( button.BitField ) << endl; // Usage determines the field’s purpose.
-
-                  if( button.IsAbsolute )
-                     wcout << "    data is absolute not relative" << endl;
-
-                  if( button.IsAlias )
-                     wcout << "    button has a set of aliased usages" << endl;
-               }
+                  bit field  :  // Usage determines the field’s purpose.
                */
-
-               //wcout << endl;
-               //wcout << "button feature ammount : " << dec << button_features.size() << endl;
-
+                            
                /*
                for( auto & feature : button_features )
-               {
-                  wcout << endl;
 
-                  wcout << "collection : " << dec << feature.LinkCollection << endl;
+                  wcout << "hid_collection : " << dec << feature.LinkCollection << endl;
                   wcout << "page       : " << usages.page( feature.UsagePage ).c_str() << endl;
                   wcout << "link page  : " << usages.page( feature.LinkUsagePage ).c_str() << endl;
                   wcout << "link usage : " << usages.usage( feature.LinkUsagePage , feature.LinkUsage ).c_str() << endl;
 
                   // button or value, data index for control
                   wcout << "report id        : " << feature.ReportID << endl;
-
-                  if( feature.IsAlias )    wcout << " * button has a set of aliased usages" << endl;
-                  //wcout << "bit field        : 0b" << std::bitset<16>( button.BitField ) << endl;
-                  if( feature.IsAbsolute ) wcout << " * data is absolute not relative" << endl; // button is digital not analogue?
-
-                  if( feature.IsRange )
-                  {
-                     wcout << "usage min : " << feature.Range.UsageMin << endl;
-                     wcout << "usage max : " << feature.Range.UsageMax << endl;
-                  }
-                  else if( feature.IsStringRange )
-                  {
-                     wcout << "string min : " << feature.Range.UsageMin << endl;
-                     wcout << "string max : " << feature.Range.UsageMax << endl;
-                  }
-                  else if( feature.IsDesignatorRange )
-                  {
-                     wcout << "designator min : " << feature.Range.DesignatorMin << endl;
-                     wcout << "designator max : " << feature.Range.DesignatorMax << endl;
-                  }
-                  else
-                  {
-                     wcout << "usage          : " << usages.usage( feature.UsagePage , feature.NotRange.Usage ).c_str() << endl;
-
+                    wcout << "usage          : " << usages.usage( feature.UsagePage , feature.NotRange.Usage ).c_str() << endl;
                      if( feature.NotRange.StringIndex ) // "Do not emit String ID == 0" haftmann
-                        wcout << "string index   : " << dec << feature.NotRange.StringIndex << endl; // ushort
-
-                     if( feature.NotRange.DesignatorIndex )
-                        wcout << "designator index : " << feature.NotRange.DesignatorIndex << endl; //ushort
-
-                     wcout << "data index     : " << feature.NotRange.DataIndex << endl; //ushort
-                  }
-               }
                */
-
-               /*
-               for( auto & value : value_caps )
-               {
-                  wcout << endl;
-
-                  if( value.IsRange ) {}
-
-                  wcout << "usage page : " << value.UsagePage << endl;
-                  wcout << "report id  : " << value.ReportID << endl; // get_data
-                  wcout << "IsAlias    : " << value.IsAlias << endl;
-
-                  wcout << "BitField         : " << value.BitField << endl;
-                  wcout << "LinkCollection   : " << value.LinkCollection << endl;   // A unique internal index window_ptr
-
-                  wcout << "LinkUsage        : " << value.LinkUsage << endl;
-                  wcout << "LinkUsagePage    : " << value.LinkUsagePage << endl;
-
-                  wcout << "IsRange          : " << value.IsRange << endl;
-                  wcout << "IsStringRange    : " << value.IsStringRange << endl;
-                  wcout << "IsDesignatorRange: " << value.IsDesignatorRange << endl;
-                  wcout << "IsAbsolute       : " << value.IsAbsolute << endl;
-
-                  wcout << "HasNull          : " << value.HasNull << endl;        // Does this channel have a null report   union
-                  wcout << "BitSize          : " << value.BitSize << endl;        // How many bits are devoted to this value?
-
-                  wcout << "ReportCount      : " << value.ReportCount << endl;    // See Note below.  Usually set to 1.
-
-                  wcout << "UnitsExp         : " << value.UnitsExp << endl;
-                  wcout << "Units            : " << value.Units << endl;
-                */
 
                   // This one tries to generate SI units
                   /*static const TCHAR * DecodeUnit( ULONG unit , int & exp ) {
@@ -500,27 +369,13 @@ namespace hid
                         case 0xE1F1: exp-=1; return T( "Pa" );
                      }*/
 
-                     /*
-                  wcout << "LogicalMin       : " << value.LogicalMin << endl;
-                  wcout << "LogicalMax       : " << value.LogicalMax << endl;
-                  wcout << "PhysicalMin      : " << value.PhysicalMin << endl;
-                  wcout << "PhysicalMax      : " << value.PhysicalMax << endl;
-               }*/
-
 //wcout << "path : " << path.data() << endl;
-//wcout << "page  : " << usages.page(caps.UsagePage).c_str() << endl;
-//wcout << "usage : " << usages.usage( caps.UsagePage , caps.Usage ).c_str() << endl;
 //wcout << "vendor     : 0x" << hex << attributes.VendorID << " , product : 0x" << attributes.ProductID << endl;
 
-//collection_text += format( L"manufacturer : {}" , manufacturer );//  endl;
-//collection_text += format( L"\nproduct      : {}" , product );// << endl;
-
-   /*
-            case physical:
+   /*       case physical:
             case application:
             case logical:
             case report:
             case named_array:
             case usage_switch:
-            case usage_modifier:
-            */
+            case usage_modifier:    */

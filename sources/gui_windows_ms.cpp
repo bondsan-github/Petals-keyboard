@@ -11,7 +11,7 @@ namespace hid
     {
         instance = in_instance; parameters = in_parameters; show_flags = in_show_flags;
 
-        locate::add_service( service_identifier::window , this );
+        //locate::add_service( service_identifier::window , this );
 
         window_class.cbSize = sizeof( WNDCLASSEX );
 
@@ -67,14 +67,14 @@ namespace hid
         }
         */
 
-        desktop_size.width  = desktop.right;
+        desktop_size.width  = desktop.right; // static_cast from long to float
         desktop_size.height = desktop.bottom;
 
-        desktop_center.x = desktop_size.width  / 2.0f;
-        desktop_center.y = desktop_size.height / 2.0f;
-
-        client_size_half.width  = client_size.width  / 2.0f;
-        client_size_half.height = client_size.height / 2.0f;
+        desktop_center.x = static_cast< int >( desktop_size.width  / 2.0f );
+        desktop_center.y = static_cast< int >( desktop_size.height / 2.0f );
+        
+        client_size_half.width  = static_cast< int >( client_size.width  / 2.0f );
+        client_size_half.height = static_cast< int >( client_size.height / 2.0f );
 
         position_center.x = desktop_center.x;
         position_center.y = desktop_center.y;
@@ -106,9 +106,14 @@ namespace hid
 
         //ShowWindow( window_principle , SW_MAXIMIZE );
         //UpdateWindow( window_principle );
+
+        SetLayeredWindowAttributes( window_principle ,
+                                    0 , // no color key     
+                                    230 , // alpha value
+                                    LWA_ALPHA );
     }
 
-    HWND gui_windows_ms::get_window()
+    HWND gui_windows_ms::get_window() const
     {
         return window_principle;
     }

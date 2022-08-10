@@ -6,25 +6,25 @@ namespace hid
 {
     class text
     {
-        private:
+        private: // variables
 
-            ComPtr< text_format >   format {}; // simple version of text_layout
-            ComPtr< brush_solid >   brush  {}; 
-            ComPtr< text_layout >   layout {};
+            text_format_pointer     format     {};
+            brush_solid_pointer     brush      {}; 
+            text_layout_pointer     layout     {};
             font_collection_pointer collection {};
 
-            string                content           { L"empty " };
-            string                locale            { L"en-us" };
-            vertex                position_center   { 0.5 , 0.5 }; // position 0..1
-            vertex                position_top_left {}; // in pixels
-            string                font              { L"Times New Roman" }; // font family
-            float                 size              { 15.0f }; // * dpi? // MS "size * 96.0f/72.0f"
-            colours               colour            { colours::Yellow };
-            brush_opactiy         opacity           { 1.0f                                  };
-            text_style            style             { text_style::normal };
-            text_weight           weight            { text_weight::regular };
-            text_stretch          stretch           { text_stretch::normal };
-            text_options          options           { text_options::none                    };
+            string                content           { L"empty"             };
+            string                font_locale       { L"en-us"             };
+          //vertex                position_center   { 10.0f , 10.0f        }; // dips
+            vertex                position_top_left {                      }; // in dips
+            string                font_face         { L"Times New Roman"   }; // font family
+            float                 font_size         { 15.0f                }; // * dpi? // MS "size * 96.0f/72.0f"
+            colours               font_colour       { colours::Yellow      };
+            float                 font_opacity      { 1.0f                 };
+            text_style            font_style        { text_style::normal   };
+            text_weight           font_weight       { text_weight::regular };
+            text_stretch          font_stretch      { text_stretch::normal };
+            text_options          font_options      { text_options::none   };
             // collection
             // family
             // spacing
@@ -34,56 +34,62 @@ namespace hid
             // alignment_horizontal
             // direction_reading
             // direction_flow
-            dimensions            boundry        { 150.0f , 150.0f };
-            float                 boundry_width  { 2.0f };
-            colours               boundry_colour { colours::AliceBlue };
-            float                 radius            { 5.0f                                  };
-            rounded_rectangle     rrectangle        { .radiusX = radius , .radiusY = radius };
-
-            bool                  show_boundry      { true                                  };
             
-        private:
+            dimensions            layout_size      { 150.0f , 150.0f    };
+            rectangle             layout_rectangle {                    };
+            text_metrics          layout_metrics   {                    };
+
+            bool                  rectangle_show   { true               };
+            float                 rectangle_margin { 0.0f               };
+            float                 rectangle_width  { 1.0f               };
+            colours               rectangle_colour { colours::Yellow    };
+            float                 rectangle_radius { 0.0f               };
+            rounded_rectangle     rrectangle       { .radiusX = rectangle_radius , 
+                                                     .radiusY = rectangle_radius };
             
-            void reset();
-            void reset_brush();
-            void reset_format();
-            void reset_layout();
-            void reset_boundry();
+        private: // functions
+            
+            void reset           ();
+            void reset_format    ();
+            void reset_layout    ();
+            void reset_rectangle ();
+            void reset_brush     ();
+            
+            
+            float  const layout_width       ();
+            float  const layout_width_half  ();
+            float  const layout_height      ();
+            float  const layout_height_half ();
+          //void   const position           ( vertex in_top_left );
 
-            vertex top_left();
-
-            void draw_text();
-            void draw_boundry();
-
+            void draw_text       ();
+            void draw_rectangle  ();
+            planes const middle_planes ();
+            
         public:
 
-                  text( string in_content = L"empty" ,
-                        vertex position_center = { 0.5f , 0.5f } ,
-                        float size = { 10.0f } ,
-                        colours in_colour = colours::Yellow );
-            float width();
-            float width_half();
-            float height();
-            float height_half();
-            void  position( vertex in_center );
+            text( string       const in_content           = { L"empty"             } ,
+                  vertex       const in_position_top_left = { 10.0f , 10.0f        } ,
+                  float        const in_font_size         = { 10.0f                } ,
+                  dimensions   const in_layout_size       = { 200.0f , 150.0f      } ,
+                  float        const in_rectangle_margin  = { 0.0f                 } ,
+                  colours      const in_font_colour       = { colours::Yellow      } ,
+                  text_weight  const in_font_weight       = { text_weight::regular } ,
+                  text_style   const in_font_style        = { text_style::normal   } ,
+                  text_stretch const in_font_stretch      = { text_stretch::normal } ,
+                  string       const in_font              = { L"Times New Roman"   } );
             
-            void  set_content( string in_content );
-            void  add( const string in_string );
-            void  set_colour( colours in_colour );
-            void  set_boundry( dimensions in_dimensions );
-            void  set_boundry_colour( colours in_colour );
-            void  set_boundry_width( float in_width );
-            void  draw();
+            void  set_content          ( string const in_content );
+            void  add_content          ( string const in_string  );
+            void  set_font_colour      ( colours const in_colour );
+          //void  set_layout_size      ( dimensions in_layout_size );
+            void  set_rectangle_colour ( colours const in_colour );
+            void  set_rectangle_width  ( float const in_width    );
+            void  draw                 ();
+
+            vertex position();
 
             rectangle_edge_middles middle_vertices();
-            /*
-            struct planes
-            {
-                float horizontal {};
-                float vertical   {};
-            };
-            planes middle_planes( float in_width , float in_height )
-            */
-    }; // class text
-
-} // namespace hid
+            rectangle              formated_rectangle();
+    };
+}

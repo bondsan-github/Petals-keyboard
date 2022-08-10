@@ -14,7 +14,7 @@ namespace hid
                                               & write );
 
 
-        locate::provide_write( this );
+        locate::add_service( service_identifier::write , this );
 
         //  translated using local system local language identifiers
     }
@@ -39,7 +39,7 @@ namespace hid
                                                   format.ReleaseAndGetAddressOf() );
 
         //format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
-        format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
+        //format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
 
         //trimming trim{};
         //trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;
@@ -64,19 +64,19 @@ namespace hid
         return layout;
     }
 
-    void write_d2d::add_text( string                in_content         ,
-                               vertex                in_position_center ,
-                               float                 in_size            ,
-                               text_weight           in_weight          ,
-                               text_style            in_style           ,
-                               text_stretch          in_stretch         ,
-                               colours               in_colour          ,
-                               dimensions            in_dimensions      ,
-                               string                in_font )
+    void write_d2d::add_text( string       in_content ,
+                              vertex       in_position_center ,
+                              float        in_size ,
+                              text_weight  in_weight ,
+                              text_style   in_style ,
+                              text_stretch in_stretch ,
+                              colours      in_colour ,
+                              dimensions   in_boundry ,
+                              string       in_font )
     {
         font_collection_pointer collection  {};
-        page_window_pointer     page        = locate::graphics().get_page();
-        brush_pointer           brush       = locate::graphics().brush_solid( in_colour );
+        page_window_pointer     page        = locate::graphics()->get_page();
+        brush_pointer           brush       = locate::graphics()->brush_solid( in_colour );
         text_format_pointer     text_format = format( in_font , 
                                                       collection.Get() ,
                                                       in_weight ,
@@ -84,7 +84,7 @@ namespace hid
                                                       in_stretch ,
                                                       in_size ,
                                                       locale );
-        text_layout_pointer    text_layout = layout( in_content , text_format , in_dimensions );
+        text_layout_pointer    text_layout = layout( in_content , text_format , in_boundry );
         rectangle              area { 100.0f , 100.0f , 300.0f , 300.0f }; // page.center() +- 100.0f
 
         //texts.emplace_back()

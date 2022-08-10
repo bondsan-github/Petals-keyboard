@@ -11,7 +11,7 @@ int WINAPI wWinMain( _In_ HINSTANCE instance , _In_opt_ HINSTANCE instance_previ
    using namespace hid;
 
    // Initialize COM apartment threaded. This is the recommended way to initialize COM for the UI thread.
-   CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED );
+   //CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED );
    
    hid_multi_touch input;
 
@@ -21,7 +21,7 @@ int WINAPI wWinMain( _In_ HINSTANCE instance , _In_opt_ HINSTANCE instance_previ
 
    result = input.begin();
    
-   CoUninitialize();
+   //CoUninitialize();
 
    return result;
 }

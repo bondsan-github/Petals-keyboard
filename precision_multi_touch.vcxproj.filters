@@ -54,7 +54,7 @@
     <ClCompile Include="sources\hid_raw_device.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="sources\hid_main_item.cpp">
+    <ClCompile Include="sources\hid_collection.cpp">
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="sources\hid_local_item.cpp">
@@ -115,7 +115,7 @@
     <ClInclude Include="headers\hid_usage_text.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\hid_main_item.h">
+    <ClInclude Include="headers\hid_collection.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\hid_local_item.h">
@@ -143,6 +143,12 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\service.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\vertex.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\virtual_desktop.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

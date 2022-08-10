@@ -145,7 +145,7 @@
     <ClCompile Include="sources\hid_device.cpp" />
     <ClCompile Include="sources\hid_devices.cpp" />
     <ClCompile Include="sources\hid_global_item.cpp" />
-    <ClCompile Include="sources\hid_main_item.cpp" />
+    <ClCompile Include="sources\hid_collection.cpp" />
     <ClCompile Include="sources\hid_raw_device.cpp" />
     <ClCompile Include="sources\line_d2d.cpp" />
     <ClCompile Include="sources\locate.cpp" />
@@ -165,15 +165,17 @@
     <ClInclude Include="headers\direct_2d.h" />
     <ClInclude Include="headers\graphics_d2d.h" />
     <ClInclude Include="headers\grid_d2d.h" />
+    <ClInclude Include="headers\vertex.h" />
     <ClInclude Include="headers\hid_global_item.h" />
     <ClInclude Include="headers\hid_local_item.h" />
-    <ClInclude Include="headers\hid_main_item.h" />
+    <ClInclude Include="headers\hid_collection.h" />
     <ClInclude Include="headers\line_d2d.h" />
     <ClInclude Include="headers\locate.h" />
     <ClInclude Include="headers\service.h" />
     <ClInclude Include="headers\text_d2d.h" />
     <ClInclude Include="headers\hid_usage_text.h" />
     <ClInclude Include="headers\utility.h" />
+    <ClInclude Include="headers\virtual_desktop.h" />
     <ClInclude Include="headers\write_d2d.h" />
     <ClInclude Include="headers\hidp_status.h" />
     <ClInclude Include="headers\hid_device.h" />

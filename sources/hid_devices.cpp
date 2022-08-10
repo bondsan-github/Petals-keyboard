@@ -7,8 +7,6 @@ namespace hid
 {
     void hid_devices::initialise()
     {
-        using raw_device_list = RAWINPUTDEVICELIST;
-
         uint                      amount   {};
         vector< raw_device_list > raw_list {};
 

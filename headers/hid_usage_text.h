@@ -123,7 +123,7 @@ namespace hid
           // Buttons can be defined as;
           //   + Selector ( defined by a main item with it's array flag as true )
           //      -  only one in a set ( exclusive or XOR )
-          //      -  n selections of a set ( n is from a main item report count ( ? collection ) ) 
+          //      -  n selections of a set ( n is from a main item report count ( ? hid_collection ) ) 
           //      -  any selection of a set ( variable flag true and report size is one , amount of selections from main report count )
           //   + On / Off    
           //      - Two buttons, On and Off
@@ -189,7 +189,7 @@ namespace hid
           make_pair( L"reserved" , L"reserved" ) , // 0x1D
           make_pair( L"reserved" , L"reserved" ) , // 0x1E
           make_pair( L"reserved" , L"reserved" ) , // 0x1F
-          make_pair( L"stylus"            , L"collection application | collection logical" ) , // 0x20 // ? no controls = ca , additional controls = L"collection logical" ) , ?
+          make_pair( L"stylus"            , L"collection application | collection logical" ) , // 0x20 // ? no controls = ca , additional controls = L"hid_collection logical" ) , ?
           make_pair( L"puck"              , L"collection logical" ) , // 0x21
           make_pair( L"finger"            , L"collection logical" ) , // 0x22
           make_pair( L"device settings"   , L"collection logical" ) , // 0x23
