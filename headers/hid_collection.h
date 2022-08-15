@@ -1,9 +1,8 @@
 #pragma once
 
 #include "..\headers\direct_2d.h"
-
 #include "..\headers\hid_item.h"
-// #include "..\headers\hid_local_item.h"
+#include "..\headers\text_d2d.h"
 
 namespace hid
 {
@@ -21,6 +20,8 @@ namespace hid
         amount        siblings { 0     }; // children
         link          first    { 0     }; // child     
         link          next     { 0     }; // sibling 
+
+        text          information{};
 
     public:
 

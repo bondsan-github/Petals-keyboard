@@ -81,13 +81,14 @@ namespace hid
             
             void  set_content          ( string const in_content );
             void  add_content          ( string const in_string  );
+            void  set_position         ( vertex in_position      );
             void  set_font_colour      ( colours const in_colour );
           //void  set_layout_size      ( dimensions in_layout_size );
             void  set_rectangle_colour ( colours const in_colour );
             void  set_rectangle_width  ( float const in_width    );
             void  draw                 ();
 
-            vertex position();
+            vertex get_position();
 
             rectangle_edge_middles middle_vertices();
             rectangle              formated_rectangle();

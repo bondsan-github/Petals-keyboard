@@ -62,7 +62,7 @@ namespace hid
     void text::reset_rectangle()
     {
         float  radius   = rectangle_radius;
-        vertex position = this->position();
+        vertex position = get_position();
         float  margin   = rectangle_margin;
 
         layout->GetMetrics( & layout_metrics );
@@ -84,7 +84,7 @@ namespace hid
 
     rectangle text::formated_rectangle()
     {
-        vertex position = this->position();
+        vertex position = get_position();
 
         layout_rectangle.top    = position.y + layout_metrics.top;
         layout_rectangle.right  = position.x + layout_metrics.width;
@@ -140,7 +140,12 @@ namespace hid
     }
     */
 
-    vertex text::position()
+    void text::set_position( vertex in_position )
+    {
+        position_top_left = in_position;
+    }
+
+    vertex text::get_position()
     {
         return position_top_left;
     }
@@ -187,7 +192,7 @@ namespace hid
 
     void text::draw_text()
     {
-        locate::graphics()->get_page()->DrawTextLayout( position() ,
+        locate::graphics()->get_page()->DrawTextLayout( get_position() ,
                                                         layout.Get() ,
                                                         brush.Get() ,
                                                         static_cast< D2D1_DRAW_TEXT_OPTIONS >( font_options ) );
@@ -202,8 +207,8 @@ namespace hid
     {
         planes middle {};
 
-        middle.horizontal = position().x + layout_width_half();
-        middle.vertical   = position().y + layout_height_half();
+        middle.horizontal = get_position().x + layout_width_half();
+        middle.vertical   = get_position().y + layout_height_half();
 
         return middle;
     }
@@ -212,7 +217,7 @@ namespace hid
     {
         rectangle_edge_middles middle     {};
 
-        vertex                 position   = this->position();
+        vertex                 position   = get_position();
         float                  horizontal = middle_planes().horizontal;
         float                  vertical   = middle_planes().vertical;
         float                  margin     = rectangle_margin;

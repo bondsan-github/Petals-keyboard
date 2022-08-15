@@ -25,6 +25,7 @@ namespace hid
         }
 
         //if( input.empty() )
+            //locate
         //    information.set_content( L"no precision multiple touch devices found" );
         //else
         //    information.set_content( L"" );

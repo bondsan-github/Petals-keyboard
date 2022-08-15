@@ -5,8 +5,7 @@
 #include < Windows.h >
 #include < hidsdi.h >
 
-#include "..\headers\constants.h"
-
+#include "..\headers\direct_2d.h"
 #include "..\headers\hid_local_item.h"
 #include "..\headers\hid_global_item.h"
 
@@ -52,18 +51,13 @@ namespace hid
          vector< char >       data_vector {};
          uint                 data_size   {};
 
-         ulong                item_amount {};
-
-         //struct report_input   : public report {} input;
-         //struct report_output  : public report {} output;
-         //struct report_feature : public report {} feature;
+         ulong                collection_amount {};
 
       public:
 
               hid_raw_device( HANDLE in_device );
          bool is_multi_touch();
          //~hid_raw_device() { close file }
-
    };
 
 }

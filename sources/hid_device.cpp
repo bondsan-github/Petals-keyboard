@@ -34,17 +34,18 @@ namespace hid
         content += L"\nusage\t\t: ";
         content += locate::usages()->usage( page , usage );
 
-        text device( content ,
+        /*text device(content ,
                      position ,
                      text_size ,
                      text_boundry ,
                      rectangle_margin ,
-                     text_colour );
+                     text_colour );*/
+        information.set_position( position );
+        information.set_content( content );
+        information.set_rectangle_width( rectangle_width );
+        information.set_rectangle_colour( rectangle_colour );
 
-        device.set_rectangle_width( rectangle_width );
-        device.set_rectangle_colour( rectangle_colour );
-
-        item_texts.push_back( move( device ) );
+        //item_texts.push_back( move( device ) );
 
         // += attributes.VendorID;
         // += attributes.ProductID;
@@ -54,6 +55,7 @@ namespace hid
 
     void hid_device::initialise_text_collections()
     {
+        /*
         vector< hid_collection >::reference item         = collection.front();
         string                             item_content  = item.text();
 
@@ -87,7 +89,7 @@ namespace hid
             item_texts.push_back( new_item );
 
             item = collection.at( item.next );
-        }
+        }*/
 
         // line from device to first main item
         //vertex a = item.mid_points( 0 ).bottom;
@@ -133,14 +135,15 @@ namespace hid
 
             if( item != collection.end() )
             {
-               // item_texts.at( item->index ).position().y
+               // position = item_texts.at( item->index ).position().y
                 //position.y = 
+                // 
             //item_position.y = ;
             //item_position.x += 100; // main_item//item_texts.back().formated_rectangle(). + spacer;   
             }
 
             text button_text( content , position , text_size , text_boundry , rectangle_margin );
-            item_texts.push_back( move( button_text ) );
+            //item_texts.push_back( move( button_text ) );
         }
     }
 
@@ -154,7 +157,7 @@ namespace hid
     // 1. transparent full screen draw contacts
         if( draw_information )
         {
-            for( auto & item : item_texts ) item.draw();            
+            //for( auto & item : item_texts ) item.draw();            
             //       lines.draw
         }
     }
@@ -176,9 +179,9 @@ namespace hid
 
         vector< node > nodes {};
 
-        nodes.resize( item_amount );
+        nodes.resize( collection_amount );
 
-        HidP_GetLinkCollectionNodes( nodes.data() , & item_amount , data );
+        HidP_GetLinkCollectionNodes( nodes.data() , &collection_amount , data );
 
         //items.resize( item_amount );
         ushort index {};
@@ -187,7 +190,7 @@ namespace hid
         {
             hid_collection new_item;
 
-            new_item.index = index;
+            new_item.index    = index;
             new_item.type     = hid_item_type { node.CollectionType };
             new_item.page     = node.LinkUsagePage;
             new_item.usage    = node.LinkUsage;
@@ -233,7 +236,7 @@ namespace hid
         HidP_GetValueCaps      ( HidP_Input   , input_values.data()    , & input.value_amount    , data );
 
         output_buttons.resize  ( output.button_amount );
-        HidP_GetButtonCaps     ( HidP_Output  , output_buttons.data()  , & output.button_amount , data);
+        HidP_GetButtonCaps     ( HidP_Output  , output_buttons.data()  , & output.button_amount  , data);
 
         output_values.resize   ( output.value_amount );
         HidP_GetValueCaps      ( HidP_Output  , output_values.data()   , & output.value_amount   , data );

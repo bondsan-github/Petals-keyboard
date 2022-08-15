@@ -34,7 +34,8 @@ namespace hid
             //grid_d2d                grid             {};
             
             vector< hid_collection > collection       {};
-            vector< text >          item_texts        {};
+            text                     information      {};
+            //vector< text >          collection_texts        {};
             
             bool                    draw_information  { true              };
             wstring                 text_font         { L"Cascasia code"  }; // { L"Sitka" };

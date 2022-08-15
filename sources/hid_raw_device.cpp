@@ -20,9 +20,9 @@ namespace hid
 
         HidP_GetCaps( data , & caps );
 
-        page        = caps.UsagePage;
-        usage       = caps.Usage;
-        item_amount = caps.NumberLinkCollectionNodes;
+        page              = caps.UsagePage;
+        usage             = caps.Usage;
+        collection_amount = caps.NumberLinkCollectionNodes;
 
         input.byte_amount              = caps.InputReportByteLength;
         input.button_amount            = caps.NumberInputButtonCaps;
