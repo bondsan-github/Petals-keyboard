@@ -21,11 +21,9 @@ namespace hid
         link          first    { 0     }; // child     
         link          next     { 0     }; // sibling 
 
-        text          information{};
-
     public:
 
-        wstring text();
+        //wstring text();
 
         bool operator == ( const hid_collection & in_item ) const
         {
