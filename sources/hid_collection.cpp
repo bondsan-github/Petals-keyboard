@@ -5,7 +5,7 @@
 
 namespace hid
 {
-    wstring hid_collection::text()
+    void hid_collection::gather_information()
     {
         wstring text;
 
@@ -44,6 +44,6 @@ namespace hid
             text += to_wstring( first );
         }
 
-        return text;
+        information.set_content( text );
     }
 }

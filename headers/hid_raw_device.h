@@ -13,7 +13,7 @@ namespace hid
 {
    using namespace std;
 
-   class hid_raw_device abstract 
+   class hid_raw_device //abstract 
    {
       protected:
 

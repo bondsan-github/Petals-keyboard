@@ -55,41 +55,29 @@ namespace hid
 
     void hid_device::initialise_text_collections()
     {
-        /*
-        vector< hid_collection >::reference item         = collection.front();
-        string                             item_content  = item.text();
-
-        float  position_x    = item_texts.at( index ).formated_rectangle().left;
-        float  position_y    = item_texts.at( index ).middle_vertices().bottom.y + spacer.y;
-        vertex item_position = { position_x , position_y };
-
-        text head_item( item_content , item_position , text_size , text_boundry , rectangle_margin );
-             head_item.set_rectangle_colour( rectangle_colour );
-             head_item.set_rectangle_width( rectangle_width );
-
-        item_texts.push_back( head_item );
-         
-        item = collection.at( item.first );
+        float  position_x    = 0;
+        float  position_y    = 0;
         
+        vertex item_position = { position_x , position_y };
+         
+         // sort input.buttons[1..n] by 
 
-        for( int index { 1 } ; index < collection.size() ; index++ )
+        for( auto & item : collection )
         {
-            item_content     = item.text();
+            item.gather_information();
 
-            float position_x = item_texts.at( index ).formated_rectangle().left;
-            float position_y = item_texts.at( index ).middle_vertices().bottom.y + spacer.y;
+            position_x = information.formated_rectangle().left;
+            position_y = information.formated_rectangle().bottom + spacer.y;
             
-            item_position    = { position_x , position_y };
+            item.information.set_position( { position_x , position_y } );
 
-            text new_item( item_content , item_position , text_size , text_boundry , rectangle_margin );
+            //new_item.set_rectangle_colour( rectangle_colour );
+            //new_item.set_rectangle_width( rectangle_width );
 
-            new_item.set_rectangle_colour( rectangle_colour );
-            new_item.set_rectangle_width( rectangle_width );
+            //item_texts.push_back( new_item );
 
-            item_texts.push_back( new_item );
-
-            item = collection.at( item.next );
-        }*/
+            //item = collection.at( item.next );
+        } 
 
         // line from device to first main item
         //vertex a = item.mid_points( 0 ).bottom;
@@ -111,14 +99,14 @@ namespace hid
     void hid_device::initialise_text_input()
     {
         //find( begin( items ) , end( items ) ,  )
-        
+        /*
         index = 0;
         
         for( auto & button : input.buttons )
         {
             button.index = index; index++;
 
-            string content  = button.text();
+            //string content  = button.text();
             vertex position {};
 
            // find if matching collection (page && usage)  , 
@@ -145,6 +133,8 @@ namespace hid
             text button_text( content , position , text_size , text_boundry , rectangle_margin );
             //item_texts.push_back( move( button_text ) );
         }
+
+        */
     }
 
     void hid_device::display_information()
@@ -157,8 +147,11 @@ namespace hid
     // 1. transparent full screen draw contacts
         if( draw_information )
         {
-            //for( auto & item : item_texts ) item.draw();            
-            //       lines.draw
+            information.draw();
+            
+            for( auto & item : collection ) item.draw();
+            
+            //lines.draw
         }
     }
     
@@ -177,31 +170,17 @@ namespace hid
         HidD_GetProductString      ( file_pointer , product      , string_size );
         HidD_GetPhysicalDescriptor ( file_pointer , physical     , string_size );
 
-        vector< node > nodes {};
+        //vector< node > nodes {};
 
-        nodes.resize( collection_amount );
+        collection.resize( collection_amount );
 
-        HidP_GetLinkCollectionNodes( nodes.data() , &collection_amount , data );
+        // memcpy to vector data pointer = copy constructor
+        HidP_GetLinkCollectionNodes( collection.data() , & collection_amount , data );
 
-        //items.resize( item_amount );
-        ushort index {};
+        ushort index { 0 };
 
-        for( const auto & node : nodes )
-        {
-            hid_collection new_item;
+        //collection.front().information.set_position();
 
-            new_item.index    = index;
-            new_item.type     = hid_item_type { node.CollectionType };
-            new_item.page     = node.LinkUsagePage;
-            new_item.usage    = node.LinkUsage;
-            new_item.is_alias = node.IsAlias;
-            new_item.siblings = node.NumberOfChildren;
-
-            new_item.origin   = node.Parent;
-            new_item.next     = node.NextSibling;
-            new_item.first    = node.FirstChild;
-
-            index++;
             //using link = vector< item >::reference;
             /*
             if( node.Parent ) // one parent , above
@@ -213,9 +192,7 @@ namespace hid
             if( node.FirstChild ) // left-most
                new_item.first  = & items.at( node.FirstChild - 1 );
             */
-            collection.push_back( new_item );//at( index ) = move( new_item );
-
-        }
+            //collection.push_back( move( new_collection ) );//at( index ) = move( new_item );
 
         using button_item = HIDP_BUTTON_CAPS;
         using value_item  = HIDP_VALUE_CAPS;
@@ -245,71 +222,73 @@ namespace hid
         HidP_GetButtonCaps     ( HidP_Feature , button_features.data() , & feature.button_amount , data );
 
         value_features.resize  ( feature.value_amount );
-        HidP_GetValueCaps      ( HidP_Feature , value_features.data()  , & feature.value_amount   , data );
+        HidP_GetValueCaps      ( HidP_Feature , value_features.data()  , & feature.value_amount  , data );
 
-        for( auto & input : input_buttons )
+        for( auto & button : input_buttons )
         {
-            hid_local_item new_item {};
+            hid_local_item new_button {};
 
             // type = input
-            new_item.page            = input.UsagePage;
+            new_button.page            = button.UsagePage;
 
-            new_item.report_index    = input.ReportID;
-            new_item.report_amount   = input.ReportCount; // Available in API version >= 2 only.
+            new_button.report_index    = button.ReportID;
+            new_button.report_amount   = button.ReportCount; // Available in API version >= 2 only.
 
-            new_item.bit_field       = input.BitField;
+            new_button.bit_field       = button.BitField;
 
-            new_item.origin          = input.LinkCollection;
-            new_item.origin_page     = input.LinkUsagePage;
-            new_item.origin_usage    = input.LinkUsage;
+            new_button.origin          = button.LinkCollection;
+            new_button.origin_page     = button.LinkUsagePage;
+            new_button.origin_usage    = button.LinkUsage;
 
-            new_item.is_range        = input.IsRange;
-            new_item.is_absolute     = input.IsAbsolute;
-            new_item.is_alias        = input.IsAlias;
+            new_button.is_range        = button.IsRange;
+            new_button.is_absolute     = button.IsAbsolute;
+            new_button.is_alias        = button.IsAlias;
 
-            new_item.has_designators = input.IsDesignatorRange;
-            new_item.has_strings     = input.IsStringRange;
+            new_button.has_designators = button.IsDesignatorRange;
+            new_button.has_strings     = button.IsStringRange;
 
-            if( new_item.is_range )
+            if( new_button.is_range )
             {
-                new_item.usages.begin = input.Range.UsageMin;
-                new_item.usages.end   = input.Range.UsageMax;
+                new_button.usages.begin = button.Range.UsageMin;
+                new_button.usages.end   = button.Range.UsageMax;
 
-                new_item.datas.begin  = input.Range.DataIndexMin;
-                new_item.datas.end    = input.Range.DataIndexMax;
+                new_button.datum_index.begin  = button.Range.DataIndexMin;
+                new_button.datum_index.end    = button.Range.DataIndexMax;
             }
             else
             {
-                new_item.usage        = input.NotRange.Usage;
-                new_item.data         = input.NotRange.DataIndex;
+                new_button.usage        = button.NotRange.Usage;
+                new_button.data_index   = button.NotRange.DataIndex;
             }
             
-            if( new_item.has_strings )
+            if( new_button.has_strings )
             {
-                new_item.strings.begin = input.Range.StringMin;
-                new_item.strings.end   = input.Range.StringMax;
+                new_button.strings.begin = button.Range.StringMin;
+                new_button.strings.end   = button.Range.StringMax;
                   //HidD_GetIndexedString
             }
             else
             {
-                new_item.string = input.NotRange.StringIndex;
+                new_button.string = button.NotRange.StringIndex;
             }
 
-            if( new_item.has_designators )
+            if( new_button.has_designators )
             {
-                new_item.designators.begin = input.Range.DesignatorMin;
-                new_item.designators.end   = input.Range.DesignatorMax;
+                new_button.designators.begin = button.Range.DesignatorMin;
+                new_button.designators.end   = button.Range.DesignatorMax;
                 // physical descriptor
             }
             else
             {
-                new_item.designator = input.NotRange.DesignatorIndex;
+                new_button.designator = button.NotRange.DesignatorIndex;
             }
 
-            this->input.buttons.emplace_back( move( new_item ) );
+            new_button.gather_information();
+
+            input.buttons.emplace_back( move( new_button ) );
         }
 
-        for( auto & input_value : input_values )
+        for( auto & value : input_values )
         {
             //value new_value {};
             //input_value.BitField;

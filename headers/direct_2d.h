@@ -27,6 +27,7 @@ namespace hid // human interface device
     using      result_win              = HRESULT;
 
     using      raw_device_list         = RAWINPUTDEVICELIST;
+    
     using      node                    = HIDP_LINK_COLLECTION_NODE;
     using      hid_attributes          = HIDD_ATTRIBUTES;
     using      hid_attributes_extended = HIDP_EXTENDED_ATTRIBUTES;

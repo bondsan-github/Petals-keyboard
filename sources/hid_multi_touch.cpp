@@ -11,7 +11,7 @@ namespace hid
     {
         gui_windows_ms::initialise( instance , parameters , show_flags );
         graphics.initialise( get_window() );
-        grid.initialise();
+        //grid.initialise();
         write.initialise();
         usages.initialise();
 

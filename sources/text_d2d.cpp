@@ -43,7 +43,9 @@ namespace hid
 
     void text::reset_format()
     {
-        format = locate::write()->format( content      ,
+    //format.Reset();
+
+        format = locate::write()->format(content ,
                                           collection   ,
                                           font_weight  ,
                                           font_style   ,
@@ -54,6 +56,7 @@ namespace hid
 
     void text::reset_layout()
     {
+    layout.Reset();
         layout = locate::write()->layout( content , format , layout_size );
 
         reset_rectangle();
@@ -143,6 +146,8 @@ namespace hid
     void text::set_position( vertex in_position )
     {
         position_top_left = in_position;
+
+        reset_rectangle();
     }
 
     vertex text::get_position()

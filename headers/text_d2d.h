@@ -8,7 +8,7 @@ namespace hid
     {
         private: // variables
 
-            text_format_pointer     format     {};
+        ComPtr<IDWriteTextFormat>     format     {};
             brush_solid_pointer     brush      {}; 
             text_layout_pointer     layout     {};
             font_collection_pointer collection {};
@@ -83,7 +83,7 @@ namespace hid
             void  add_content          ( string const in_string  );
             void  set_position         ( vertex in_position      );
             void  set_font_colour      ( colours const in_colour );
-          //void  set_layout_size      ( dimensions in_layout_size );
+            void  set_boundry_size     ( dimensions in_boundry_size );
             void  set_rectangle_colour ( colours const in_colour );
             void  set_rectangle_width  ( float const in_width    );
             void  draw                 ();

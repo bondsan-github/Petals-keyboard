@@ -19,7 +19,7 @@ namespace hid
         //  translated using local system local language identifiers
     }
 
-    text_format_pointer write_d2d::format( string       in_font ,
+    IDWriteTextFormat & write_d2d::format( string       in_font ,
                                            font_collection_pointer in_collection ,
                                            text_weight  in_weight  ,
                                            text_style   in_style   ,
@@ -27,7 +27,7 @@ namespace hid
                                            float        in_size    ,
                                            string       in_locale  )
     {
-        text_format_pointer format {};
+        ComPtr< IDWriteTextFormat > format {};
 
         HRESULT result = write->CreateTextFormat( in_font.c_str() ,
                                                   in_collection.Get() ,
@@ -40,24 +40,20 @@ namespace hid
 
         //format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
         //format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
-
-        //trimming trim{};
-        //trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;
-        //format->SetTrimming( & trim , 0 );
-
-        return format;
+        //trimming trim{};    //trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;        //format->SetTrimming( & trim , 0 );
+        return format.;
     }
 
-    text_layout_pointer write_d2d::layout( string              in_content ,
+    ComPtr< text_layout > write_d2d::layout( string              in_content ,
                                            text_format_pointer in_format ,
                                            dimensions          in_dimensions ) // pixels * dpi
     {
-        text_layout_pointer layout {};
+        ComPtr< text_layout > layout {};
 
-        write->CreateTextLayout( in_content.c_str() ,
-                                 in_content.size() ,
-                                 in_format.Get() ,
-                                 in_dimensions.width ,
+        write->CreateTextLayout( in_content.c_str()   ,
+                                 in_content.size()    ,
+                                 in_format.Get()      ,
+                                 in_dimensions.width  ,
                                  in_dimensions.height ,
                                  layout.ReleaseAndGetAddressOf() );
 

@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="hid::gui_windows_ms">
+    <Position X="1.75" Y="5.25" Width="2.75" />
+    <Members>
+      <Field Name="class_style" Hidden="true" />
+      <Field Name="client_dpi" Hidden="true" />
+      <Field Name="client_height" Hidden="true" />
+      <Field Name="client_size" Hidden="true" />
+      <Field Name="client_size_half" Hidden="true" />
+      <Field Name="client_width" Hidden="true" />
+      <Field Name="desktop_center" Hidden="true" />
+      <Field Name="desktop_dpi" Hidden="true" />
+      <Field Name="desktop_size" Hidden="true" />
+      <Field Name="instance" Hidden="true" />
+      <Field Name="menu" Hidden="true" />
+      <Field Name="message" Hidden="true" />
+      <Field Name="parameters" Hidden="true" />
+      <Field Name="parent_window" Hidden="true" />
+      <Field Name="position_center" Hidden="true" />
+      <Field Name="position_top_left" Hidden="true" />
+      <Field Name="result" Hidden="true" />
+      <Field Name="show_flags" Hidden="true" />
+      <Field Name="style" Hidden="true" />
+      <Field Name="style_extra" Hidden="true" />
+      <Field Name="this_pointer" Hidden="true" />
+      <Field Name="title_text" Hidden="true" />
+      <Field Name="window_class" Hidden="true" />
+      <Field Name="window_principle" Hidden="true" />
+      <Field Name="x" Hidden="true" />
+      <Field Name="y" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Struct Name="hid::gui_windows_ms::dimensions" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>headers\gui_windows_ms.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="hid::gui_windows_ms::vertex" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>headers\gui_windows_ms.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CAAEABIAiAAAAAAEDAEAAggSEABEABgAAABgEICBCig=</HashCode>
+      <FileName>headers\gui_windows_ms.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::hid_devices">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAMAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>headers\hid_devices.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::hid_device">
+    <Position X="8.5" Y="4" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAwAAYBAqABAAEEIAAEgAAAIAEAAAAAAASAAFABQ=</HashCode>
+      <FileName>headers\hid_device.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::hid_multi_touch">
+    <Position X="2.25" Y="1" Width="2.5" />
+    <InheritanceLine Type="hid::gui_windows_ms" FixedFromPoint="true">
+      <Path>
+        <Point X="3" Y="5.25" />
+        <Point X="3" Y="4.213" />
+        <Point X="3.5" Y="4.213" />
+        <Point X="3.5" Y="3.838" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAUAAAAQAAAAABgAAQAAEAAAAAA=</HashCode>
+      <FileName>headers\hid_multi_touch.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::hid_raw_device">
+    <Position X="9.5" Y="1" Width="1.5" />
+    <Members>
+      <Field Name="collection_amount" Hidden="true" />
+      <Field Name="data" Hidden="true" />
+      <Field Name="data_size" Hidden="true" />
+      <Field Name="data_vector" Hidden="true" />
+      <Field Name="device" Hidden="true" />
+      <Field Name="feature" Hidden="true" />
+      <Field Name="file_pointer" Hidden="true" />
+      <Field Name="input" Hidden="true" />
+      <Field Name="output" Hidden="true" />
+      <Field Name="page" Hidden="true" />
+      <Field Name="path" Hidden="true" />
+      <Field Name="requests" Hidden="true" />
+      <Field Name="usage" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Struct Name="hid::hid_raw_device::__unnamed_struct_040f_1" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>headers\hid_raw_device.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="hid::hid_raw_device::report" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>headers\hid_raw_device.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAIAACAAAAQAAAGAQCAAgACAAAABAYEAAQAQAAAAA=</HashCode>
+      <FileName>headers\hid_raw_device.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::text">
+    <Position X="5.25" Y="4.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>TCICACKFygAAACiAZEIACBIAoAQiIAAYJAAEiEIEiAQ=</HashCode>
+      <FileName>headers\text_d2d.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hid::write_d2d">
+    <Position X="13" Y="2.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAABAAEACAAAAAAAIAAAQQAACAAQAIA=</HashCode>
+      <FileName>headers\write_d2d.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

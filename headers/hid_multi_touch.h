@@ -19,7 +19,7 @@ namespace hid
             hid_usages   usages;
             write_d2d    write;
             hid_devices  input;
-            grid_d2d     grid;
+            //grid_d2d     grid;
             PAINTSTRUCT  paint;
 
             virtual LRESULT message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter ) override;

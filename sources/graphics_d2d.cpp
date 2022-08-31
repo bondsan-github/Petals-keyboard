@@ -12,7 +12,10 @@ namespace hid
 
         locate::add_service( service_identifier::graphics , this );
 
-        D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory.ReleaseAndGetAddressOf() ); //static_cast< D2D1_FACTORY_TYPE >( factory_type::single_thread );
+        D2D1_FACTORY_OPTIONS factory_options {};
+        factory_options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
+
+        D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory_options , factory.ReleaseAndGetAddressOf() ); //static_cast< D2D1_FACTORY_TYPE >( factory_type::single_thread );
         
         reset();
     }

@@ -46,7 +46,7 @@ namespace hid
             float                   rectangle_width   { 1.0f              };
             colours                 rectangle_colour  { colours::DarkCyan };
 
-            vertex const            spacer            { 15.0f, 80.0f      };
+            vertex const            spacer            { 15.0f, 15.0f      };
             
             uint                    index             {};
             vector< line_d2d >      lines             {};
@@ -54,8 +54,8 @@ namespace hid
         private:
 
             void gather_information          ();
-            void initialise_text_collections ();
             void initialise_text_device      ();
+            void initialise_text_collections ();
             void initialise_text_input       ();
 
         public:

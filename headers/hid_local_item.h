@@ -21,8 +21,8 @@ namespace hid
 
         bool   is_range        {};
         range  usages          {};
-        ushort data            {};
-        range  datas           {};
+        ushort data_index      {};
+        range  datum_index     {};
 
         bool   has_strings     {};
         ushort string          {}; // HidD_GetIndexedString        
@@ -34,8 +34,8 @@ namespace hid
 
         //public:
         //void page( const ushort in_page ) { page = in_page; }
-
         wstring text();
-        //void draw()
+
+        //hid_local_item & operator = ( const )
     };
 }

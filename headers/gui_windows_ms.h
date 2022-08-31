@@ -24,7 +24,7 @@ namespace hid
             HWND       parent_window    {};
             // unordered_map< identifier , window * > window_siblings;
 
-            HMENU      menu{};
+            HMENU      menu        {};
             PCWSTR     title_text  { L"Precision multiple touch input" };
             UINT       class_style { CS_HREDRAW | CS_VREDRAW };
             DWORD      style       { WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_MAXIMIZE };

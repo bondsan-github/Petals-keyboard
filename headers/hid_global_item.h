@@ -9,17 +9,18 @@ namespace hid
 {
     struct hid_global_item : public hid_local_item
     {
-        link       main_item{};
+        link       main_item     {};
 
-        ushort     bit_amount{};
-        ulong      unit_exponent{};
-        ulong      unit{};
+        ushort     bit_amount    {};
+        ulong      unit_exponent {};
+        ulong      unit          {};
 
-        bool       has_null{};
-        bool       is_absolute{}; // or relative
+        bool       has_null      {};
+        bool       is_absolute   {}; // or relative
 
-        limits     physical{};
-        limits     logical{};
+        limits     physical      {};
+        limits     logical       {};
+
     };
 
         // uint usages = identifiers_usage.maximum - identifiers_usage.minumum;

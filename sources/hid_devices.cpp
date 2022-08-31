@@ -8,7 +8,7 @@ namespace hid
     void hid_devices::initialise()
     {
         uint                      amount   {};
-        vector< raw_device_list > raw_list {};
+        vector< raw_device_list > raw_list {}; // RAWINPUTDEVICELIST
 
         GetRawInputDeviceList( nullptr , & amount , sizeof( raw_device_list ) );
 
@@ -18,10 +18,13 @@ namespace hid
 
         for( auto & device : raw_list )
         {
-            hid_device new_device( device.hDevice );
+            hid_raw_device new_raw_device( device.hDevice );
 
-            if( new_device.is_multi_touch() )
-                input.emplace_back( move( new_device ) );
+            if( new_raw_device.is_multi_touch() )
+            {
+                hid_device new_hid_device( device.hDevice );
+                input.emplace_back( move( new_hid_device ) );
+            }
         }
 
         //if( input.empty() )
