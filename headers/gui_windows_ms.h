@@ -1,11 +1,11 @@
 #pragma once
 
 #include < windows.h >
-#include "..\headers\service.h"
+//#include "..\headers\service.h"
 
 namespace hid
 {
-    class gui_windows_ms : public service
+    class gui_windows_ms// : public service
     {
         private:
          
@@ -27,8 +27,8 @@ namespace hid
             HMENU      menu        {};
             PCWSTR     title_text  { L"Precision multiple touch input" };
             UINT       class_style { CS_HREDRAW | CS_VREDRAW };
-            DWORD      style       { WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_MAXIMIZE };
-            DWORD      style_extra { WS_EX_LAYERED | WS_EX_COMPOSITED | WS_EX_TRANSPARENT };
+            DWORD      style       { WS_VISIBLE | WS_MAXIMIZE }; //WS_OVERLAPPEDWINDOW
+            DWORD      style_extra {};//{ WS_EX_LAYERED | WS_EX_COMPOSITED | WS_EX_TRANSPARENT };
     
          //WS_EX_LAYOUTRTL
          /*If( shell language ) == Hebrew, Arabic, or language supports reading order alignment

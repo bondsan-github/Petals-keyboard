@@ -8,7 +8,8 @@ namespace hid
     {
         private: // variables
 
-        ComPtr<IDWriteTextFormat>     format     {};
+            text_format_pointer     format     {};
+            //ID2D1SolidColorBrush brush;
             brush_solid_pointer     brush      {}; 
             text_layout_pointer     layout     {};
             font_collection_pointer collection {};
@@ -16,7 +17,7 @@ namespace hid
             string                content           { L"empty"             };
             string                font_locale       { L"en-us"             };
           //vertex                position_center   { 10.0f , 10.0f        }; // dips
-            vertex                position_top_left {                      }; // in dips
+            vertex                position_top_left { 0.0f , 0.0f          }; // in dips
             string                font_face         { L"Times New Roman"   }; // font family
             float                 font_size         { 15.0f                }; // * dpi? // MS "size * 96.0f/72.0f"
             colours               font_colour       { colours::Yellow      };
@@ -55,7 +56,6 @@ namespace hid
             void reset_rectangle ();
             void reset_brush     ();
             
-            
             float  const layout_width       ();
             float  const layout_width_half  ();
             float  const layout_height      ();
@@ -68,7 +68,8 @@ namespace hid
             
         public:
 
-            text( string       const in_content           = { L"empty"             } ,
+            text(void);
+            /*text(string       const in_content           ={L"empty"} ,
                   vertex       const in_position_top_left = { 10.0f , 10.0f        } ,
                   float        const in_font_size         = { 10.0f                } ,
                   dimensions   const in_layout_size       = { 200.0f , 150.0f      } ,
@@ -77,18 +78,20 @@ namespace hid
                   text_weight  const in_font_weight       = { text_weight::regular } ,
                   text_style   const in_font_style        = { text_style::normal   } ,
                   text_stretch const in_font_stretch      = { text_stretch::normal } ,
-                  string       const in_font              = { L"Times New Roman"   } );
+                  string       const in_font              = { L"Times New Roman"   } ); */
             
-            void  set_content          ( string const in_content );
-            void  add_content          ( string const in_string  );
-            void  set_position         ( vertex in_position      );
-            void  set_font_colour      ( colours const in_colour );
-            void  set_boundry_size     ( dimensions in_boundry_size );
-            void  set_rectangle_colour ( colours const in_colour );
-            void  set_rectangle_width  ( float const in_width    );
+            void  set_content          ( string     const in_content      );
+            void  add_content          ( string     const in_string       );
+            void  set_position         ( vertex     const in_position     );
+            void  set_font_colour      ( colours    const in_colour       );
+            //void  set_boundry_size     ( dimensions const in_boundry_size );
+            //void  set_rectangle_size   ( dimensions const in_boundry_size );
+            void  set_rectangle_colour ( colours    const in_colour       );
+            void  set_rectangle_width  ( float      const in_width        );
             void  draw                 ();
 
             vertex get_position();
+            //D2D1_POINT_2F get_position();
 
             rectangle_edge_middles middle_vertices();
             rectangle              formated_rectangle();

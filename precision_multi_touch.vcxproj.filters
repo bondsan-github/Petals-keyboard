@@ -151,6 +151,9 @@
     <ClInclude Include="headers\virtual_desktop.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="headers\windows_messages.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="headers\ClassDiagram.cd" />

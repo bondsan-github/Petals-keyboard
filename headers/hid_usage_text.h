@@ -15,7 +15,7 @@ namespace hid
     const usage_text usages
     {
        {  // page 0x00 undefined 
-          make_pair( L"undefined" , L"undefined" )
+         make_pair( L"undefined" , L"undefined" )
        } ,
 
        {  // page 0x01 generic desktop

@@ -13,9 +13,9 @@ namespace hid
         services.emplace( in_identifier , in_service );
     }
     
-    graphics_d2d * locate::graphics()
+    graphics_d2d & locate::graphics()
     {
-        return any_cast< graphics_d2d * >( services.find( service_identifier::graphics )->second );
+        return any_cast< graphics_d2d & >( services.find( service_identifier::graphics )->second );
     }
 
     write_d2d * locate::write()

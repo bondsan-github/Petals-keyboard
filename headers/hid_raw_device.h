@@ -57,7 +57,7 @@ namespace hid
 
               hid_raw_device( HANDLE in_device );
          bool is_multi_touch();
-         //~hid_raw_device() { close file }
+         ~hid_raw_device() { CloseHandle( file_pointer ); }
    };
 
 }

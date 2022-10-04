@@ -12,19 +12,20 @@ namespace hid
                         vertex in_b       ,
                         float in_width    ,
                         colours in_colour )
-    : a ( in_a ) , b ( in_b ) , width ( in_width ) , colour ( in_colour )
+    : a ( in_a ) , b ( in_b ) , width ( in_width ) , colour ( in_colour ) //, brush( locate::graphics().brush_solid( colour ) )
     {
-        reset();
+        //brush = locate::graphics().brush_solid( colour );
+        //reset();
     }
 
     void line_d2d::reset()
     {
-        brush = locate::graphics()->brush_solid( colour );
+        //brush = locate::graphics().brush_solid( colour );
     }
 
     void line_d2d::draw()
     {
-        locate::graphics()->draw_line( a , b , width , colour );
+        locate::graphics().draw_line( a , b , width , colour );
     }
 
 } // namespace hid

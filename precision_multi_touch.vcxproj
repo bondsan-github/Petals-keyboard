@@ -176,6 +176,7 @@
     <ClInclude Include="headers\hid_usage_text.h" />
     <ClInclude Include="headers\utility.h" />
     <ClInclude Include="headers\virtual_desktop.h" />
+    <ClInclude Include="headers\windows_messages.h" />
     <ClInclude Include="headers\write_d2d.h" />
     <ClInclude Include="headers\hidp_status.h" />
     <ClInclude Include="headers\hid_device.h" />

@@ -65,23 +65,26 @@ namespace hid
                 the shape of the layered window will be ignored 
                 and the mouse events will be passed to other windows underneath the layered window.*/
             //https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/december/windows-with-c-layered-windows-with-direct2d
-                page_window_pointer page = locate::graphics()->get_page();
+                
+                page_window_pointer page = locate::graphics().get_page();
 
                 BeginPaint( get_window() , & paint );
                 
-                page->BeginDraw();
+                if( page )
+                {
+                    page->BeginDraw();
 
-                page->SetTransform( Matrix3x2F::Identity() );
+                    page->SetTransform( Matrix3x2F::Identity() );
 
-                page->Clear( ColorF( 0.2f , 0.2f , 0.2f , 0.2f ) );
+                    page->Clear( ColorF( 0.2f , 0.2f , 0.2f , 0.2f ) );
 
-                input.draw();
+                    input.draw();
 
-                page->EndDraw();
+                    page->EndDraw();
 
-                long result = EndPaint( get_window() , & paint );
-                //if( result < 0 ) discard_resources();
-
+                    long result = EndPaint( get_window() , & paint );
+                    //if( result < 0 ) discard_resources();
+                }
             } break;
 
             case WM_SIZE:

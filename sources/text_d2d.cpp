@@ -10,10 +10,10 @@ namespace hid
     using namespace D2D1;
     using namespace Microsoft::WRL;
 
-    text::text( string       in_content           ,
+    /*text::text(string       in_content ,
                 vertex       in_position_top_left ,
                 float        in_font_size         ,
-                dimensions   in_layout_size       ,
+                dimensions   in_layout_size       , // setter bounds checks
                 float        in_rectangle_margin  , 
                 colours      in_font_colour       ,
                 text_weight  in_font_weight       ,
@@ -29,9 +29,15 @@ namespace hid
                 font_weight( in_font_weight )             ,
                 font_style( in_font_style )               ,
                 font_stretch( in_font_stretch )           ,
-                font_face( in_font_face )
+                font_face( in_font_face ) 
+                //brush( locate::graphics().brush_solid( font_colour ) )
     {
         reset();
+    }*/
+
+    text::text()
+    {
+        OutputDebugString( L"\n text::text()" );
     }
 
     void text::reset()
@@ -43,10 +49,8 @@ namespace hid
 
     void text::reset_format()
     {
-    //format.Reset();
-
         format = locate::write()->format(content ,
-                                          collection   ,
+                                          collection ,
                                           font_weight  ,
                                           font_style   ,
                                           font_stretch ,
@@ -56,7 +60,6 @@ namespace hid
 
     void text::reset_layout()
     {
-    layout.Reset();
         layout = locate::write()->layout( content , format , layout_size );
 
         reset_rectangle();
@@ -99,7 +102,7 @@ namespace hid
 
     void text::reset_brush()
     {
-        brush = locate::graphics()->brush_solid( font_colour );
+        locate::graphics().get_page()->CreateSolidColorBrush( font_colour , brush.ReleaseAndGetAddressOf() );
     }
 
     float const text::layout_width()
@@ -152,7 +155,7 @@ namespace hid
 
     vertex text::get_position()
     {
-        return position_top_left;
+        return D2D1_POINT_2F(position_top_left.x , position_top_left.y);
     }
 
     void text::set_font_colour( colours in_font_colour )
@@ -197,15 +200,15 @@ namespace hid
 
     void text::draw_text()
     {
-        locate::graphics()->get_page()->DrawTextLayout( get_position() ,
-                                                        layout.Get() ,
-                                                        brush.Get() ,
-                                                        static_cast< D2D1_DRAW_TEXT_OPTIONS >( font_options ) );
+        locate::graphics().get_page()->DrawTextLayout( position_top_left, //get_position() ,
+                                                       layout.Get() ,
+                                                       brush.Get() );
+                                                        //static_cast< D2D1_DRAW_TEXT_OPTIONS >( font_options ) );
     }
 
     void text::draw_rectangle()
     {
-        locate::graphics()->draw_rounded_rectangle( rrectangle , rectangle_radius , rectangle_width , rectangle_colour );
+        locate::graphics().draw_rounded_rectangle( rrectangle , rectangle_radius , rectangle_width , rectangle_colour );
     }
 
     planes const text::middle_planes()

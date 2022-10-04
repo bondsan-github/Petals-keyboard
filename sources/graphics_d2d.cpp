@@ -10,7 +10,7 @@ namespace hid
     {
         window = in_window;
 
-        locate::add_service( service_identifier::graphics , this );
+        locate::add_service( service_identifier::graphics , * this );
 
         D2D1_FACTORY_OPTIONS factory_options {};
         factory_options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
@@ -26,7 +26,7 @@ namespace hid
 
     page_window_pointer graphics_d2d::get_page()
     {
-        return page;
+        return page.Get();
     }
 
     void graphics_d2d::reset()
@@ -53,14 +53,27 @@ namespace hid
                                          page.ReleaseAndGetAddressOf() );
     }
 
-    brush_solid_pointer graphics_d2d::brush_solid( colours in_colour )
+    brush_solid_pointer graphics_d2d::brush_solid( colours in_colour)
+    {
+        brush_solid_pointer brush_solid{};
+    
+        get_page()->CreateSolidColorBrush( in_colour , brush_solid.ReleaseAndGetAddressOf());
+
+        return brush_solid.Get();
+    }
+
+    
+    //pass page
+    /*
+    ID2D1SolidColorBrush & graphics_d2d::brush_solid( colours in_colour )
     {
         brush_solid_pointer brush_solid {};
+        HRESULT result;
+        result = page->CreateSolidColorBrush( in_colour , brush_solid.ReleaseAndGetAddressOf() );
 
-        page->CreateSolidColorBrush( in_colour , brush_solid.ReleaseAndGetAddressOf() );
-
-        return brush_solid;
+        return ** brush_solid.ReleaseAndGetAddressOf();
     }
+    */
 
     /*
     ComPtr< stroke_style > graphics_d2d::style( colours in_colour )
@@ -110,11 +123,11 @@ namespace hid
 
     void graphics_d2d::draw_rectangle( rectangle in_rectangle )
     {
-        brush_solid_pointer  brush = brush_solid();
+        brush_solid_pointer brush = brush_solid();
         stroke_style_pointer style = stroke_style();
         float                stroke_width = 1.0f;
 
-        page->DrawRectangle( in_rectangle , brush.Get() , stroke_width , style.Get() );
+        page->DrawRectangle( in_rectangle , brush.Get() , stroke_width , style.Get());
 
     }
 
@@ -123,7 +136,7 @@ namespace hid
                                                float boundry_width ,
                                                colours colour )
     {
-        brush_solid_pointer  brush = brush_solid( colour );
+        brush_solid_pointer brush = brush_solid( colour );
         stroke_style_pointer style = stroke_style();
 
         page->DrawRoundedRectangle( in_rectangle ,
@@ -148,7 +161,7 @@ namespace hid
         rectangle.rect.bottom = position.y + in_size.height;
         rectangle.rect.left   = position.x;
 
-        brush_solid_pointer  brush = brush_solid( in_colour );
+        brush_solid_pointer brush = brush_solid( in_colour );
         stroke_style_pointer style = stroke_style();
 
         page->DrawRoundedRectangle( rectangle ,
@@ -200,9 +213,9 @@ namespace hid
         //page_dpi dpi = get_dpi();
 
         stroke_style_pointer style {}; // = stroke_style;
-        brush_solid_pointer  brush = brush_solid( in_colours );
+        brush_solid_pointer brush = brush_solid( in_colours );
 
-        page->DrawLine( in_a , in_b , brush.Get() , in_width , style.Get() );
+        page->DrawLine( in_a , in_b , brush.Get() , in_width , style.Get());
     }
 
     void graphics_d2d::resize()

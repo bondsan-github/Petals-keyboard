@@ -1,13 +1,13 @@
 #pragma once
 
 #include "..\headers\direct_2d.h"
-#include "..\headers\service.h"
+//#include "..\headers\service.h"
 
 namespace hid
 {
    using namespace std;
 
-   class hid_usages : public service
+   class hid_usages// : public service
    {
       public:
          

@@ -36,9 +36,11 @@ namespace hid
             void resize     ();
 
             page_window_pointer get_page        ();
+            //ID2D1HwndRenderTarget & get_page        ();
             page_dips           get_size_dips   ();
             page_dimensions     get_size_pixels ();
             page_dpi            get_dpi         ();
+            //ID2D1SolidColorBrush & brush_solid( colours in_colour = colours::Yellow );
             brush_solid_pointer brush_solid( colours in_colour = colours::Yellow );
             stroke_style_pointer stroke_style( stroke_cap_style  in_cap_start   = stroke_cap_style::flat  ,
                                                stroke_cap_style  in_cap_dash    = stroke_cap_style::flat  ,

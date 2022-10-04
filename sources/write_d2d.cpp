@@ -1,6 +1,7 @@
 #include "..\headers\write_d2d.h"
 #include "..\headers\graphics_d2d.h"
 #include "..\headers\locate.h"
+#include "..\headers\utility.h"
 
 namespace hid
 {
@@ -19,18 +20,18 @@ namespace hid
         //  translated using local system local language identifiers
     }
 
-    IDWriteTextFormat & write_d2d::format( string       in_font ,
+    text_format_pointer write_d2d::format( string       in_font ,
                                            font_collection_pointer in_collection ,
                                            text_weight  in_weight  ,
                                            text_style   in_style   ,
                                            text_stretch in_stretch ,
                                            float        in_size    ,
-                                           string       in_locale  )
+                                           string       in_locale  ) const
     {
         ComPtr< IDWriteTextFormat > format {};
 
         HRESULT result = write->CreateTextFormat( in_font.c_str() ,
-                                                  in_collection.Get() ,
+                                                  nullptr ,
                                                   static_cast< font_weight  >( in_weight  ),
                                                   static_cast< font_style   >( in_style  ) ,
                                                   static_cast< font_stretch >( in_stretch ) ,
@@ -38,13 +39,15 @@ namespace hid
                                                   in_locale.c_str() ,
                                                   format.ReleaseAndGetAddressOf() );
 
+        if( result ) { error(L"create format error"); }
+
         //format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER ); // _LEADING
         //format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
         //trimming trim{};    //trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;        //format->SetTrimming( & trim , 0 );
-        return format.;
+        return format;
     }
 
-    ComPtr< text_layout > write_d2d::layout( string              in_content ,
+    text_layout_pointer write_d2d::layout( string              in_content ,
                                            text_format_pointer in_format ,
                                            dimensions          in_dimensions ) // pixels * dpi
     {
@@ -71,8 +74,8 @@ namespace hid
                               string       in_font )
     {
         font_collection_pointer collection  {};
-        page_window_pointer     page        = locate::graphics()->get_page();
-        brush_pointer           brush       = locate::graphics()->brush_solid( in_colour );
+        page_window_pointer page            = locate::graphics().get_page();
+        //brush_pointer           brush       = locate::graphics().brush_solid( in_colour );
         text_format_pointer     text_format = format( in_font , 
                                                       collection.Get() ,
                                                       in_weight ,

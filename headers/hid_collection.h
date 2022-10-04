@@ -21,8 +21,7 @@ namespace hid
             link          first    { 0     }; // child     
             link          next     { 0     }; // sibling 
 
-            text          information {};
-
+            text          information;
                 
             void draw() { information.draw(); }
             void gather_information();
@@ -60,10 +59,10 @@ namespace hid
                 return * this;
             }
 
-            hid_collection() {};
+            /*hid_collection() {};
             hid_collection( hid_collection const & in_collection )
             {
                 * this = in_collection;
-            }
+            }*/
     };
 }

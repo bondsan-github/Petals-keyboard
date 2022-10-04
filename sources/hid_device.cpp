@@ -15,8 +15,8 @@ namespace hid
             gather_information();
 
             initialise_text_device();
-            initialise_text_collections();
-            initialise_text_input();
+            //initialise_text_collections();
+            //initialise_text_input();
         }
     }
 
@@ -40,8 +40,9 @@ namespace hid
                      text_boundry ,
                      rectangle_margin ,
                      text_colour );*/
-        information.set_position( position );
+
         information.set_content( content );
+        information.set_position( position );
         information.set_rectangle_width( rectangle_width );
         information.set_rectangle_colour( rectangle_colour );
 
@@ -66,10 +67,10 @@ namespace hid
         {
             item.gather_information();
 
-            position_x = information.formated_rectangle().left;
-            position_y = information.formated_rectangle().bottom + spacer.y;
+            //position_x = information.formated_rectangle().left;
+            //position_y = information.formated_rectangle().bottom + spacer.y;
             
-            item.information.set_position( { position_x , position_y } );
+            //item.information.set_position( { position_x , position_y } );
 
             //new_item.set_rectangle_colour( rectangle_colour );
             //new_item.set_rectangle_width( rectangle_width );
@@ -226,7 +227,7 @@ namespace hid
 
         for( auto & button : input_buttons )
         {
-            hid_local_item new_button {};
+            hid_local_item new_button;
 
             // type = input
             new_button.page            = button.UsagePage;

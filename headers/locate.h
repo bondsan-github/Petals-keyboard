@@ -22,11 +22,11 @@ namespace hid
         public:
 
             //template< typename service_type >
-            static void add_service( service_identifier in_identifier , any  in_service );
+            static void add_service( service_identifier in_identifier , any in_service );
             
             //template< typename service_type >
             //static service_type get_service( service_identifier in_service );
-            static graphics_d2d * graphics();
+            static graphics_d2d & graphics();
             static write_d2d    * write();
             static hid_usages   * usages();
             //static void add_service( service_identifier in_identifier , any in_service );

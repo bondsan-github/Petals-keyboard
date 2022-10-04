@@ -15,8 +15,8 @@ namespace hid
 
         const uint char_amount{ 200 };
 
-        wchar_t message[ char_amount ]{};
-        wchar_t display[ char_amount ]{};
+        wchar_t message[ char_amount ] {};
+        wchar_t display[ char_amount ] {};
         ulong   error_id               = GetLastError();
 
         FormatMessage(// FORMAT_MESSAGE_ALLOCATE_BUFFER |

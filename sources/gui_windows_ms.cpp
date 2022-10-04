@@ -2,13 +2,15 @@
 
 #include < cassert >
 #include < windows.h >
-
+#include < sstream >
 #include "..\headers\locate.h"
 
 namespace hid
 {
     void gui_windows_ms::initialise( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags )
     {
+        OutputDebugString( L"\n gui_windows_ms::initialise" );
+
         instance = in_instance; parameters = in_parameters; show_flags = in_show_flags;
 
         //locate::add_service( service_identifier::window , this );
@@ -138,6 +140,8 @@ namespace hid
 
         if( message == WM_NCCREATE )
         {
+            OutputDebugString( L"\n  main_window_process() - WM_NCCREATE" );
+
             CREATESTRUCT * create_ptr = reinterpret_cast< CREATESTRUCT * >( l_param );
 
             this_pointer = static_cast< gui_windows_ms * >( create_ptr->lpCreateParams );
@@ -148,6 +152,11 @@ namespace hid
         }
         else
         {
+            string wmessage { L"\n  main_window_process() - message = 0x" };
+            wmessage += to_wstring(message);
+
+            OutputDebugString( wmessage.c_str() );
+
             this_pointer = reinterpret_cast< gui_windows_ms * >( GetWindowLongPtr( in_window , GWLP_USERDATA ) );
         }
 

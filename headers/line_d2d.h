@@ -12,7 +12,8 @@ namespace hid
             vertex                  b      {};
             float                   width  { 1.0f };
             colours                 colour { D2D1::ColorF::Yellow };
-            ComPtr< brush_solid  >  brush  {};
+            //ID2D1SolidColorBrush & brush;
+            brush_solid_pointer brush {};
             ComPtr< stroke_style >  style  {};
 
         public:

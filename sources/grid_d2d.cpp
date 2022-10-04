@@ -8,7 +8,7 @@ namespace hid
 
         cell_amount.width  = in_column_amount;
         cell_amount.height = in_row_amount;
-        area               = locate::graphics()->get_size_dips();
+        area               = locate::graphics().get_size_dips();
 
         float cell_width  = area.width / cell_amount.width;
         float cell_height = area.height / cell_amount.height;
