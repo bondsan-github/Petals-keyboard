@@ -35,10 +35,18 @@ namespace hid // human interface device
     enum class raw_device_type         { mouse , keyboard , hid }; // Microsoft windows input types
     enum class factory_type            { force_dword = -1 , single_thread , multiple_threads };
 
+
     using      factory_d2d             = ID2D1Factory;
+    using      factory_d2d_options     = D2D1_FACTORY_OPTIONS;
     using      paint_structure         = PAINTSTRUCT;
-    // width , height
-    using      dimensions              = D2D1_SIZE_F;
+    
+    //using      dimensions              = D2D1_SIZE_F;
+    struct dimensions 
+    { 
+        float width  { 0 }; 
+        float height { 0 };
+    };
+
     using      colours                 = ColorF;
 
     using      page_window             = ID2D1HwndRenderTarget;
@@ -77,32 +85,32 @@ namespace hid // human interface device
     };
     */
 
-    using      write_factory           = IDWriteFactory;
-    enum class write_factory_type      { shared , isolated };
+    //using      write_factory           = IDWriteFactory;
+    //enum class write_factory_type      { shared , isolated };
     using      renderer_parameters     = IDWriteRenderingParams;
 
     using      font_collection         = IDWriteFontCollection;
     using      font_collection_pointer = ComPtr< font_collection >;
     using      font_family             = IDWriteFontFamily;
     using      font_collection_names   = IDWriteLocalizedStrings;
-    using      font_weight             = DWRITE_FONT_WEIGHT;
-    using      font_style              = DWRITE_FONT_STYLE;
-    using      font_stretch            = DWRITE_FONT_STRETCH;
+    //using      font_weight             = DWRITE_FONT_WEIGHT;
+    //using      font_style              = DWRITE_FONT_STYLE;
+    //using      font_stretch            = DWRITE_FONT_STRETCH;
 
-    using      text_format             = IDWriteTextFormat;
-    using      text_format_pointer     = ComPtr< text_format >;
-    using      text_layout             = IDWriteTextLayout;
-    using      text_layout_pointer     = ComPtr< text_layout >;
-    enum class text_style              { normal          , oblique       , italic         };
-    enum class text_weight             { light     = 300 , regular = 400 , bold     = 700 };
-    enum class text_stretch            { condensed = 3   , normal  = 5   , expanded = 7   };
-    enum class text_options            { force_dword    = -1 , 
+    //using      text_format             = IDWriteTextFormat;
+    //using      text_format_pointer     = ComPtr< text_format >;
+    //using      text_layout             = IDWriteTextLayout;
+    //using      text_layout_pointer     = ComPtr< text_layout >;
+    enum class font_style              { normal          , oblique       , italic         };
+    enum class font_weight             { light     = 300 , regular = 400 , bold     = 700 };
+    enum class font_stretch            { condensed = 3   , normal  = 5   , expanded = 7   };
+    enum class font_options            { force_dword    = -1 , 
                                          none           =  0 ,
                                          no_snap        =  1 ,
                                          clip           =  2 ,
                                          colour_font    =  4 ,
                                          no_snap_bitmap =  8 };
-    using text_metrics = DWRITE_TEXT_METRICS;
+    using      text_metrics            = DWRITE_TEXT_METRICS;
     using      text_analyser           = IDWriteTextAnalyzer;
 
     using      rectangle               = D2D_RECT_F;

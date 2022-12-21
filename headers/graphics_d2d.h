@@ -17,26 +17,28 @@ namespace hid
     {
         private:
 
-            HWND                  window       {};
-            ComPtr< factory_d2d > factory      {};
-            ComPtr< page_window > page         {};
+            HWND                      window       {};
+            ComPtr< factory_d2d >     factory      {};
+            ComPtr< page_window >     page         {};
             
-            paint_structure           paint        {};
-            colours                   colour_clear { 0.2f , 0.2f , 0.2f , 0.5f };
-            page_dimensions           size         { 1024 , 768 };
-            page_dips                 dips         {};
+            paint_structure           paint        {                                  };
+            colours                   colour_clear { 0.2f , 0.2f , 0.2f , 0.5f        };
+            page_dimensions           size         { 1024 , 768                       };
+            page_dips                 dips         { 0                                };
             page_dpi                  dpi          { .width = 96.0f , .height = 96.0f };
-            //result_win              result            { E_FAIL };
+            //result_win              result       { E_FAIL };
 
         public:
 
-            void initialise ( HWND in_window );
+             graphics_d2d( void );
+            ~graphics_d2d( void );
+
+            //void initialise 
             void reset      ();
             void draw       ();
             void resize     ();
 
-            page_window_pointer get_page        ();
-            //ID2D1HwndRenderTarget & get_page        ();
+            page_window_pointer get_page        (); //ID2D1HwndRenderTarget & get_page();
             page_dips           get_size_dips   ();
             page_dimensions     get_size_pixels ();
             page_dpi            get_dpi         ();
@@ -50,9 +52,9 @@ namespace hid
                                                stroke_dash_style in_dash_style  = stroke_dash_style::dash ,
                                                float             in_dash_offset = 1.0f                    );
             
-            void draw_line( vertex  in_a        = { 0.0f , 0.0f } , // dips 0..1
-                            vertex  in_b        = { 1.0f , 1.0f } ,
-                            float   in_width     = 1.0f            ,
+            void draw_line( vertex  in_a       = { 0.0f , 0.0f } , // dips 0..1
+                            vertex  in_b       = { 1.0f , 1.0f } ,
+                            float   in_width   = 1.0f            ,
                             colours in_colours = colours::Yellow );
 
             void draw_rectangle( rectangle in_rectangle );

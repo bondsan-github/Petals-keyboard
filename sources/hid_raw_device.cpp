@@ -4,9 +4,16 @@ namespace hid
 {
     using namespace std;
 
+    hid_raw_device::hid_raw_device() 
+    {
+        OutputDebugString( L"\n hid_raw_device::default constructor" );
+    }
+
     hid_raw_device::hid_raw_device( HANDLE in_device ) : device( in_device )
     {
-        uint data_size {};
+        OutputDebugString( L"\n hid_raw_device::parametertised constructor" );
+
+        uint data_size { 0 };
 
         GetRawInputDeviceInfo( device , requests.data , nullptr , & data_size );
 
@@ -47,6 +54,8 @@ namespace hid
 
         GetRawInputDeviceInfo( device , requests.path , path.data() , & path_char_amount );  // wchar_t
 
+        OutputDebugString( path.data() );
+
         // open i_o device for query 
         file_pointer = CreateFileW( path.data() ,
                                     0 ,                                  // access
@@ -59,9 +68,34 @@ namespace hid
 
     }
 
-    bool hid_raw_device::is_multi_touch() 
+    hid_raw_device::hid_raw_device( const hid_raw_device & copy ) 
+    {
+        OutputDebugString( L"\n hid_raw_device::copy constructor" );
+
+        device = copy.device;
+        page = copy.page;
+        usage = copy.usage;
+
+        file_pointer = copy.file_pointer;
+        path = copy.path;
+    }
+
+    //hid_raw_device::hid_raw_device( const hid_raw_device && move )// noexcept { OutputDebugString( L"\n hid_raw_device::move constructor" ); * this = move; }
+
+    //hid_raw_device & hid_raw_device::operator = ( const hid_raw_device & assignment ) { OutputDebugString( L"\n hid_raw_device::assignment constructor" ); return * this; }
+
+    //hid_raw_device & hid_raw_device::operator = ( const hid_raw_device && assignment_move )// noexcept { OutputDebugString( L"\n hid_raw_device::assignment move constructor" ); return * this; }
+
+    hid_raw_device::~hid_raw_device( void )
+    {
+        OutputDebugString( L"\n hid_raw_device::de-constructor" );
+
+        CloseHandle( file_pointer );
+    }
+
+    bool hid_raw_device::is_multi_touch() const
     { 
-        return page == HID_USAGE_PAGE_DIGITIZER && usage == HID_USAGE_DIGITIZER_TOUCH_PAD;
+        return ( page == HID_USAGE_PAGE_DIGITIZER && usage == HID_USAGE_DIGITIZER_TOUCH_PAD );
     }
 
 }

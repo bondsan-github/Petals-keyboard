@@ -2,22 +2,29 @@
 
 #include "..\headers\locate.h"
 #include "..\headers\write_d2d.h"
-#include "..\headers\gui_windows_ms.h"
+#include "..\headers\gui_microsoft.h"
 
 namespace hid
 {
-    void graphics_d2d::initialise( HWND in_window )
+    graphics_d2d::graphics_d2d()// HWND in_window )
     {
-        window = in_window;
+        OutputDebugString( L"\n graphics_d2d::constructor" );
 
-        locate::add_service( service_identifier::graphics , * this );
+        //locate::add_service( service_identifier::graphics , this );
+        //window = any_cast< gui_microsoft * >( locate::get_service( service_identifier::window ) )->get_window();
+        locate::set_graphics( this );
 
-        D2D1_FACTORY_OPTIONS factory_options {};
+        factory_d2d_options factory_options {};
         factory_options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
 
         D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory_options , factory.ReleaseAndGetAddressOf() ); //static_cast< D2D1_FACTORY_TYPE >( factory_type::single_thread );
         
         reset();
+    }
+
+    graphics_d2d::~graphics_d2d()
+    {
+        OutputDebugString( L"\n graphics_d2d::de-constructor" );
     }
 
     //enum class request_type { page }
@@ -33,7 +40,7 @@ namespace hid
     {
         RECT page_size {};
 
-        //gui_windows_ms * window_pointer = any_cast< gui_windows_ms * >( locate::get_service( service_identifier::window ) );
+        //static_assert( window != nullptr );
 
         GetClientRect( window , & page_size );
 
@@ -234,7 +241,6 @@ namespace hid
     }
 
 }
-
         //page_dpi          dpi         = get_dpi();
         //dimensions        size_dips   = get_size_dips();
         //page_dimensions   size_pixels = get_size_pixels();

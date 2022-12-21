@@ -1,23 +1,25 @@
 #pragma once
 
 #include < windows.h >
-//#include "..\headers\service.h"
+
+#include "..\headers\direct_2d.h"
+#include "..\headers\vertex.h"
 
 namespace hid
 {
-    class gui_windows_ms// : public service
+    class gui_microsoft
     {
         private:
          
-            using  uint = unsigned int;
-            using ulong = unsigned long;
+            //using  uint  = unsigned int;
+            //using  ulong = unsigned long;
 
-            struct dimensions { int  width {}; int  height {}; };
-            struct vertex     { int  x     {}; int  y      {}; };
+            //struct dimensions { int  width { 100 }; int  height { 100 }; };
+            //struct vertex     { int  x     { 0 }; int  y      {}; };
 
             HINSTANCE  instance         {};
             LPWSTR     parameters       {};
-            int        show_flags       {};
+            int        show_flags       { 0 };
          
             WNDCLASSEX window_class     {};
             HWND       window_principle {};
@@ -33,8 +35,8 @@ namespace hid
          //WS_EX_LAYOUTRTL
          /*If( shell language ) == Hebrew, Arabic, or language supports reading order alignment
               window horizontal origin = on the right edge. // horizontal++ advance to the left.*/
-
          /*WS_EX_NOACTIVATE*/
+
             float      x                 { 0.5f }; // vertex
             float      y                 { 0.5f };
             float      client_width      { 0.2f };
@@ -49,25 +51,34 @@ namespace hid
             vertex     position_center   {};
             vertex     desktop_center    {};
 
-            MSG        message{};
+            MSG        message {};
             
-            inline static const wchar_t class_name [] { L"precision_input" };
+            static inline const wchar_t class_name [] { L"precision_input" };
 
-            static inline gui_windows_ms * this_pointer {};
+            static inline gui_microsoft * this_pointer {}; //shared_pointer
 
             LRESULT result {};
             virtual LRESULT          message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
             static  LRESULT CALLBACK main_window_process( HWND window , UINT message , WPARAM w_param , LPARAM l_param );
-         //void calculate_layout();
+          
+            //void calculate_layout();
 
-        protected:
+        //protected:
 
         public:
       
+            gui_microsoft( void );
+            gui_microsoft( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags );
+            gui_microsoft( const gui_microsoft & copy );
+            gui_microsoft( const gui_microsoft && move );
+
+            gui_microsoft & operator = ( const gui_microsoft & assignment );
+            gui_microsoft & operator = ( gui_microsoft && assigned_move );
+
+            ~gui_microsoft();
+
             HWND get_window() const;
-            void initialise( const HINSTANCE instance , const LPWSTR parameters , const int show_flags );
             int  message_loop();
             //uint dpi();
     };
-
 }

@@ -11,7 +11,12 @@ namespace hid
    {
       public:
          
-         void    initialise();
+         //void    initialise();
+         hid_usages();
+         ~hid_usages();
+         // copy and move 
+         //
+
          wstring page  ( uint in_page );
          wstring usage ( uint in_page , uint in_usage );
          wstring type  ( uint in_page , int in_usage );

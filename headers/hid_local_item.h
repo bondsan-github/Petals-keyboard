@@ -1,41 +1,102 @@
 #pragma once
 
 #include "..\headers\direct_2d.h"
+#include "..\headers\text_d2d.h"
 
 #include "..\headers\hid_item.h"
 #include "..\headers\hid_collection.h"
 
 namespace hid
 {
-    struct hid_local_item : public hid_collection
+    class hid_local_item : public hid_collection
     {
-        ushort report_index    {};
-        ushort report_amount   {};
+        private:
 
-        ushort bit_field       {};
+            ushort report_index    { 0 };
+            ushort report_amount   { 0 };
 
-        bool   is_absolute     {}; // or relative
+            ushort bit_field       { 0 };
 
-        ushort origin_usage    {};
-        ushort origin_page     {};
+            bool   is_absolute     { false }; // or relative
 
-        bool   is_range        {};
-        range  usages          {};
-        ushort data_index      {};
-        range  datum_index     {};
+            ushort origin_usage    { 0 };
+            ushort origin_page     { 0 };
 
-        bool   has_strings     {};
-        ushort string          {}; // HidD_GetIndexedString        
-        range  strings         {};
+            bool   is_range        { false };
+            range  usages          { range{ 0 , 0 } };
+            ushort data_index      { 0 };
+            range  datum_index     { range{ 0 , 0 } };
 
-        bool   has_designators {};
-        ushort designator      {}; // describes body part recommended control. Index points to a designator in the Physical descriptor
-        range  designators     {};
+            bool   has_strings     { false };
+            ushort string          { 0 }; // HidD_GetIndexedString        
+            range  strings         { range{ 0 , 0 } };
 
-        //public:
-        //void page( const ushort in_page ) { page = in_page; }
-        wstring text();
+            bool   has_designators { false };
+            ushort designator      { 0 }; // describes body part recommended control. Index points to a designator in the Physical descriptor
+            range  designators     { range{ 0 , 0 } };
 
-        //hid_local_item & operator = ( const )
+            text information {};
+
+        public:
+
+            hid_local_item( void );
+            hid_local_item( const hid_local_item & copy );
+            hid_local_item( const hid_local_item && move );
+
+            hid_local_item & operator = ( const hid_local_item & assignment );
+            hid_local_item & operator = ( const hid_local_item && assignment_move );
+
+            ~hid_local_item( void );
+
+            void set_information();
+
+            ushort get_report_index()    const { return report_index;    }
+            ushort get_report_amount()   const { return report_amount;   }
+            ushort get_bit_field()       const { return bit_field;       }
+            bool   get_is_absolute()     const { return is_absolute;     } // or relative
+            ushort get_origin_usage()    const { return origin_usage;    }
+            ushort get_origin_page()     const { return origin_page;     }
+            bool   get_is_range()        const { return is_range;        }
+            range  get_usages_range()    const { return usages;          }
+            ushort get_data_index()      const { return data_index;      }
+            range  get_datum_index()     const { return datum_index;     }
+            bool   get_has_strings()     const { return has_strings;     }
+            ushort get_string_index()    const { return string;          } // HidD_GetIndexedString        
+            range  get_strings_range()   const { return strings;         }
+            long   get_strings_index_begin()   const { return strings.begin; }
+            long   get_strings_index_end()     const { return strings.end;   }
+            bool   get_has_designators() const { return has_designators; }
+            ushort get_designator()      const { return designator;      } // describes body part recommended control. Index points to a designator in the Physical descriptor
+            range  get_designators_range()     const { return designators;     }
+            long   get_designators_range_begin()     const { return designators.begin;     }
+            long   get_designators_range_end()     const { return designators.end;     }
+
+            void set_report_index       ( const ushort  in_report_index       ) { report_index    = in_report_index;    }
+            void set_report_amount      ( const ushort  in_report_amount      ) { report_amount   = in_report_amount;   }
+            void set_bit_field          ( const ushort  in_bit_field          ) { bit_field       = in_bit_field;       }
+            void set_is_absolute        ( const bool    in_is_absolute        ) { is_absolute     = in_is_absolute;     }
+            void set_origin_usage       ( const ushort  in_origin_usage       ) { origin_usage    = in_origin_usage;    }
+            void set_origin_page        ( const ushort  in_origin_page        ) { origin_page     = in_origin_page;     }
+            void set_is_range           ( const bool    in_is_range           ) { is_range        = in_is_range;        }
+            void set_usages             ( const range   in_usages             ) { usages          = in_usages;          }
+            void set_usages_begin       ( const ushort  in_usages_begin       ) { usages.begin    = in_usages_begin;    }
+            void set_usages_end         ( const ushort  in_usages_end         ) { usages.end      = in_usages_end;      }
+            void set_data_index         ( const ushort  in_data_index         ) { data_index      = in_data_index;      }
+            void set_datum_indicies     ( const range   in_datum_index        ) { datum_index     = in_datum_index;     }
+            void set_datum_index_begin  ( const ushort  in_datum_index_begin  ) { datum_index.begin = in_datum_index_begin; }
+            void set_datum_index_end    ( const ushort  in_datum_index_end    ) { datum_index.end   = in_datum_index_end;   }
+            void set_has_strings        ( const bool    in_has_strings        ) { has_strings     = in_has_strings;     }
+            void set_string_index       ( const ushort  in_string             ) { string          = in_string;          }
+            void set_strings_range      ( const range   in_strings            ) { strings         = in_strings;         }
+            void set_strings_range_begin ( const long in_range_begin ) { strings.begin = in_range_begin; }
+            void set_strings_range_end  ( const long in_range_end ) { strings.end = in_range_end; }
+            void set_has_designators    ( const bool    in_has_designators    ) { has_designators = in_has_designators; }
+            void set_designator         ( const ushort  in_designator         ) { designator      = in_designator;      }
+            void set_designators_range  ( const range   in_designators        ) { designators     = in_designators;     }
+            void set_designators_range_begin ( const long in_designators_range_begin ) { designators.begin = in_designators_range_begin; }
+            void set_designators_range_end   ( const long in_designators_range_end   ) { designators.end   = in_designators_range_end;   }
+            //void set_information_string ( const wstring in_information_string ) { set_information( in_information_string ); }
+
+            //hid_local_item & operator = ( const )
     };
 }

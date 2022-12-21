@@ -5,43 +5,54 @@
 
 namespace hid
 {
-    void hid_collection::gather_information()
+    hid_collection::hid_collection()
+    {
+        OutputDebugString( L"\n hid_collection::default constructor" );
+        //usages = any_cast< hid_usages * >( locate::get_service( service_identifier::usages ) );
+    }
+
+    hid_collection::~hid_collection()
+    {
+        OutputDebugString( L"\n hid_collection::de-constructor" );
+    }
+
+    void hid_collection::set_information()
     {
         wstring text;
 
         text = L"index\t: ";
-        text += to_wstring( index );
+        text += to_wstring( get_index() );
         text += L"\ntype\t: ";
         //text += L"\nidentifier:\t ";
         //text += 
-        text += hid_item_type_text.at( std::to_underlying( type ) ); // c++23
+        text += hid_item_type_text.at( std::to_underlying( get_type() ) ); // c++23
         text += L"\npage\t: ";
-        text += locate::usages()->page( page );
+        text += locate::get_usages().page( get_page() );
         text += L"\nusage\t: ";
-        text += locate::usages()->usage( page , usage );
+        text += locate::get_usages().usage(get_page() , get_usage());
 
         if( siblings )
         {
             text += L"\nsibling amount\t: ";
-            text += to_wstring( siblings );
+            text += to_wstring( get_sibling_amount() );
         }
 
         if( origin )
         {
             text += L"\norigin\t: ";
-            text += to_wstring( origin );
+            text += to_wstring( get_origin() );
         }
 
         if( next )
         {
             text += L"\nnext\t: ";
-            text += to_wstring( next );
+            text += to_wstring( get_next() );
         }
 
         if( first )
         {
             text += L"\nfirst\t: ";
-            text += to_wstring( first );
+            text += to_wstring( get_first() );
         }
 
         information.set_content( text );

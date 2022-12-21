@@ -10,10 +10,17 @@ namespace hid
 {
     using namespace std;
 
-    void hid_usages::initialise()
+    hid_usages::hid_usages()
     {
-        locate::add_service( service_identifier::usages , this );
+        OutputDebugString( L"\n hid_usages:default :constructor" );
+        //locate::add_service( service_identifier::usages , this );
+        locate::set_usages( this );
     }
+
+    hid_usages::~hid_usages()
+    {
+        OutputDebugString( L"\n hid_usages::de-constructor" );
+    };
 
     wstring hid_usages::page( uint in_page )
     {

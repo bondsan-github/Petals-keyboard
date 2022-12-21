@@ -4,8 +4,9 @@
 
 struct vertex
 {
-    vertex( D2D1_POINT_2F in_point ) : x( in_point.x ) , y( in_point.y ) { }
-    vertex( float x_in = 0.0f , float y_in = 0.0f ) : x( x_in ) , y( y_in ) {}
+    // using vertex_two_floats = D2D1_POINT_2F;
+    vertex( D2D1_POINT_2F in_point )                : x( in_point.x ) , y( in_point.y ) { }
+    vertex( float x_in = 0.0f , float y_in = 0.0f ) : x( x_in )       , y( y_in )       { }
     
     vertex & operator = ( vertex const & in_vertex ) // right variable
     {

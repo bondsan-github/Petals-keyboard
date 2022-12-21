@@ -50,8 +50,8 @@ namespace hid
     
     struct range
     {
-        long begin {};
-        long end   {};
+        long begin { 0 };
+        long end   { 0 };
     };
 
     using index      = ushort;
@@ -59,8 +59,8 @@ namespace hid
 
     struct limits
     {
-        long minumum {};
-        long maximum {};
+        long minimum { 0 };
+        long maximum { 0 };
     };
     
 } // namespace hid

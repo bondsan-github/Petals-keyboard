@@ -5,8 +5,10 @@
 
 namespace hid
 {
-    void hid_devices::initialise()
+    hid_devices::hid_devices( void )
     {
+        OutputDebugString( L"\n hid_devices::constructor" );
+
         uint                      amount   {};
         vector< raw_device_list > raw_list {}; // RAWINPUTDEVICELIST
 
@@ -32,6 +34,11 @@ namespace hid
         //    information.set_content( L"no precision multiple touch devices found" );
         //else
         //    information.set_content( L"" );
+    }
+
+    hid_devices::~hid_devices( void )
+    {
+        OutputDebugString( L"\n hid_devices::de-constructor" );
     }
 
     void hid_devices::draw()

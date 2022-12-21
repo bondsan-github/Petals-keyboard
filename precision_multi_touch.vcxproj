@@ -139,7 +139,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="implementations\main.cpp" />
-    <ClCompile Include="sources\grid_d2d.cpp" />
+    <ClCompile Include="sources\grid_d2d.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="sources\utility.cpp" />
     <ClCompile Include="sources\graphics_d2d.cpp" />
     <ClCompile Include="sources\hid_device.cpp" />
@@ -149,11 +151,13 @@
     <ClCompile Include="sources\hid_raw_device.cpp" />
     <ClCompile Include="sources\line_d2d.cpp" />
     <ClCompile Include="sources\locate.cpp" />
-    <ClCompile Include="sources\hid_multi_touch.cpp" />
+    <ClCompile Include="sources\hid_multi_touch.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="sources\hid_local_item.cpp" />
     <ClCompile Include="sources\text_d2d.cpp" />
     <ClCompile Include="sources\hid_usages.cpp" />
-    <ClCompile Include="sources\gui_windows_ms.cpp" />
+    <ClCompile Include="sources\gui_microsoft.cpp" />
     <ClCompile Include="sources\write_d2d.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -162,16 +166,21 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h" />
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h" />
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\um\WinUser.h" />
     <ClInclude Include="headers\direct_2d.h" />
     <ClInclude Include="headers\graphics_d2d.h" />
-    <ClInclude Include="headers\grid_d2d.h" />
+    <ClInclude Include="headers\grid_d2d.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="headers\vertex.h" />
     <ClInclude Include="headers\hid_global_item.h" />
     <ClInclude Include="headers\hid_local_item.h" />
     <ClInclude Include="headers\hid_collection.h" />
     <ClInclude Include="headers\line_d2d.h" />
     <ClInclude Include="headers\locate.h" />
-    <ClInclude Include="headers\service.h" />
+    <ClInclude Include="headers\service.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="headers\text_d2d.h" />
     <ClInclude Include="headers\hid_usage_text.h" />
     <ClInclude Include="headers\utility.h" />
@@ -182,14 +191,21 @@
     <ClInclude Include="headers\hid_device.h" />
     <ClInclude Include="headers\hid_devices.h" />
     <ClInclude Include="headers\hid_item.h" />
-    <ClInclude Include="headers\hid_multi_touch.h" />
+    <ClInclude Include="headers\hid_multi_touch.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="headers\hid_raw_device.h" />
     <ClInclude Include="headers\hid_usages.h" />
-    <ClInclude Include="headers\gui_windows_ms.h" />
+    <ClInclude Include="headers\gui_microsoft.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="documents\hid1_11.pdf" />
+    <None Include="documents\hut1_3_0.pdf" />
     <None Include="headers\ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="documents\Initialsation sequence.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

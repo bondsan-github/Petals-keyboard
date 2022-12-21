@@ -7,7 +7,7 @@
 
 namespace hid
 {
-    class grid_d2d : public service
+    class grid_d2d //                                                                                                                                                                                                                                                                                                                                          : public service
     {
         private:
     

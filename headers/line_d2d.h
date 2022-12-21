@@ -22,6 +22,7 @@ namespace hid
                       vertex in_b = { 1.0f , 1.0f } ,
                       float in_width = 1.0f ,
                       colours in_colour = colours( 0.4f , 0.4f , 0.2f , 0.2f ) );
+            ~line_d2d( void );
 
             void reset();
 

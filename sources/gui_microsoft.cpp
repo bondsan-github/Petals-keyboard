@@ -1,4 +1,4 @@
-#include "..\headers\gui_windows_ms.h"
+#include "..\headers\gui_microsoft.h"
 
 #include < cassert >
 #include < windows.h >
@@ -7,18 +7,51 @@
 
 namespace hid
 {
-    void gui_windows_ms::initialise( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags )
+    gui_microsoft::gui_microsoft( void )
     {
-        OutputDebugString( L"\n gui_windows_ms::initialise" );
+        OutputDebugString( L"\n gui_microsoft::default constructor" );
+    }
+
+    gui_microsoft::gui_microsoft( const gui_microsoft & copy )
+    {
+        OutputDebugString( L"\n gui_microsoft::copy constructor" );
+        //swap
+        instance = copy.instance;
+    }
+    
+    gui_microsoft & gui_microsoft::operator=( const gui_microsoft & assignment )
+    {
+        OutputDebugString( L"\n gui_microsoft::assignment operator" );
+        if( this != & assignment )
+        {}
+
+        return * this;
+    }
+
+    gui_microsoft & gui_microsoft::operator = ( gui_microsoft && assigned_move )
+    {
+        OutputDebugString( L"\n gui_microsoft::assigned move operator" );
+        return *this;
+    }
+
+    gui_microsoft::gui_microsoft( const gui_microsoft && move )
+    {
+        OutputDebugString( L"\n gui_microsoft::move constructor" );
+    }
+
+    gui_microsoft::gui_microsoft( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags )
+    {
+        OutputDebugString( L"\n gui_microsoft::parameterised constructor" );
 
         instance = in_instance; parameters = in_parameters; show_flags = in_show_flags;
 
         //locate::add_service( service_identifier::window , this );
+        locate::set_windows( this );
 
         window_class.cbSize = sizeof( WNDCLASSEX );
 
         window_class.style         = class_style;
-        window_class.lpfnWndProc   = gui_windows_ms::main_window_process;
+        window_class.lpfnWndProc   = gui_microsoft::main_window_process;
         window_class.hInstance     = instance; //instance that contains the window procedure for the class.
         window_class.lpszClassName = class_name;
 
@@ -102,8 +135,6 @@ namespace hid
 
         //assert( window_principle != nullptr );
 
-        
-
         //if( window_principle == nullptr ) error( L"create window ex" );
 
         //ShowWindow( window_principle , SW_MAXIMIZE );
@@ -113,14 +144,23 @@ namespace hid
                                     0 , // no color key     
                                     230 , // alpha value
                                     LWA_ALPHA );
+
+        //message_loop();
     }
 
-    HWND gui_windows_ms::get_window() const
+    gui_microsoft::~gui_microsoft()
+    {
+        OutputDebugString( L"\n gui_microsoft::de-constructor" );
+
+        //PostQuitMessage( 0 );
+    }
+
+    HWND gui_microsoft::get_window() const
     {
         return window_principle;
     }
 
-    int gui_windows_ms::message_loop()
+    int gui_microsoft::message_loop()
     {
         while( GetMessage( & message , 0 , 0 , 0 ) )
         {
@@ -133,7 +173,7 @@ namespace hid
 
     // to forward Windows messages from a global window procedure to member function window procedure
     // because we cannot assign a member function to WNDCLASS::lpfnWndProc.
-    LRESULT CALLBACK gui_windows_ms::main_window_process( HWND in_window , UINT message , WPARAM w_param , LPARAM l_param )
+    LRESULT CALLBACK gui_microsoft::main_window_process( HWND in_window , UINT message , WPARAM w_param , LPARAM l_param )
     {
         // If we are creating the window, set the window_ptr to the instance of CAppWindow associated with the window as the HWND's user data.
         // That way when we get messages besides WM_CREATE we can call the instance's WndProc and reference non-static member variables.
@@ -144,7 +184,7 @@ namespace hid
 
             CREATESTRUCT * create_ptr = reinterpret_cast< CREATESTRUCT * >( l_param );
 
-            this_pointer = static_cast< gui_windows_ms * >( create_ptr->lpCreateParams );
+            this_pointer = static_cast< gui_microsoft * >( create_ptr->lpCreateParams );
 
             SetWindowLongPtr( in_window , GWLP_USERDATA , reinterpret_cast< LONG_PTR >( this_pointer ) );
 
@@ -152,12 +192,11 @@ namespace hid
         }
         else
         {
-            string wmessage { L"\n  main_window_process() - message = 0x" };
-            wmessage += to_wstring(message);
+            //string wmessage { L"\n  main_window_process() - message = 0x" };
+            //wmessage += to_wstring(message);
+            //OutputDebugString( wmessage.c_str() );
 
-            OutputDebugString( wmessage.c_str() );
-
-            this_pointer = reinterpret_cast< gui_windows_ms * >( GetWindowLongPtr( in_window , GWLP_USERDATA ) );
+            this_pointer = reinterpret_cast< gui_microsoft * >( GetWindowLongPtr( in_window , GWLP_USERDATA ) );
         }
 
         if( this_pointer )
@@ -166,24 +205,94 @@ namespace hid
         return DefWindowProc( in_window , message , w_param , l_param );
     }
 
-    //window::~window()
-
-    LRESULT gui_windows_ms::message_handler( HWND in_window , UINT message , WPARAM wParam , LPARAM lParam )
+    LRESULT gui_microsoft::message_handler( HWND in_window , UINT message , WPARAM wParam , LPARAM lParam )
     {
         switch( message )
         {
+            case WM_CREATE:
+            {
+            } break;
+
+            /*
+            * https://docs.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged
+            case WM_DPICHANGED:
+            {
+                g_dpi = HIWORD( wParam );
+                UpdateDpiDependentFontsAndResources();
+
+                RECT * const prcNewWindow = ( RECT * ) lParam;
+                SetWindowPos( hWnd ,
+                              NULL ,
+                              prcNewWindow->left ,
+                              prcNewWindow->top ,
+                              prcNewWindow->right - prcNewWindow->left ,
+                              prcNewWindow->bottom - prcNewWindow->top ,
+                              SWP_NOZORDER | SWP_NOACTIVATE );
+                break;
+            }
+            */
             case WM_DESTROY:
             {
-                //PostQuitMessage( 0 );
+                PostQuitMessage( 0 );
+            } break;
+
+            case WM_PAINT:
+            {
+                // graphics.draw();
+
+                // UpdateLayeredWindow
+                /*Hit testing of a layered window is based on the shape and transparency of the window.
+                This means that the areas of the window that are color-keyed or whose alpha value is zero
+                will let the mouse messages through.
+                However, if the layered window has the WS_EX_TRANSPARENT extended window style,
+                the shape of the layered window will be ignored
+                and the mouse events will be passed to other windows underneath the layered window.*/
+            //https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/december/windows-with-c-layered-windows-with-direct2d
+
+                /*
+                page_window_pointer page = locate::graphics().get_page();
+
+                BeginPaint( get_window() , &paint );
+
+                if( page )
+                {
+                    page->BeginDraw();
+
+                    page->SetTransform( Matrix3x2F::Identity() );
+
+                    page->Clear( ColorF( 0.2f , 0.2f , 0.2f , 0.2f ) );
+
+                    input.draw();
+
+                    page->EndDraw();
+
+                    long result = EndPaint( get_window() , &paint );
+                    //if( result < 0 ) discard_resources();
+                }
+                */
+            } break;
+
+            case WM_SIZE:
+            {
+               //graphics.resize();
             } break;
 
             case WM_KEYDOWN:
             {
+                // input.key_down( wParam );
+
                 switch( wParam )
                 {
                     case VK_ESCAPE:
                     {
                         PostQuitMessage( 0 );
+                        //DestroyWindow( in_window );
+                    } break;
+
+                    case VK_SPACE:
+                    {
+                        //for( auto & device : input )
+                          //  device.display_information();
                     } break;
                 }
             }

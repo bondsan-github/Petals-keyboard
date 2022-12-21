@@ -8,12 +8,15 @@ namespace hid
     {
         protected:
 
-            std::vector< hid_device > input;
+            std::vector< hid_device > input {};
             //text                      information {};
 
         public:
 
-            void initialise();
+            hid_devices( void );
+            ~hid_devices( void );
+
+            //void initialise();
             void draw();
 
     };

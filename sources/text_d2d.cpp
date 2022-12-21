@@ -10,34 +10,151 @@ namespace hid
     using namespace D2D1;
     using namespace Microsoft::WRL;
 
-    /*text::text(string       in_content ,
-                vertex       in_position_top_left ,
-                float        in_font_size         ,
-                dimensions   in_layout_size       , // setter bounds checks
-                float        in_rectangle_margin  , 
-                colours      in_font_colour       ,
-                text_weight  in_font_weight       ,
-                text_style   in_font_style        ,
-                text_stretch in_font_stretch      ,
-                string       in_font_face         )
-              : content( in_content )                     ,
-                position_top_left( in_position_top_left ) ,
-                font_size( in_font_size )                 ,  
-                layout_size( in_layout_size )             ,
-                rectangle_margin( in_rectangle_margin )   ,
-                font_colour( in_font_colour )             ,
-                font_weight( in_font_weight )             ,
-                font_style( in_font_style )               ,
-                font_stretch( in_font_stretch )           ,
-                font_face( in_font_face ) 
-                //brush( locate::graphics().brush_solid( font_colour ) )
+    text::text( void )
     {
-        reset();
-    }*/
+        OutputDebugString( L"\n text::default constructor" );
+    }
 
-    text::text()
+    text::text( const text & copy )
     {
-        OutputDebugString( L"\n text::text()" );
+        OutputDebugString( L"\n text::copy constructor" );
+    }
+
+    text::text( const text && move )
+    {
+        OutputDebugString( L"\n text::move constructor" );
+    }
+
+    text & text::operator = ( const text & assignment )
+    {
+        OutputDebugString( L"\n text::assignment" );
+    }
+
+    text & text::operator = ( const text & assignment_move )
+    {
+        OutputDebugString( L"\n text::assignment_move" );
+    }
+
+    void text::set_font_locale( const string in_font_locale )
+    {
+        if( in_font_locale.empty() )
+            font_locale = L"en-us"; // en-uk
+            // else not a vaild locale
+        else
+            font_locale = in_font_locale;
+    }
+
+    string text::get_font_locale() const { return font_locale; }
+
+    void text::set_font_face( const string in_font_face )
+    {
+        if( in_font_face.empty() )
+            font_face = L"Times New Roman";
+        else
+            font_face = in_font_face;
+    }
+
+    string text::get_font_face() const { return font_face; }
+
+    void text::set_font_size( const float in_font_size )
+    {
+        if( in_font_size <= 0.0f )//|| in_font_size > )
+            font_size = 0.1f;
+        else
+            font_size = in_font_size;
+    }
+
+    float text::get_font_size() const { return font_size; }
+
+    void text::set_font_style( const font_style in_font_style )
+    {
+        _font_style = in_font_style;
+    }
+    font_style text::get_font_style() const { return _font_style; }
+    
+    void text::set_font_weight( const font_weight in_font_weight )
+    {
+        _font_weight = in_font_weight;
+    }
+
+    font_weight text::get_font_weight() const { return _font_weight; }
+
+    void text::set_font_options( const font_options in_font_options )
+    {
+        _font_options = in_font_options;
+    }
+    font_options text::get_font_options() const { return _font_options; }
+
+    void text::set_font_opacity( const float in_font_opacity ) 
+    {
+        if( in_font_opacity < 0.0f ) // || > 1.0f clamp(0.0,1.0);
+            font_opacity = 0.0f;
+        else
+            font_opacity = in_font_opacity;
+    }
+
+    float text::get_font_opacity() const { return font_opacity; }  
+
+    void text::set_font_weight( const font_weight in_font_weight ) 
+    {
+        _font_weight = in_font_weight;
+    }
+
+    font_weight text::get_font_weight() const { return _font_weight; }
+
+    void text::set_font_stretch( const font_stretch in_font_stretch ) 
+    {
+        _font_stretch = in_font_stretch;
+    }
+    font_stretch text::get_font_stretch() const { return _font_stretch; }
+
+    void text::set_layout_size( const dimensions in_layout_size )
+    {
+        // check sizes are within all screen bounds
+        layout_size = in_layout_size;
+    }
+
+    dimensions text::get_layout_size() const { return layout_size; }
+
+    void text::set_rectangle_size( const rectangle in_rectangle_size ) 
+    {
+        rectangle_size = in_rectangle_size;
+    }
+
+    rectangle text::get_rectangle_size() const { return rectangle_size; }
+
+    float text::get_layout_width() const
+    {
+    }
+
+    float text::get_layout_width_half() const
+    {
+
+    }
+
+    float text::get_layout_height() const
+    {
+
+    }
+
+    float text::get_layout_height_half() const
+    {
+
+    }
+
+    planes text::get_middle_planes() const
+    {
+
+    }
+
+    text::~text( void )
+    {
+        OutputDebugString( L"\n text::de-constructor" );
+
+        if( format ) format.Reset();
+        if( brush  ) brush.Reset();
+        if( layout ) layout.Reset();
+        if( collection ) collection.Reset();
     }
 
     void text::reset()
@@ -49,18 +166,18 @@ namespace hid
 
     void text::reset_format()
     {
-        format = locate::write()->format(content ,
+        format = locate::get_write().get_format( get_content() ,
                                           collection ,
-                                          font_weight  ,
-                                          font_style   ,
-                                          font_stretch ,
+                                          get_font_weight() ,
+                                          get_font_style() ,
+                                          get_font_stretch() ,
                                           font_size    ,
                                           font_locale  );
     }
 
     void text::reset_layout()
     {
-        layout = locate::write()->layout( content , format , layout_size );
+        layout = locate::get_write().set_layout( content , format , layout_size ); // set_layout
 
         reset_rectangle();
     }
@@ -68,7 +185,7 @@ namespace hid
     void text::reset_rectangle()
     {
         float  radius   = rectangle_radius;
-        vertex position = get_position();
+        vertex position = get_position_top_left();
         float  margin   = rectangle_margin;
 
         layout->GetMetrics( & layout_metrics );
@@ -88,9 +205,9 @@ namespace hid
         rrectangle.rect.bottom = position.y + layout_rectangle.bottom + margin;
     }
 
-    rectangle text::formated_rectangle()
+    rectangle text::get_formated_rectangle() const
     {
-        vertex position = get_position();
+        vertex position = get_position_top_left();
 
         layout_rectangle.top    = position.y + layout_metrics.top;
         layout_rectangle.right  = position.x + layout_metrics.width;
@@ -102,31 +219,31 @@ namespace hid
 
     void text::reset_brush()
     {
-        locate::graphics().get_page()->CreateSolidColorBrush( font_colour , brush.ReleaseAndGetAddressOf() );
+        locate::get_graphics().get_page()->CreateSolidColorBrush( font_colour , brush.ReleaseAndGetAddressOf() );
     }
 
-    float const text::layout_width()
+    float text::get_layout_width() const
     { 
         layout->GetMetrics( & layout_metrics );
 
         return layout_metrics.width;
     }
     
-    float const text::layout_width_half()
+    float text::get_layout_width_half() const
     { 
-        return layout_width() / 2.0f; 
+        return get_layout_width() / 2.0f; 
     }
 
-    float const text::layout_height()
+    float text::get_layout_height() const
     { 
         layout->GetMetrics( & layout_metrics );
 
         return layout_metrics.height;
     }
 
-    float const text::layout_height_half()
+    float text::get_layout_height_half() const
     {
-        return layout_height() / 2.0f;
+        return get_layout_height() / 2.0f;
     }
     
     /*
@@ -146,34 +263,43 @@ namespace hid
     }
     */
 
-    void text::set_position( vertex in_position )
+    void text::set_position_top_left( const vertex in_position_top_left )
     {
-        position_top_left = in_position;
+        //set_position_top_left( in_position_top_left );
 
         reset_rectangle();
     }
 
-    vertex text::get_position()
+    vertex text::get_position_top_left() const
     {
-        return D2D1_POINT_2F(position_top_left.x , position_top_left.y);
+        //return D2D1_POINT_2F(position_top_left.x , position_top_left.y);
+        return { get_position_top_left().x , get_position_top_left().y};
     }
 
-    void text::set_font_colour( colours in_font_colour )
+    void text::set_font_colour( const colours in_font_colour )
     {
         font_colour = in_font_colour;
 
         reset_brush();
     }
 
-    void text::set_rectangle_width( float const in_width )
+    colours text::get_font_colour() const
+    {}
+
+    void text::set_rectangle_edge_width( float const in_width )
     {
         rectangle_width = in_width;
     }
+    float text::get_reactangle_edge_width() const
+    {}
     
     void text::set_rectangle_colour( colours const in_colour )
     {
         rectangle_colour = in_colour;
     }
+
+    colours text::get_rectangle_colour() const
+    {}
 
     void text::set_content( string const in_content )
     {
@@ -182,6 +308,11 @@ namespace hid
         reset_format();
         reset_layout();
         reset_rectangle();
+    }
+
+    string text::get_content() const
+    {
+
     }
 
     void text::add_content( string const in_string )
@@ -200,7 +331,7 @@ namespace hid
 
     void text::draw_text()
     {
-        locate::graphics().get_page()->DrawTextLayout( position_top_left, //get_position() ,
+        locate::get_graphics().get_page()->DrawTextLayout( position_top_left, //get_position() ,
                                                        layout.Get() ,
                                                        brush.Get() );
                                                         //static_cast< D2D1_DRAW_TEXT_OPTIONS >( font_options ) );
@@ -208,29 +339,32 @@ namespace hid
 
     void text::draw_rectangle()
     {
-        locate::graphics().draw_rounded_rectangle( rrectangle , rectangle_radius , rectangle_width , rectangle_colour );
+        locate::get_graphics().draw_rounded_rectangle( rrectangle , rectangle_radius , rectangle_width , rectangle_colour );
     }
 
-    planes const text::middle_planes()
+    planes text::get_middle_planes() const
     {
         planes middle {};
 
-        middle.horizontal = get_position().x + layout_width_half();
-        middle.vertical   = get_position().y + layout_height_half();
+        middle.horizontal = get_position_top_left().x + get_layout_width_half();
+        middle.vertical   = get_position_top_left().y + get_layout_height_half();
 
         return middle;
     }
 
-    rectangle_edge_middles text::middle_vertices()
+    text_metrics text::get_text_metrics() const
+    {}
+
+    rectangle_edge_middles text::get_middle_vertices() const
     {
         rectangle_edge_middles middle     {};
 
-        vertex                 position   = get_position();
-        float                  horizontal = middle_planes().horizontal;
-        float                  vertical   = middle_planes().vertical;
+        vertex                 position   = get_position_top_left();
+        float                  horizontal = get_middle_planes().horizontal;
+        float                  vertical   = get_middle_planes().vertical;
         float                  margin     = rectangle_margin;
-        float                  width      = layout_width();
-        float                  height     = layout_height();
+        float                  width      = get_layout_width();
+        float                  height     = get_layout_height();
 
         middle.top.x    = vertical;
         middle.top.y    = position.y - margin;

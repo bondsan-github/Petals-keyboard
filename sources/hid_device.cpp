@@ -8,19 +8,28 @@ namespace hid
     using namespace std;
     //using namespace D2D1;
 
-    hid_device::hid_device( HANDLE in_device ) : hid_raw_device( in_device )
+    hid_device::hid_device( const HANDLE in_device ) : hid_raw_device( in_device )
     {
+        OutputDebugString( L"\n hid_device::constructor" );
+
         if( is_multi_touch() )
         {
-            gather_information();
+            //usage_list = make_unique< hid_usages >( any_cast< hid_usages * >( locate::get_service( service_identifier::usages ) ) );
 
-            initialise_text_device();
-            //initialise_text_collections();
-            //initialise_text_input();
+            collect_information();
+
+            set_text_device();
+            //set_text_collections();
+            //set_text_input();
         }
     }
 
-    void hid_device::initialise_text_device()
+    hid_device::~hid_device( void )
+    {
+        OutputDebugString( L"\n hid_device::de-constructor" );
+    }
+
+    void hid_device::set_text_device()
     {
         string content  {};
         vertex position { 30.0f , 30.0f };
@@ -30,9 +39,9 @@ namespace hid
         content += L"\nproduct\t\t: ";
         content += product;
         content += L"\npage\t\t: ";
-        content += locate::usages()->page( page );
+        content += locate::get_usages().page(get_page());
         content += L"\nusage\t\t: ";
-        content += locate::usages()->usage( page , usage );
+        content += locate::get_usages().usage(get_page() , get_usage());
 
         /*text device(content ,
                      position ,
@@ -54,7 +63,7 @@ namespace hid
         // += physical
     }
 
-    void hid_device::initialise_text_collections()
+    void hid_device::set_text_collections()
     {
         float  position_x    = 0;
         float  position_y    = 0;
@@ -65,7 +74,7 @@ namespace hid
 
         for( auto & item : collection )
         {
-            item.gather_information();
+            item.set_information();
 
             //position_x = information.formated_rectangle().left;
             //position_y = information.formated_rectangle().bottom + spacer.y;
@@ -97,7 +106,7 @@ namespace hid
         //main_window.paint.add_line( a , b , 0.5 , colours::White );
     }
 
-    void hid_device::initialise_text_input()
+    void hid_device::set_text_input()
     {
         //find( begin( items ) , end( items ) ,  )
         /*
@@ -162,21 +171,23 @@ namespace hid
            // write_ptr->add( input.text() );
     }
 
-    void hid_device::gather_information()
+    void hid_device::collect_information() // collect / colate
     {
         NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
 
-        HidD_GetAttributes         ( file_pointer , & attributes );
-        HidD_GetManufacturerString ( file_pointer , manufacturer , string_size );//manufacturer.data() , string_size );
-        HidD_GetProductString      ( file_pointer , product      , string_size );
-        HidD_GetPhysicalDescriptor ( file_pointer , physical     , string_size );
+        HidD_GetAttributes         ( get_file_pointer() , & attributes );
+        HidD_GetManufacturerString ( get_file_pointer() , manufacturer , string_size );//manufacturer.data() , string_size );
+        HidD_GetProductString      ( get_file_pointer() , product      , string_size );
+        HidD_GetPhysicalDescriptor ( get_file_pointer() , physical     , string_size );
 
         //vector< node > nodes {};
 
-        collection.resize( collection_amount );
+        collection.resize( get_collection_amount() );
 
-        // memcpy to vector data pointer = copy constructor
-        HidP_GetLinkCollectionNodes( collection.data() , & collection_amount , data );
+        // memmove to vector data pointer = copy constructor
+        ulong collection_amount { 0 };
+
+        HidP_GetLinkCollectionNodes( collection.data() , & collection_amount , get_data() );
 
         ushort index { 0 };
 
@@ -194,106 +205,138 @@ namespace hid
                new_item.first  = & items.at( node.FirstChild - 1 );
             */
             //collection.push_back( move( new_collection ) );//at( index ) = move( new_item );
-
-        using button_item = HIDP_BUTTON_CAPS;
-        using value_item  = HIDP_VALUE_CAPS;
-
-        vector< button_item > input_buttons   {};
-        vector< value_item >  input_values    {};
-
-        vector< button_item > output_buttons  {};
-        vector< value_item >  output_values   {};
-
-        vector< button_item > button_features {};
-        vector< value_item >  value_features  {};
         
-        input_buttons.resize   ( input.button_amount );
-        HidP_GetButtonCaps     ( HidP_Input   , input_buttons.data()   , & input.button_amount   , data );
+        input_buttons.resize   ( get_input().button_amount);
+        //                       report type  , data destination       , data size               , source data
+        HidP_GetButtonCaps     ( HidP_Input   , input_buttons.data()   , & get_input().button_amount   , get_data() );
 
-        input_values.resize    ( input.value_amount );
-        HidP_GetValueCaps      ( HidP_Input   , input_values.data()    , & input.value_amount    , data );
+        input_values.resize    ( get_input().value_amount );
+        HidP_GetValueCaps      ( HidP_Input   , input_values.data()    , & get_input().value_amount    , get_data() );
 
-        output_buttons.resize  ( output.button_amount );
-        HidP_GetButtonCaps     ( HidP_Output  , output_buttons.data()  , & output.button_amount  , data);
+        output_buttons.resize  ( get_output().button_amount );
+        HidP_GetButtonCaps     ( HidP_Output  , output_buttons.data()  , &get_output().button_amount  , get_data() );
 
-        output_values.resize   ( output.value_amount );
-        HidP_GetValueCaps      ( HidP_Output  , output_values.data()   , & output.value_amount   , data );
+        output_values.resize   ( get_output().value_amount );
+        HidP_GetValueCaps      ( HidP_Output  , output_values.data()   , &get_output().value_amount   , get_data() );
 
-        button_features.resize ( feature.button_amount );
-        HidP_GetButtonCaps     ( HidP_Feature , button_features.data() , & feature.button_amount , data );
+        button_features.resize ( get_feature().button_amount );
+        HidP_GetButtonCaps     ( HidP_Feature , button_features.data() , &get_feature().button_amount , get_data() );
 
-        value_features.resize  ( feature.value_amount );
-        HidP_GetValueCaps      ( HidP_Feature , value_features.data()  , & feature.value_amount  , data );
+        value_features.resize  ( get_feature().value_amount );
+        HidP_GetValueCaps      ( HidP_Feature , value_features.data()  , &get_feature().value_amount  , get_data() );
 
-        for( auto & button : input_buttons )
+        for( auto & button : input_buttons ) //input_buttons.release
         {
-            hid_local_item new_button;
+            hid_local_item new_button {};
 
             // type = input
-            new_button.page            = button.UsagePage;
+            new_button.set_page( button.UsagePage );
 
-            new_button.report_index    = button.ReportID;
-            new_button.report_amount   = button.ReportCount; // Available in API version >= 2 only.
+            new_button.set_report_index( button.ReportID ); // report identifier
+            new_button.set_report_amount( button.ReportCount );
 
-            new_button.bit_field       = button.BitField;
+            new_button.set_bit_field( button.BitField );
 
-            new_button.origin          = button.LinkCollection;
-            new_button.origin_page     = button.LinkUsagePage;
-            new_button.origin_usage    = button.LinkUsage;
+            new_button.set_origin( button.LinkCollection );
+            new_button.set_origin_page( button.LinkUsagePage );
+            new_button.set_origin_usage( button.LinkUsage );
 
-            new_button.is_range        = button.IsRange;
-            new_button.is_absolute     = button.IsAbsolute;
-            new_button.is_alias        = button.IsAlias;
+            new_button.set_is_range( button.IsRange );
+            new_button.set_is_absolute( button.IsAbsolute );
+            new_button.set_is_alias( button.IsAlias ); // does button have multiple usages
 
-            new_button.has_designators = button.IsDesignatorRange;
-            new_button.has_strings     = button.IsStringRange;
+            new_button.set_has_designators( button.IsDesignatorRange );
+            new_button.set_has_strings( button.IsStringRange );
 
-            if( new_button.is_range )
+            if( new_button.get_is_range() )
             {
-                new_button.usages.begin = button.Range.UsageMin;
-                new_button.usages.end   = button.Range.UsageMax;
+                new_button.set_usages_begin( button.Range.UsageMin );
+                new_button.set_usages_end( button.Range.UsageMax );
 
-                new_button.datum_index.begin  = button.Range.DataIndexMin;
-                new_button.datum_index.end    = button.Range.DataIndexMax;
+                new_button.set_datum_index_begin( button.Range.DataIndexMin );
+                new_button.set_datum_index_end( button.Range.DataIndexMax );
+
+                new_button.set_strings_range_begin( button.Range.StringMin ); //HidD_GetIndexedString
+                new_button.set_strings_range_end( button.Range.StringMax );
+
+                new_button.set_designators_range_begin( button.Range.DesignatorMin ); // physical descriptor
+                new_button.set_designators_range_end( button.Range.DesignatorMax );
             }
             else
             {
-                new_button.usage        = button.NotRange.Usage;
-                new_button.data_index   = button.NotRange.DataIndex;
+                new_button.set_usage( button.NotRange.Usage );
+                new_button.set_data_index( button.NotRange.DataIndex );
+                new_button.set_string_index( button.NotRange.StringIndex );
+                new_button.set_designator( button.NotRange.DesignatorIndex );
             }
             
-            if( new_button.has_strings )
-            {
-                new_button.strings.begin = button.Range.StringMin;
-                new_button.strings.end   = button.Range.StringMax;
-                  //HidD_GetIndexedString
-            }
-            else
-            {
-                new_button.string = button.NotRange.StringIndex;
-            }
+            //if( new_button.get_has_strings() )
+            //{} else {}
+            //if( new_button.get_has_designators() )
+            //{} else {}
 
-            if( new_button.has_designators )
-            {
-                new_button.designators.begin = button.Range.DesignatorMin;
-                new_button.designators.end   = button.Range.DesignatorMax;
-                // physical descriptor
-            }
-            else
-            {
-                new_button.designator = button.NotRange.DesignatorIndex;
-            }
+            //new_button.gather_information(); get_information_string()
 
-            new_button.gather_information();
-
-            input.buttons.emplace_back( move( new_button ) );
+            get_input().buttons.emplace_back( move( new_button ) );
         }
 
         for( auto & value : input_values )
         {
-            //value new_value {};
-            //input_value.BitField;
+            hid_global_item new_value {};
+
+            new_value.set_page( value.UsagePage );
+
+            new_value.set_origin( value.LinkCollection );   // A unique internal index pointer
+            new_value.set_origin_usage( value.LinkUsage );
+            new_value.set_origin_page( value.LinkUsagePage );
+
+            new_value.set_is_alias( value.IsAlias );
+            new_value.set_is_range( value.IsRange );
+            
+            new_value.set_is_range( value.IsDesignatorRange );
+            new_value.set_is_absolute( value.IsAbsolute );
+
+            new_value.set_has_strings( value.IsStringRange );
+            new_value.set_has_null( value.HasNull );
+
+            new_value.set_bit_amount( value.BitSize );
+            new_value.set_bit_field( value.BitField );
+
+            new_value.set_report_index( value.ReportID );
+            new_value.set_report_amount( value.ReportCount );
+
+            new_value.set_unit_exponent( value.UnitsExp );
+            new_value.set_unit( value.Units );
+
+            new_value.set_logical_limit_minimum( value.LogicalMin );
+            new_value.set_logical_limit_maximum( value.LogicalMax );
+            new_value.set_physical_limit_minimum( value.PhysicalMin );
+            new_value.set_physical_limit_maximum( value.PhysicalMax );
+
+            if( new_value.get_is_range() )
+            {
+                new_value.set_usages_begin( value.Range.UsageMin );
+                new_value.set_usages_end( value.Range.UsageMax );
+
+                new_value.set_datum_index_begin( value.Range.DataIndexMin );
+                new_value.set_datum_index_end( value.Range.DataIndexMax );
+
+                new_value.set_strings_range_begin( value.Range.StringMin ); //HidD_GetIndexedString
+                new_value.set_strings_range_end( value.Range.StringMax );
+
+                new_value.set_designators_range_begin( value.Range.DesignatorMin ); // physical descriptor
+                new_value.set_designators_range_end( value.Range.DesignatorMax );
+            }
+            else
+            {
+                new_value.set_usage( value.NotRange.Usage );
+                new_value.set_data_index( value.NotRange.DataIndex );
+                new_value.set_string_index( value.NotRange.StringIndex );
+                new_value.set_designator( value.NotRange.DesignatorIndex );
+            }
         }
+
+        
 
         //new_item.origin = input.LinkCollection; vector<main_item>::reference
     }

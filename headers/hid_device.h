@@ -7,7 +7,11 @@
 #include "..\headers\hid_raw_device.h"
 
 #include "..\headers\text_d2d.h"
-#include "..\headers\grid_d2d.h"
+#include "..\headers\line_d2d.h"
+#include "..\headers\hid_usages.h"
+//#include "..\headers\grid_d2d.h"
+
+#include < memory >
 
 namespace hid
 {
@@ -37,32 +41,54 @@ namespace hid
             text                     information      {};
             //vector< text >          collection_texts        {};
             
-            bool                    draw_information  { true              };
-            wstring                 text_font         { L"Cascasia code"  }; // { L"Sitka" };
-            float                   text_size         { 15.0f             };
-            colours                 text_colour       { colours::White    };
-            dimensions              text_boundry      { 500.0f , 500.0f   };
-            float                   rectangle_margin  { 0.0f };
-            float                   rectangle_width   { 1.0f              };
-            colours                 rectangle_colour  { colours::DarkCyan };
+            bool                     draw_information  { true              };
 
-            vertex const            spacer            { 15.0f, 15.0f      };
+            wstring                  text_font         { L"Cascasia code"  }; // { L"Sitka" };
+            float                    text_size         { 15.0f             };
+            colours                  text_colour       { colours::White    };
+            dimensions               text_boundry      { 500.0f , 500.0f   };
+
+            float                    rectangle_margin  { 0.0f };
+            float                    rectangle_width   { 1.0f              };
+            colours                  rectangle_colour  { colours::DarkCyan };
+
+            vertex const             spacer            { 15.0f, 15.0f      };
             
-            uint                    index             {};
-            vector< line_d2d >      lines             {};
+            uint                     index             {};
+            vector< line_d2d >       lines             {};
+
+            using button_item = HIDP_BUTTON_CAPS;
+            using value_item  = HIDP_VALUE_CAPS;
+
+            vector< button_item > input_buttons{};
+            vector< value_item >  input_values{};
+
+            vector< button_item > output_buttons{};
+            vector< value_item >  output_values{};
+
+            vector< button_item > button_features{};
+            vector< value_item >  value_features{};
 
         private:
 
-            void gather_information          ();
-            void initialise_text_device      ();
-            void initialise_text_collections ();
-            void initialise_text_input       ();
+            void collect_information      ();
+            void set_text_device      ();
+            void set_text_collections ();
+            void set_text_input       ();
 
         public:
 
-                 hid_device( HANDLE in_device );
-            void display_information();
-            void texts_items_input();
-            void draw();
+                 hid_device  ( const HANDLE in_device );
+                 ~hid_device ( void );
+
+                 hid_device( const hid_device & copy );
+                 hid_device( const hid_device && move ) noexcept;
+
+                 hid_device & operator = ( const hid_device & assignment );
+                 hid_device & operator = ( const hid_device && assignment_move ) noexcept;
+
+            void display_information ();
+            void texts_items_input   ();
+            void draw                ();
     };
 }

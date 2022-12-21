@@ -16,6 +16,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Documents">
+      <UniqueIdentifier>{cf6f7aaf-b8cb-43ec-92e6-b08cab4b62fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="implementations\main.cpp">
@@ -24,7 +27,7 @@
     <ClCompile Include="sources\graphics_d2d.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="sources\gui_windows_ms.cpp">
+    <ClCompile Include="sources\gui_microsoft.cpp">
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="sources\locate.cpp">
@@ -97,7 +100,7 @@
     <ClInclude Include="headers\hid_usages.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\gui_windows_ms.h">
+    <ClInclude Include="headers\gui_microsoft.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\graphics_d2d.h">
@@ -154,9 +157,23 @@
     <ClInclude Include="headers\windows_messages.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\um\WinUser.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="headers\ClassDiagram.cd" />
     <None Include="ClassDiagram.cd" />
+    <None Include="documents\hid1_11.pdf">
+      <Filter>Documents</Filter>
+    </None>
+    <None Include="documents\hut1_3_0.pdf">
+      <Filter>Documents</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="documents\Initialsation sequence.txt">
+      <Filter>Documents</Filter>
+    </Text>
   </ItemGroup>
 </Project>
