@@ -27,27 +27,32 @@ namespace hid
 
         public:
 
-            void set_link_main_item         ( const link in_link           ) { main_item = in_link; } // >= 0 else message error
-            void set_bit_amount             ( const ushort in_bit_amount   ) { bit_amount = in_bit_amount; } // >= 0
-            void set_unit_exponent          ( const ulong in_unit_exponent ) { unit_exponent = in_unit_exponent; }
-            void set_unit                   ( const ulong in_unit          ) { unit = in_unit; }
-            void set_has_null               ( const bool in_has_null       ) { has_null = in_has_null; }
-            void set_is_absolute            ( const bool in_is_absolute    ) { is_absolute = in_is_absolute; }
-            void set_physical_limit_minimum ( const long in_limit_minimum  ) { physical.minimum = in_limit_minimum; }
-            void set_physical_limit_maximum ( const long in_limit_maximum  ) { physical.maximum = in_limit_maximum; }
-            void set_logical_limit_minimum  ( const long in_limit_minimum  ) { logical.minimum = in_limit_minimum; }
-            void set_logical_limit_maximum  ( const long in_limit_maximum  ) { logical.maximum = in_limit_maximum; }
+            //hid_global_item();
+            //hid_global_item( hid_global_item & in_copy );
+            //hid_global_item( hid_global_item && in_move );
+            //~hid_global_item();
 
-            link   get_link_main_item()         const { return main_item; }
-            ushort get_bit_amount()             const { return bit_amount; }
-            ulong  get_unit_exponent()          const { return unit_exponent; }
-            ulong  get_unit()                   const { return unit; }
-            bool   get_has_null()               const { return has_null; }
-            bool   get_is_absolute()            const { return is_absolute ; }
-            long   get_physical_limit_minimum() const { return physical.minimum; }
-            long   get_physical_limit_maximum() const { return physical.maximum; }
-            long   get_logical_limit_minimum()  const { return logical.minimum; }
-            long   get_logical_limit_maximum()  const { return logical.maximum; }
+            void set_link_main_item         ( link in_link           ) { main_item = in_link; } // >= 0 else message error
+            void set_bit_amount             ( ushort in_bit_amount   ) { bit_amount = in_bit_amount; } // >= 0
+            void set_unit_exponent          ( ulong in_unit_exponent ) { unit_exponent = in_unit_exponent; }
+            void set_unit                   ( ulong in_unit          ) { unit = in_unit; }
+            void set_has_null               ( bool in_has_null       ) { has_null = in_has_null; }
+            void set_is_absolute            ( bool in_is_absolute    ) { is_absolute = in_is_absolute; }
+            void set_physical_limit_minimum ( long in_limit_minimum  ) { physical.minimum = in_limit_minimum; }
+            void set_physical_limit_maximum ( long in_limit_maximum  ) { physical.maximum = in_limit_maximum; }
+            void set_logical_limit_minimum  ( long in_limit_minimum  ) { logical.minimum = in_limit_minimum; }
+            void set_logical_limit_maximum  ( long in_limit_maximum  ) { logical.maximum = in_limit_maximum; }
+
+            link   get_link_main_item()         { return main_item; }
+            ushort get_bit_amount()             { return bit_amount; }
+            ulong  get_unit_exponent()          { return unit_exponent; }
+            ulong  get_unit()                   { return unit; }
+            bool   get_has_null()               { return has_null; }
+            bool   get_is_absolute()            { return is_absolute ; }
+            long   get_physical_limit_minimum() { return physical.minimum; }
+            long   get_physical_limit_maximum() { return physical.maximum; }
+            long   get_logical_limit_minimum()  { return logical.minimum; }
+            long   get_logical_limit_maximum()  { return logical.maximum; }
     };
 
         // uint usages = identifiers_usage.maximum - identifiers_usage.minumum;

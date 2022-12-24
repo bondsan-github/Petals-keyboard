@@ -6,16 +6,12 @@
 
 namespace hid
 {
-    hid_local_item::hid_local_item()
-    {
-        OutputDebugString( L"\n hid_local_item::constructor" );
-        //usages = any_cast< hid_usages * >( locate::get_service( service_identifier::usages ) );
-    }
-
-    hid_local_item::~hid_local_item()
-    {
-        OutputDebugString( L"\n hid_local_item::de-constructor" );
-    }
+    //hid_local_item::hid_local_item() { OutputDebugString( L"\n hid_local_item::default constructor" ); }
+    //hid_local_item::hid_local_item( const hid_local_item & copy ) { OutputDebugString( L"\n hid_local_item::copy constructor" ); }
+    //hid_local_item::hid_local_item( hid_local_item && move ) { OutputDebugString( L"\n hid_local_item::move constructor" ); }
+    //hid_local_item & hid_local_item::operator = ( const hid_local_item & assignment ) {}
+    //hid_local_item & hid_local_item::operator = ( const hid_local_item && assignment_move ) {}
+    //hid_local_item::~hid_local_item() { OutputDebugString( L"\n hid_local_item::de-constructor" ); }
 
     void hid_local_item::set_information()
     {
@@ -72,6 +68,6 @@ namespace hid
         //text += has_strings;
         //text += has_designators;
 
-        information.set_content( move( text ) );
+        information.set_content( text );
     };
 }

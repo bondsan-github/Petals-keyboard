@@ -7,39 +7,36 @@ namespace hid
 {
     hid_devices::hid_devices( void )
     {
-        OutputDebugString( L"\n hid_devices::constructor" );
+        // get device amount
+        GetRawInputDeviceList( nullptr , & device_amount , sizeof( raw_device_list ) );
 
-        uint                      amount   {};
-        vector< raw_device_list > raw_list {}; // RAWINPUTDEVICELIST
+        raw_list.resize( device_amount );
 
-        GetRawInputDeviceList( nullptr , & amount , sizeof( raw_device_list ) );
+        // get device list
+        GetRawInputDeviceList( raw_list.data() , & device_amount , sizeof( raw_device_list ) );
 
-        raw_list.resize( amount );
-
-        GetRawInputDeviceList( raw_list.data() , & amount , sizeof( raw_device_list ) );
-
+        // copy only multiple touch devices to input vector
         for( auto & device : raw_list )
         {
             hid_raw_device new_raw_device( device.hDevice );
 
             if( new_raw_device.is_multi_touch() )
             {
-                hid_device new_hid_device( device.hDevice );
-                input.emplace_back( move( new_hid_device ) );
+                hid_device new_hid_device( new_raw_device );
+
+                input.push_back( new_hid_device );
             }
         }
 
+        //raw_list.clear();
+
         //if( input.empty() )
-            //locate
         //    information.set_content( L"no precision multiple touch devices found" );
         //else
         //    information.set_content( L"" );
     }
 
-    hid_devices::~hid_devices( void )
-    {
-        OutputDebugString( L"\n hid_devices::de-constructor" );
-    }
+    //hid_devices::~hid_devices( void ) { OutputDebugString( L"\n hid_devices::de-constructor" ); }
 
     void hid_devices::draw()
     {

@@ -8,42 +8,35 @@ namespace hid
    {
        private:
 
-           ComPtr< IDWriteFactory >         write    { nullptr };
+           IDWriteFactory *        write;
 
-           //ComPtr< IDWriteTextFormat > format;//{ nullptr };
-           //ComPtr< IDWriteTextLayout > layout;// {nullptr };
+           //ComPtr< IDWriteTextFormat >     format;
+           //ComPtr< IDWriteTextLayout >     layout;
 
-           ComPtr< font_collection >       fonts    { nullptr };
-           ComPtr< font_family >           family   { nullptr };
-           ComPtr< font_collection_names > names    { nullptr };
-           ComPtr< text_analyser >         analyser { nullptr };
-           string                          locale   { L"en-us" }; // en-uk
+           //ComPtr< font_collection >       fonts;
+           //ComPtr< font_family >           family;
+           //ComPtr< font_collection_names > names;
+           //ComPtr< text_analyser >         analyser;
+           string                          locale   { L"en-us" }; // en-GB
 
        public:
 
             write_d2d();
-            ~write_d2d();
-
-           //void initialise();
+            //~write_d2d();
          
-            //IDWriteTextFormat * get_format( string        in_font    = L"Times New Roman"   ,
-            ComPtr< IDWriteTextFormat > get_format(
-                             string in_font    = L"Times New Roman" ,
-                                              //ComPtr< font_collection > in_collection = { nullptr } ,
-                                              //IDWriteFontCollection * in_collection = nullptr ,
-                              DWRITE_FONT_WEIGHT in_weight = DWRITE_FONT_WEIGHT_NORMAL ,
-                                              //font_weight   in_weight  = font_weight::regular ,
-                              DWRITE_FONT_STYLE in_style = DWRITE_FONT_STYLE_NORMAL ,
-                                              //font_style    in_style   = font_style::normal ,
-                              DWRITE_FONT_STRETCH in_stretch = DWRITE_FONT_STRETCH_NORMAL ,
-                                              //font_stretch  in_stretch = font_stretch::normal ,
-                              float         in_size    = 15.0f ,
-                              string        in_locale  = L"en-us" );
+            void get_format( IDWriteTextFormat * in_format,
+                             string              in_font_family_name    = L"Times New Roman" ,
+                             ComPtr< IDWriteFontCollection > in_font_collection = nullptr ,
+                             DWRITE_FONT_WEIGHT  in_font_weight = DWRITE_FONT_WEIGHT_NORMAL ,
+                             DWRITE_FONT_STYLE   in_font_style = DWRITE_FONT_STYLE_NORMAL ,
+                             DWRITE_FONT_STRETCH in_font_stretch = DWRITE_FONT_STRETCH_NORMAL ,
+                             float               in_font_size    = 15.0f ,
+                             string              in_font_locale  = L"en-us" );
 
-            IDWriteTextLayout * get_layout( string              in_content ,
-                                            //text_format_pointer in_text_format ,
-                                            IDWriteTextFormat * in_text_format,
-                                            dimensions          in_dimensions = { 200.0f , 200.0f } ) const; // pixels
+            void get_layout( IDWriteTextLayout * in_layout ,
+                             string              in_content ,
+                             ComPtr< IDWriteTextFormat > in_text_format ,
+                             D2D1_SIZE_F          in_dimensions ={ 200.0f , 200.0f } ); // pixels
            /*
            void add_text( string                in_content         = L"empty"             ,
                           vertex                in_position_center = { 0.5f , 0.5f }      , // dips 0..1

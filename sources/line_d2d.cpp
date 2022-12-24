@@ -14,15 +14,12 @@ namespace hid
                         colours in_colour )
     : a ( in_a ) , b ( in_b ) , width ( in_width ) , colour ( in_colour ) //, brush( locate::graphics().brush_solid( colour ) )
     {
-        OutputDebugString( L"\n line_d2d::constructor" );
+        //OutputDebugString( L"\n line_d2d::constructor" );
         //brush = locate::graphics().brush_solid( colour );
         //reset();
     }
 
-    line_d2d::~line_d2d( void )
-    {
-        OutputDebugString( L"\n line_d2d::de-constructor" );
-    }
+    //line_d2d::~line_d2d( void ) { OutputDebugString( L"\n line_d2d::de-constructor" ); }
 
     void line_d2d::reset()
     {

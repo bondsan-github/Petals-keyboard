@@ -7,15 +7,8 @@
 namespace hid
 {
 
-    locate::locate( void )
-    {
-        OutputDebugString( L"\n locate::constructor" );
-    }
-
-    locate::~locate( void )
-    {
-        OutputDebugString( L"\n locate::de-constructor" );
-    }
+    //locate::locate( void ) { OutputDebugString( L"\n locate::constructor" ); }
+    //locate::~locate( void ) { OutputDebugString( L"\n locate::de-constructor" ); }
 
     /*
     void locate::add_service( service_identifier in_identifier , any in_service )

@@ -1,32 +1,259 @@
 #include "..\headers\hid_device.h"
 
+//#include "..\headers\utility.h"
 #include "..\headers\locate.h"
 #include "..\headers\hid_usages.h"
 
 namespace hid
 {
     using namespace std;
-    //using namespace D2D1;
 
-    hid_device::hid_device( const HANDLE in_device ) : hid_raw_device( in_device )
+    //hid_device::hid_device() { OutputDebugString( L"\n hid_device::default constructor" ); }
+
+    hid_device::hid_device( hid_raw_device raw_device )
     {
-        OutputDebugString( L"\n hid_device::constructor" );
+        device_pointer = raw_device.get_device_pointer();
+        device_pointer = raw_device.get_device_pointer();
+        capabilities   = raw_device.get_capabilities();
+        data_preparsed = raw_device.get_preparsed_data();
 
-        if( is_multi_touch() )
-        {
-            //usage_list = make_unique< hid_usages >( any_cast< hid_usages * >( locate::get_service( service_identifier::usages ) ) );
+        collect_information();
 
-            collect_information();
-
-            set_text_device();
+        set_text_device();
             //set_text_collections();
             //set_text_input();
+    }
+
+    HANDLE hid_device::get_device_pointer()
+    {
+        /*
+        if( device_pointer )
+            return device_pointer;
+        else
+        {
+            error( L"device pointer is null" );
+            return nullptr;
         }
+        */
+        return device_pointer;
+    }
+
+    ulong hid_device::get_collection_amount()
+    {
+        return collection_amount;
+    }
+
+    void hid_device::collect_information()
+    {
+        NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
+
+        page              = capabilities.UsagePage;
+        usage             = capabilities.Usage;
+        collection_amount = capabilities.NumberLinkCollectionNodes;
+
+        input.byte_amount              = capabilities.InputReportByteLength;
+        input.button_amount            = capabilities.NumberInputButtonCaps;
+        input.value_amount             = capabilities.NumberInputValueCaps;
+        input.data_identifier_amount   = capabilities.NumberInputDataIndices;
+
+        output.byte_amount             = capabilities.OutputReportByteLength;
+        output.button_amount           = capabilities.NumberOutputButtonCaps;
+        output.value_amount            = capabilities.NumberOutputValueCaps;
+        output.data_identifier_amount  = capabilities.NumberOutputDataIndices;
+
+        feature.byte_amount            = capabilities.FeatureReportByteLength;
+        feature.button_amount          = capabilities.NumberFeatureButtonCaps;
+        feature.value_amount           = capabilities.NumberFeatureValueCaps;
+        feature.data_identifier_amount = capabilities.NumberFeatureDataIndices;
+
+        // get device path character amount
+        GetRawInputDeviceInfoW( get_device_pointer() , request.path , nullptr , & path_char_amount);
+
+        device_path.resize( path_char_amount );
+
+        // get device path
+        GetRawInputDeviceInfoW( get_device_pointer() , request.path , device_path.data() , & path_char_amount);  // wchar_t
+
+        //OutputDebugString( path.data() );
+
+        // open i_o device for query 
+        device_pointer = CreateFileW( device_path.data() ,
+                                    0 ,                                  // access
+                                    FILE_SHARE_READ | FILE_SHARE_WRITE , // share
+                                    0 ,                                  // security
+                                    OPEN_EXISTING ,                      // creation
+                                    FILE_ATTRIBUTE_NORMAL ,              // flags
+                                    0 );                                 // template
+
+        HidD_GetAttributes( get_device_pointer() , &attributes );
+        HidD_GetManufacturerString( get_device_pointer() , manufacturer , string_size );//manufacturer.data() , string_size );
+        HidD_GetProductString( get_device_pointer() , product , string_size );
+        HidD_GetPhysicalDescriptor( get_device_pointer() , physical , string_size );
+
+        //vector< node > nodes {};
+
+        collection.resize( get_collection_amount() );
+
+        HidP_GetLinkCollectionNodes( collection.data() , & collection_amount , get_data_preparsed() );
+
+        //ushort index{ 0 };
+
+        //collection.front().information.set_position();
+
+            //using link = vector< item >::reference;
+            /*
+            if( node.Parent ) // one parent , above
+               new_item.origin = & items.at( node.Parent - 1 );
+
+            if( node.NextSibling ) // to right
+               new_item.next   = & items.at( node.NextSibling - 1 );
+
+            if( node.FirstChild ) // left-most
+               new_item.first  = & items.at( node.FirstChild - 1 );
+            */
+            //collection.push_back( move( new_collection ) );//at( index ) = move( new_item );
+
+        input_buttons.resize( get_input().button_amount );
+        //                       report type  , data destination       , data size               , source data
+        HidP_GetButtonCaps( HidP_Input , input_buttons.data() , & input.button_amount , get_data_preparsed() );
+
+        input_values.resize( get_input().value_amount );
+        HidP_GetValueCaps( HidP_Input , input_values.data() , & input.value_amount , get_data_preparsed() );
+
+        output_buttons.resize( get_output().button_amount );
+        HidP_GetButtonCaps( HidP_Output , output_buttons.data() , & output.button_amount , get_data_preparsed() );
+
+        output_values.resize( get_output().value_amount );
+        HidP_GetValueCaps( HidP_Output , output_values.data() , & output.value_amount , get_data_preparsed() );
+
+        button_features.resize( get_feature().button_amount );
+        HidP_GetButtonCaps( HidP_Feature , button_features.data() , & feature.button_amount , get_data_preparsed() );
+
+        value_features.resize( get_feature().value_amount );
+        HidP_GetValueCaps( HidP_Feature , value_features.data() , & feature.value_amount , get_data_preparsed() );
+
+        for( auto & button : input_buttons ) //input_buttons.release
+        {
+            hid_local_item new_button{};
+
+            // type = input
+            new_button.set_page( button.UsagePage );
+
+            new_button.set_report_index( button.ReportID ); // report identifier
+            new_button.set_report_amount( button.ReportCount );
+
+            new_button.set_bit_field( button.BitField );
+
+            new_button.set_origin( button.LinkCollection );
+            new_button.set_origin_page( button.LinkUsagePage );
+            new_button.set_origin_usage( button.LinkUsage );
+
+            new_button.set_is_range( button.IsRange );
+            new_button.set_is_absolute( button.IsAbsolute );
+            new_button.set_is_alias( button.IsAlias ); // does button have multiple usages
+
+            new_button.set_has_designators( button.IsDesignatorRange );
+            new_button.set_has_strings( button.IsStringRange );
+
+            if( new_button.get_is_range() )
+            {
+                new_button.set_usages_begin( button.Range.UsageMin );
+                new_button.set_usages_end( button.Range.UsageMax );
+
+                new_button.set_datum_index_begin( button.Range.DataIndexMin );
+                new_button.set_datum_index_end( button.Range.DataIndexMax );
+
+                new_button.set_strings_range_begin( button.Range.StringMin ); //HidD_GetIndexedString
+                new_button.set_strings_range_end( button.Range.StringMax );
+
+                new_button.set_designators_range_begin( button.Range.DesignatorMin ); // physical descriptor
+                new_button.set_designators_range_end( button.Range.DesignatorMax );
+            }
+            else
+            {
+                new_button.set_usage( button.NotRange.Usage );
+                new_button.set_data_index( button.NotRange.DataIndex );
+                new_button.set_string_index( button.NotRange.StringIndex );
+                new_button.set_designator( button.NotRange.DesignatorIndex );
+            }
+
+            //if( new_button.get_has_strings() )
+            //{} else {}
+            //if( new_button.get_has_designators() )
+            //{} else {}
+
+            //new_button.gather_information(); get_information_string()
+
+            //input.buttons.emplace_back( move( new_button ) );
+            input.buttons.push_back( new_button );
+        }
+
+        for( auto & value : input_values )
+        {
+            hid_global_item new_value {};
+
+            new_value.set_page( value.UsagePage );
+
+            new_value.set_origin( value.LinkCollection );   // A unique internal index pointer
+            new_value.set_origin_usage( value.LinkUsage );
+            new_value.set_origin_page( value.LinkUsagePage );
+
+            new_value.set_is_alias( value.IsAlias );
+            new_value.set_is_range( value.IsRange );
+
+            new_value.set_is_range( value.IsDesignatorRange );
+            new_value.set_is_absolute( value.IsAbsolute );
+
+            new_value.set_has_strings( value.IsStringRange );
+            new_value.set_has_null( value.HasNull );
+
+            new_value.set_bit_amount( value.BitSize );
+            new_value.set_bit_field( value.BitField );
+
+            new_value.set_report_index( value.ReportID );
+            new_value.set_report_amount( value.ReportCount );
+
+            new_value.set_unit_exponent( value.UnitsExp );
+            new_value.set_unit( value.Units );
+
+            new_value.set_logical_limit_minimum( value.LogicalMin );
+            new_value.set_logical_limit_maximum( value.LogicalMax );
+            new_value.set_physical_limit_minimum( value.PhysicalMin );
+            new_value.set_physical_limit_maximum( value.PhysicalMax );
+
+            if( new_value.get_is_range() )
+            {
+                new_value.set_usages_begin( value.Range.UsageMin );
+                new_value.set_usages_end( value.Range.UsageMax );
+
+                new_value.set_datum_index_begin( value.Range.DataIndexMin );
+                new_value.set_datum_index_end( value.Range.DataIndexMax );
+
+                new_value.set_strings_range_begin( value.Range.StringMin ); //HidD_GetIndexedString
+                new_value.set_strings_range_end( value.Range.StringMax );
+
+                new_value.set_designators_range_begin( value.Range.DesignatorMin ); // physical descriptor
+                new_value.set_designators_range_end( value.Range.DesignatorMax );
+            }
+            else
+            {
+                new_value.set_usage( value.NotRange.Usage );
+                new_value.set_data_index( value.NotRange.DataIndex );
+                new_value.set_string_index( value.NotRange.StringIndex );
+                new_value.set_designator( value.NotRange.DesignatorIndex );
+            }
+
+            //input.values.emplace_back( move( new_value ) );
+            input.values.push_back( new_value );
+            //new_item.origin = input.LinkCollection; vector<main_item>::reference
+        }
+        
     }
 
     hid_device::~hid_device( void )
     {
-        OutputDebugString( L"\n hid_device::de-constructor" );
+        //OutputDebugString( L"\n hid_device::de-constructor" );
+        CloseHandle( device_pointer );
     }
 
     void hid_device::set_text_device()
@@ -39,9 +266,9 @@ namespace hid
         content += L"\nproduct\t\t: ";
         content += product;
         content += L"\npage\t\t: ";
-        content += locate::get_usages().page(get_page());
+        content += locate::get_usages().page( get_page() );
         content += L"\nusage\t\t: ";
-        content += locate::get_usages().usage(get_page() , get_usage());
+        content += locate::get_usages().usage( get_page() , get_usage() );
 
         /*text device(content ,
                      position ,
@@ -51,9 +278,9 @@ namespace hid
                      text_colour );*/
 
         information.set_content( content );
-        information.set_position( position );
-        information.set_rectangle_width( rectangle_width );
-        information.set_rectangle_colour( rectangle_colour );
+        information.set_position_top_left( position );
+        information.set_layout_size( D2D1_SIZE_F{ 200.0f , 200.0f } );
+        information.set_rectangle_line_colour( rectangle_line_colour );
 
         //item_texts.push_back( move( device ) );
 
@@ -171,175 +398,7 @@ namespace hid
            // write_ptr->add( input.text() );
     }
 
-    void hid_device::collect_information() // collect / colate
-    {
-        NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
-
-        HidD_GetAttributes         ( get_file_pointer() , & attributes );
-        HidD_GetManufacturerString ( get_file_pointer() , manufacturer , string_size );//manufacturer.data() , string_size );
-        HidD_GetProductString      ( get_file_pointer() , product      , string_size );
-        HidD_GetPhysicalDescriptor ( get_file_pointer() , physical     , string_size );
-
-        //vector< node > nodes {};
-
-        collection.resize( get_collection_amount() );
-
-        // memmove to vector data pointer = copy constructor
-        ulong collection_amount { 0 };
-
-        HidP_GetLinkCollectionNodes( collection.data() , & collection_amount , get_data() );
-
-        ushort index { 0 };
-
-        //collection.front().information.set_position();
-
-            //using link = vector< item >::reference;
-            /*
-            if( node.Parent ) // one parent , above
-               new_item.origin = & items.at( node.Parent - 1 );
-
-            if( node.NextSibling ) // to right
-               new_item.next   = & items.at( node.NextSibling - 1 );
-
-            if( node.FirstChild ) // left-most
-               new_item.first  = & items.at( node.FirstChild - 1 );
-            */
-            //collection.push_back( move( new_collection ) );//at( index ) = move( new_item );
-        
-        input_buttons.resize   ( get_input().button_amount);
-        //                       report type  , data destination       , data size               , source data
-        HidP_GetButtonCaps     ( HidP_Input   , input_buttons.data()   , & get_input().button_amount   , get_data() );
-
-        input_values.resize    ( get_input().value_amount );
-        HidP_GetValueCaps      ( HidP_Input   , input_values.data()    , & get_input().value_amount    , get_data() );
-
-        output_buttons.resize  ( get_output().button_amount );
-        HidP_GetButtonCaps     ( HidP_Output  , output_buttons.data()  , &get_output().button_amount  , get_data() );
-
-        output_values.resize   ( get_output().value_amount );
-        HidP_GetValueCaps      ( HidP_Output  , output_values.data()   , &get_output().value_amount   , get_data() );
-
-        button_features.resize ( get_feature().button_amount );
-        HidP_GetButtonCaps     ( HidP_Feature , button_features.data() , &get_feature().button_amount , get_data() );
-
-        value_features.resize  ( get_feature().value_amount );
-        HidP_GetValueCaps      ( HidP_Feature , value_features.data()  , &get_feature().value_amount  , get_data() );
-
-        for( auto & button : input_buttons ) //input_buttons.release
-        {
-            hid_local_item new_button {};
-
-            // type = input
-            new_button.set_page( button.UsagePage );
-
-            new_button.set_report_index( button.ReportID ); // report identifier
-            new_button.set_report_amount( button.ReportCount );
-
-            new_button.set_bit_field( button.BitField );
-
-            new_button.set_origin( button.LinkCollection );
-            new_button.set_origin_page( button.LinkUsagePage );
-            new_button.set_origin_usage( button.LinkUsage );
-
-            new_button.set_is_range( button.IsRange );
-            new_button.set_is_absolute( button.IsAbsolute );
-            new_button.set_is_alias( button.IsAlias ); // does button have multiple usages
-
-            new_button.set_has_designators( button.IsDesignatorRange );
-            new_button.set_has_strings( button.IsStringRange );
-
-            if( new_button.get_is_range() )
-            {
-                new_button.set_usages_begin( button.Range.UsageMin );
-                new_button.set_usages_end( button.Range.UsageMax );
-
-                new_button.set_datum_index_begin( button.Range.DataIndexMin );
-                new_button.set_datum_index_end( button.Range.DataIndexMax );
-
-                new_button.set_strings_range_begin( button.Range.StringMin ); //HidD_GetIndexedString
-                new_button.set_strings_range_end( button.Range.StringMax );
-
-                new_button.set_designators_range_begin( button.Range.DesignatorMin ); // physical descriptor
-                new_button.set_designators_range_end( button.Range.DesignatorMax );
-            }
-            else
-            {
-                new_button.set_usage( button.NotRange.Usage );
-                new_button.set_data_index( button.NotRange.DataIndex );
-                new_button.set_string_index( button.NotRange.StringIndex );
-                new_button.set_designator( button.NotRange.DesignatorIndex );
-            }
-            
-            //if( new_button.get_has_strings() )
-            //{} else {}
-            //if( new_button.get_has_designators() )
-            //{} else {}
-
-            //new_button.gather_information(); get_information_string()
-
-            get_input().buttons.emplace_back( move( new_button ) );
-        }
-
-        for( auto & value : input_values )
-        {
-            hid_global_item new_value {};
-
-            new_value.set_page( value.UsagePage );
-
-            new_value.set_origin( value.LinkCollection );   // A unique internal index pointer
-            new_value.set_origin_usage( value.LinkUsage );
-            new_value.set_origin_page( value.LinkUsagePage );
-
-            new_value.set_is_alias( value.IsAlias );
-            new_value.set_is_range( value.IsRange );
-            
-            new_value.set_is_range( value.IsDesignatorRange );
-            new_value.set_is_absolute( value.IsAbsolute );
-
-            new_value.set_has_strings( value.IsStringRange );
-            new_value.set_has_null( value.HasNull );
-
-            new_value.set_bit_amount( value.BitSize );
-            new_value.set_bit_field( value.BitField );
-
-            new_value.set_report_index( value.ReportID );
-            new_value.set_report_amount( value.ReportCount );
-
-            new_value.set_unit_exponent( value.UnitsExp );
-            new_value.set_unit( value.Units );
-
-            new_value.set_logical_limit_minimum( value.LogicalMin );
-            new_value.set_logical_limit_maximum( value.LogicalMax );
-            new_value.set_physical_limit_minimum( value.PhysicalMin );
-            new_value.set_physical_limit_maximum( value.PhysicalMax );
-
-            if( new_value.get_is_range() )
-            {
-                new_value.set_usages_begin( value.Range.UsageMin );
-                new_value.set_usages_end( value.Range.UsageMax );
-
-                new_value.set_datum_index_begin( value.Range.DataIndexMin );
-                new_value.set_datum_index_end( value.Range.DataIndexMax );
-
-                new_value.set_strings_range_begin( value.Range.StringMin ); //HidD_GetIndexedString
-                new_value.set_strings_range_end( value.Range.StringMax );
-
-                new_value.set_designators_range_begin( value.Range.DesignatorMin ); // physical descriptor
-                new_value.set_designators_range_end( value.Range.DesignatorMax );
-            }
-            else
-            {
-                new_value.set_usage( value.NotRange.Usage );
-                new_value.set_data_index( value.NotRange.DataIndex );
-                new_value.set_string_index( value.NotRange.StringIndex );
-                new_value.set_designator( value.NotRange.DesignatorIndex );
-            }
-        }
-
-        
-
-        //new_item.origin = input.LinkCollection; vector<main_item>::reference
-    }
+    
 }
 /*
 // move constructor

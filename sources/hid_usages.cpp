@@ -12,17 +12,14 @@ namespace hid
 
     hid_usages::hid_usages()
     {
-        OutputDebugString( L"\n hid_usages:default :constructor" );
-        //locate::add_service( service_identifier::usages , this );
+        //OutputDebugString( L"\n hid_usages:default :constructor" );
+        
         locate::set_usages( this );
     }
 
-    hid_usages::~hid_usages()
-    {
-        OutputDebugString( L"\n hid_usages::de-constructor" );
-    };
+    //hid_usages::~hid_usages() { OutputDebugString( L"\n hid_usages::de-constructor" ); };
 
-    wstring hid_usages::page( uint in_page )
+    const wstring hid_usages::page( const uint in_page )
     {
         try
         {
@@ -36,7 +33,7 @@ namespace hid
         }
     };
 
-    wstring hid_usages::usage( uint in_page , uint in_usage )
+    const wstring hid_usages::usage( const uint in_page , const uint in_usage )
     {
         try
         {
@@ -57,7 +54,7 @@ namespace hid
         }
     }
 
-    wstring hid_usages::type( uint in_page , int in_usage ) 
+    const wstring hid_usages::type( const uint in_page , const int in_usage ) 
     {
         try
         {

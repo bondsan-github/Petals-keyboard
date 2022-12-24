@@ -15,9 +15,27 @@
 
 namespace hid
 {
-    class hid_device : public hid_raw_device
+    class hid_device
     {
         private:
+
+            PHIDP_PREPARSED_DATA data_preparsed { nullptr };
+
+            HANDLE  device_pointer   { nullptr           };
+            wstring device_path      { L"no device path" }; // or std::filesystem::wpath
+            uint    path_char_amount { 0                 };
+
+            ushort page{ 0 };
+            ushort usage{ 0 };
+            //NTSTATUS       hid_result   { HIDP_STATUS_NULL };
+            //hidp_status    status       { };
+
+            requests request;
+            report   input , output , feature;
+
+            HIDP_CAPS capabilities {};
+
+            ulong                collection_amount{ 0 };
 
             hid_attributes            attributes       { .Size = sizeof( HIDD_ATTRIBUTES ) };
             hid_attributes_extended   attributes_extra {};
@@ -43,16 +61,16 @@ namespace hid
             
             bool                     draw_information  { true              };
 
-            wstring                  text_font         { L"Cascasia code"  }; // { L"Sitka" };
-            float                    text_size         { 15.0f             };
-            colours                  text_colour       { colours::White    };
-            dimensions               text_boundry      { 500.0f , 500.0f   };
+            wstring                  font_face         { L"Cascasia code"  }; // { L"Sitka" };
+            float                    font_size         { 15.0f             };
+            colours                  font_colour       { colours::White    };
+            dimensions               paragraph_boundry      { 500.0f , 500.0f   };
 
             float                    rectangle_margin  { 0.0f };
-            float                    rectangle_width   { 1.0f              };
-            colours                  rectangle_colour  { colours::DarkCyan };
+            float                    rectangle_line_width   { 1.0f              };
+            colours                  rectangle_line_colour  { colours::DarkCyan };
 
-            vertex const             spacer            { 15.0f, 15.0f      };
+            vertex                   paragraph_spacing { 15.0f, 15.0f };
             
             uint                     index             {};
             vector< line_d2d >       lines             {};
@@ -71,24 +89,31 @@ namespace hid
 
         private:
 
-            void collect_information      ();
-            void set_text_device      ();
-            void set_text_collections ();
-            void set_text_input       ();
+            void collect_information();
+            void set_text_device();
+            void set_text_collections();
+            void set_text_input();
+
+            HANDLE get_device_pointer();
+            ulong get_collection_amount();
+            PHIDP_PREPARSED_DATA get_data_preparsed() { return data_preparsed; }
+
+            report get_input()   { return input; }
+            report get_output()  { return output; }
+            report get_feature() { return feature; }
+
+            ushort get_page()  { return page; }
+            ushort get_usage() { return usage; }
 
         public:
 
-                 hid_device  ( const HANDLE in_device );
-                 ~hid_device ( void );
+            //hid_device( void );
+            ~hid_device( void );
 
-                 hid_device( const hid_device & copy );
-                 hid_device( const hid_device && move ) noexcept;
+            hid_device( hid_raw_device raw_device );
 
-                 hid_device & operator = ( const hid_device & assignment );
-                 hid_device & operator = ( const hid_device && assignment_move ) noexcept;
-
-            void display_information ();
-            void texts_items_input   ();
-            void draw                ();
+            void display_information();
+            void texts_items_input();
+            void draw();
     };
 }

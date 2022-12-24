@@ -5,6 +5,7 @@
 #include < Windows.h >
 #include < hidsdi.h >
 
+//#include "..\headers\utility.h"
 #include "..\headers\direct_2d.h"
 #include "..\headers\hid_local_item.h"
 #include "..\headers\hid_global_item.h"
@@ -13,72 +14,61 @@ namespace hid
 {
     using namespace std;
 
+    struct report
+    {
+        ushort byte_amount            { 0 };
+
+        ushort button_amount          { 0 };
+        ushort value_amount           { 0 };
+        ushort data_identifier_amount { 0 };
+
+        vector< hid_local_item >  buttons { 0 };
+        vector< hid_global_item > values  { 0 };
+    };
+
+    const struct requests
+    {
+        uint data = ( 1 << 29 ) | 0x5;
+        uint path = ( 1 << 29 ) | 0x7; // return value in character amount, not byte size
+        uint info = ( 1 << 29 ) | 0xB;
+
+    };
+
     class hid_raw_device
     {
         private:
 
-            HANDLE           device       { nullptr };
+            HANDLE device_pointer { nullptr };
 
-            ushort           page         { 0 };
-            ushort           usage        { 0 };
-         
-            HANDLE           file_pointer { nullptr };
-            wstring          path         { L"no path" }; // or std::filesystem::wpath
+            PHIDP_PREPARSED_DATA data_preparsed   { nullptr };
+            vector< _int8 >      data_bytes       { 0 };
+            uint                 data_byte_amount { 0 };
 
-            //NTSTATUS       hid_result   { HIDP_STATUS_NULL };
-            //hidp_status    status       { };
+            HIDP_CAPS capabilities {};
 
-            const struct
-            {
-                uint data = ( 1 << 29 ) | 0x5;
-                uint path = ( 1 << 29 ) | 0x7; // return value in character amount, not byte size
-                uint info = ( 1 << 29 ) | 0xB;
+            ushort page  { 0 };
+            ushort usage { 0 };
 
-            } requests; // instantiates here
-
-            struct report
-            {
-                ushort byte_amount            { 0 };
-
-                ushort button_amount          { 0 };
-                ushort value_amount           { 0 };
-                ushort data_identifier_amount { 0 };
-
-                vector< hid_local_item >  buttons { 0 };
-                vector< hid_global_item > values  { 0 };
-
-            } input , output , feature;
-
-             PHIDP_PREPARSED_DATA data        { nullptr }; // using PHIDP_PREPARSED_DATA
-             vector< char >       data_vector { 0 };
-             uint                 data_size   { 0 };
-
-             ulong                collection_amount { 0 };
+            requests request;
 
       public:
 
-           hid_raw_device( void );
-           hid_raw_device( const HANDLE in_device );
-          ~hid_raw_device( void );
+           hid_raw_device( HANDLE in_device );
+          //~hid_raw_device( void );
 
-          hid_raw_device( const hid_raw_device & copy );
-          //hid_raw_device( const hid_raw_device && move );// noexcept;
+          bool is_multi_touch();
 
-          //hid_raw_device & operator = ( const hid_raw_device & assignment );
-          //hid_raw_device & operator = ( const hid_raw_device && assignment_move );// noexcept;
+          HANDLE get_device_pointer()
+          { 
+              //if( device_pointer ) return device_pointer;
+              //else error( L"device pointer is null" );
 
-          ulong  get_collection_amount() const { return collection_amount; }
-          HANDLE get_file_pointer()      const { return file_pointer; }
-          PHIDP_PREPARSED_DATA get_data() const { return data; }
-
-          report & get_input()   { return input; }
-          report & get_output()  { return output; }
-          report & get_feature() { return feature; }
-
-          bool   is_multi_touch() const;
-
-          ushort get_page()  const { return page; };
-          ushort get_usage() const { return usage; };
+              return device_pointer;
+          }
+          HIDP_CAPS get_capabilities()  { return capabilities; }
+          PHIDP_PREPARSED_DATA get_preparsed_data()  { return data_preparsed; }
+          ushort get_page()   { return page; }
+          ushort get_usage()  { return usage; }
    };
 
 }

@@ -31,7 +31,7 @@ namespace hid
         public:
 
              graphics_d2d( void );
-            ~graphics_d2d( void );
+            //~graphics_d2d( void );
 
             //void initialise 
             void reset      ();
@@ -60,12 +60,12 @@ namespace hid
             void draw_rectangle( rectangle in_rectangle );
 
             void draw_rounded_rectangle( dimensions in_size            = { 100 , 100 } ,
-                                         vertex     in_position_center ={ 0.5f , 0.5f } ,
+                                         vertex     in_position_center = { 0.5f , 0.5f } ,
                                          float      in_radius          = 5.0f ,
                                          float      in_width           = 5.0f ,
                                          colours    in_colour          = colours::Yellow );
 
-            void draw_rounded_rectangle( rounded_rectangle in_rectangle = { 10.0f, 10.0f , 50.0f , 50.0f } ,
+            void draw_rounded_rectangle( D2D1_ROUNDED_RECT in_rectangle = { 10.0f, 10.0f , 50.0f , 50.0f } ,
                                          float             radius = 0.0f ,
                                          float             boundry_width = 1.0f ,
                                          colours           colour = colours::Yellow );

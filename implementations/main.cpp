@@ -1,5 +1,5 @@
-https://learn.microsoft.com/en-us/archive/msdn-magazine/2013/november/windows-with-c-exploring-fonts-with-directwrite-and-modern-c
-https://learn.microsoft.com/en-us/windows/win32/directwrite/direct-write-portal
+//https://learn.microsoft.com/en-us/archive/msdn-magazine/2013/november/windows-with-c-exploring-fonts-with-directwrite-and-modern-c
+//https://learn.microsoft.com/en-us/windows/win32/directwrite/direct-write-portal
 
 
 // markt precision multiple touch input controls
@@ -19,10 +19,9 @@ https://learn.microsoft.com/en-us/windows/win32/directwrite/direct-write-portal
 int WINAPI wWinMain( HINSTANCE instance , HINSTANCE instance_previous , LPWSTR parameters , int show_flags )
 {
    // Initialize COM apartment threaded. This is the recommended way to initialize COM for the UI thread.
-   CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED );
+   //CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED );
 
    using namespace hid;
-   
    
    graphics_d2d  graphics;
    write_d2d     write;
@@ -31,7 +30,7 @@ int WINAPI wWinMain( HINSTANCE instance , HINSTANCE instance_previous , LPWSTR p
    gui_microsoft window( instance , parameters , show_flags );
    window.message_loop();
 
-   CoUninitialize();
+   //CoUninitialize();
    
    return 0;
 }

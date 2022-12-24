@@ -6,17 +6,20 @@ namespace hid
 {
     class hid_devices
     {
-        protected:
+        private:
+            
+            uint                      device_amount{};
+            vector< raw_device_list > raw_list{};
 
-            std::vector< hid_device > input {};
+            std::vector< hid_device > input{};
+
             //text                      information {};
 
         public:
 
             hid_devices( void );
-            ~hid_devices( void );
+            //~hid_devices( void );
 
-            //void initialise();
             void draw();
 
     };

@@ -110,11 +110,11 @@ namespace hid // human interface device
                                          clip           =  2 ,
                                          colour_font    =  4 ,
                                          no_snap_bitmap =  8 };
-    using      text_metrics            = DWRITE_TEXT_METRICS;
+    //using      text_metrics            = DWRITE_TEXT_METRICS;
     using      text_analyser           = IDWriteTextAnalyzer;
 
     using      rectangle               = D2D_RECT_F;
-    using      rounded_rectangle       = D2D1_ROUNDED_RECT;
+    //using      rounded_rectangle       = D2D1_ROUNDED_RECT;
     //using      dimensions              = D2D_SIZE_F;
 
     struct rectangle_edge_middles

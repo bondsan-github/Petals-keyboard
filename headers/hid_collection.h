@@ -31,8 +31,10 @@ namespace hid
                 
         public:
 
-             hid_collection( void );
-            ~hid_collection( void );
+            //hid_collection( void );
+            //~hid_collection( void );
+            //hid_collection( hid_collection & copy );
+            //hid_collection( hid_collection && move );
 
             identifier    get_index()          const { return index;    }
             hid_item_type get_type()           const { return type;     }

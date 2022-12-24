@@ -8,10 +8,8 @@ namespace hid
 {
     graphics_d2d::graphics_d2d()// HWND in_window )
     {
-        OutputDebugString( L"\n graphics_d2d::constructor" );
+        //OutputDebugString( L"\n graphics_d2d::constructor" );
 
-        //locate::add_service( service_identifier::graphics , this );
-        //window = any_cast< gui_microsoft * >( locate::get_service( service_identifier::window ) )->get_window();
         locate::set_graphics( this );
 
         factory_d2d_options factory_options {};
@@ -22,10 +20,7 @@ namespace hid
         reset();
     }
 
-    graphics_d2d::~graphics_d2d()
-    {
-        OutputDebugString( L"\n graphics_d2d::de-constructor" );
-    }
+    //graphics_d2d::~graphics_d2d() { OutputDebugString( L"\n graphics_d2d::de-constructor" ); }
 
     //enum class request_type { page }
     //template< typename type >
@@ -138,7 +133,7 @@ namespace hid
 
     }
 
-    void graphics_d2d::draw_rounded_rectangle( rounded_rectangle in_rectangle,
+    void graphics_d2d::draw_rounded_rectangle( D2D1_ROUNDED_RECT in_rectangle,
                                                float radius ,
                                                float boundry_width ,
                                                colours colour )
@@ -159,7 +154,7 @@ namespace hid
                                                colours    in_colour            )
     {
         vertex            position  { in_position_top_left };
-        rounded_rectangle rectangle {};
+        D2D1_ROUNDED_RECT rectangle {};
 
         rectangle.radiusX = rectangle.radiusY = in_radius;
 

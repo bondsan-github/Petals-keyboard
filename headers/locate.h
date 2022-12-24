@@ -21,8 +21,8 @@ namespace hid
     {
         public:
 
-            locate( void );
-            ~locate( void );
+            //locate( void );
+            //~locate( void );
 
             //static void add_service( service_identifier in_identifier , any in_service );
             //static any  get_service( service_identifier in_identifier );
@@ -30,7 +30,7 @@ namespace hid
             static void set_graphics( graphics_d2d * const in_graphics ) 
             { 
                 OutputDebugString( L"\n locate::set_graphics" );
-                _graphics = in_graphics;//make_unique< graphics_d2d >( in_graphics );
+                _graphics = in_graphics;
             }
 
             static graphics_d2d & get_graphics() { return * _graphics; }
@@ -38,26 +38,26 @@ namespace hid
             static void set_usages( hid_usages * const in_usages ) 
             { 
                 OutputDebugString( L"\n locate::set_usages" );
-                _usages = in_usages;//make_unique< hid_usages >( in_usages );
+                _usages = in_usages;
             }
 
-            static hid_usages & get_usages() { return * _usages; }//.get(); }
+            static hid_usages & get_usages() { return * _usages; }
 
             static void set_write( write_d2d * const in_write ) 
             { 
                 OutputDebugString( L"\n locate::set_write" );
-                _write = in_write;//make_unique< write_d2d >( in_write );
+                _write = in_write;
             }
 
-            static write_d2d & get_write() { return * _write; }//.get(); }
+            static write_d2d & get_write() { return * _write; }
 
             static void set_windows( gui_microsoft * const in_windows ) 
             {
                 OutputDebugString( L"\n locate::set_windows" );
-                _windows = in_windows;//make_unique< gui_microsoft >( in_windows );
+                _windows = in_windows;
             }
 
-            static gui_microsoft & get_windows() { return * _windows; }//.get(); }
+            static gui_microsoft & get_windows() { return * _windows; }
             //static gui_microsoft * get_windows() { return _windows.get(); }
 
         private:

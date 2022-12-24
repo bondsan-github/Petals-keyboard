@@ -5,16 +5,27 @@
 
 namespace hid
 {
-    hid_collection::hid_collection()
+    //hid_collection::hid_collection() { OutputDebugString( L"\n hid_collection::default constructor" ); }
+    //hid_collection::hid_collection( hid_collection & copy ) { OutputDebugString( L"\n hid_collection::copy constructor" );}
+    /*
+    hid_collection::hid_collection( hid_collection && in_move )
     {
-        OutputDebugString( L"\n hid_collection::default constructor" );
-        //usages = any_cast< hid_usages * >( locate::get_service( service_identifier::usages ) );
-    }
+        OutputDebugString( L"\n hid_collection::move constructor" );
 
-    hid_collection::~hid_collection()
-    {
-        OutputDebugString( L"\n hid_collection::de-constructor" );
+        index = move( in_move.index );
+        type = move( in_move.type );
+        page = move( in_move.page );
+        usage = move( in_move.usage );
+        is_alias = move( in_move.is_alias );
+        origin = move( in_move.origin ); // parent  
+        siblings = move( in_move.siblings ); // children
+        first = move( in_move.first ); // child     
+        next = move( in_move.next ); // sibling 
+
+        information = move( in_move.information);
     }
+    */
+    //hid_collection::~hid_collection() { OutputDebugString( L"\n hid_collection::de-constructor" ); }
 
     void hid_collection::set_information()
     {
