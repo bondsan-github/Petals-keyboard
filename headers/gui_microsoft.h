@@ -1,8 +1,8 @@
 #pragma once
 
-#include < windows.h >
+#include <windows.h>
 
-#include "..\headers\direct_2d.h"
+#include "..\headers\custom_types.h"
 #include "..\headers\vertex.h"
 
 namespace hid
@@ -42,14 +42,14 @@ namespace hid
             float      client_width      { 0.2f };
             float      client_height     { 0.2f };
 
-            dimensions desktop_size      {};
-            uint       desktop_dpi       { 96 };
-            dimensions client_size       { 1024 , 768 };
-            uint       client_dpi        { 96 };
-            dimensions client_size_half  {};
-            vertex     position_top_left {};
-            vertex     position_center   {};
-            vertex     desktop_center    {};
+            D2D1_SIZE_F desktop_size      {};
+            uint        desktop_dpi       { 0 };
+            D2D1_SIZE_F client_size       { 0.0f , 0.0f };
+            uint        client_dpi        { 96 };
+            D2D1_SIZE_F client_size_half  {};
+            vertex      position_top_left {};
+            vertex      position_center   {};
+            vertex      desktop_center    {};
 
             MSG        message {};
             
@@ -67,15 +67,13 @@ namespace hid
 
         public:
       
-            gui_microsoft( void );
+            //gui_microsoft( void );
             gui_microsoft( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags );
-            gui_microsoft( const gui_microsoft & copy );
-            gui_microsoft( const gui_microsoft && move );
-
-            gui_microsoft & operator = ( const gui_microsoft & assignment );
-            gui_microsoft & operator = ( gui_microsoft && assigned_move );
-
-            ~gui_microsoft();
+            //gui_microsoft( const gui_microsoft & copy );
+            //gui_microsoft( const gui_microsoft && move );
+            //gui_microsoft & operator = ( const gui_microsoft & assignment );
+            //gui_microsoft & operator = ( gui_microsoft && assigned_move );
+            //~gui_microsoft();
 
             HWND get_window() const;
             int  message_loop();

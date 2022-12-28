@@ -5,8 +5,8 @@
 
 namespace hid
 {
-    using namespace D2D1;
-    using namespace Microsoft::WRL;
+    //using namespace D2D1;
+    //using namespace Microsoft::WRL;
 
     line_d2d::line_d2d( vertex in_a       ,
                         vertex in_b       ,

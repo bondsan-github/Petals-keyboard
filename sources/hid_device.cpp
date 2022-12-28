@@ -8,63 +8,193 @@ namespace hid
 {
     using namespace std;
 
-    //hid_device::hid_device() { OutputDebugString( L"\n hid_device::default constructor" ); }
-
-    hid_device::hid_device( hid_raw_device raw_device )
+    hid_device::hid_device() 
     {
-        device_pointer = raw_device.get_device_pointer();
-        device_pointer = raw_device.get_device_pointer();
-        capabilities   = raw_device.get_capabilities();
-        data_preparsed = raw_device.get_preparsed_data();
-
-        collect_information();
-
-        set_text_device();
-            //set_text_collections();
-            //set_text_input();
+        OutputDebugString( L"\n hid_device::default constructor" );
     }
 
-    HANDLE hid_device::get_device_pointer()
+    hid_device::hid_device( const hid_raw_device & raw_device )
     {
-        /*
-        if( device_pointer )
-            return device_pointer;
-        else
+        device_pointer   = raw_device.get_device_pointer();
+        data_preparsed   = raw_device.get_preparsed_data();
+        capabilities     = raw_device.get_capabilities();
+        page             = raw_device.get_page();
+        usage            = raw_device.get_usage();
+    }
+
+    hid_device::hid_device( const hid_device & in_copy )
+    {
+        OutputDebugString( L"\n hid_device::copy constructor" );
+
+        if( this != &in_copy ) *this = in_copy;
+    }
+
+    hid_device::hid_device( hid_device && in_move ) noexcept
+    {
+        OutputDebugString( L"\n hid_device::move constructor" );
+
+        if( this != &in_move ) *this = std::move( in_move );
+    }
+
+    hid_device & hid_device::operator = ( const hid_device & assign_copy )
+    {
+        if( this != &assign_copy )
         {
-            error( L"device pointer is null" );
-            return nullptr;
+            data_preparsed        = assign_copy.data_preparsed;
+            device_pointer        = assign_copy.device_pointer;
+            device_path           = assign_copy.device_path;
+            path_char_amount      = assign_copy.path_char_amount;
+            page                  = assign_copy.page;
+            usage                 = assign_copy.usage;
+            input_report          = assign_copy.input_report;
+            output_report         = assign_copy.output_report;
+            feature_report        = assign_copy.feature_report;
+            capabilities          = assign_copy.capabilities;
+            collection_amount     = assign_copy.collection_amount;
+            attributes            = assign_copy.attributes;
+            attributes_extra      = assign_copy.attributes_extra;
+            manufacturer          = assign_copy.manufacturer;
+            product               = assign_copy.product;
+            physical              = assign_copy.physical;
+            collection            = assign_copy.collection;
+            information           = assign_copy.information;
+            //lines                 = assign_copy.lines;
+            input_buttons         = assign_copy.input_buttons;
+            input_values          = assign_copy.input_values;
+            output_buttons        = assign_copy.output_buttons;
+            output_values         = assign_copy.output_values;
+            button_features       = assign_copy.button_features;
+            value_features        = assign_copy.value_features;
+            draw_information      = assign_copy.draw_information;
+            font_face             = assign_copy.font_face;
+            font_size             = assign_copy.font_size;
+            font_colour           = assign_copy.font_colour;
+            layout_size     = assign_copy.layout_size;
+            //rectangle_margin      = assign_copy.rectangle_margin;
+            //rectangle_line_width  = assign_copy.rectangle_line_width;
+            //rectangle_line_colour = assign_copy.rectangle_line_colour;
+            information_spacing     = assign_copy.information_spacing;
         }
-        */
-        return device_pointer;
+
+        return *this;
     }
 
-    ulong hid_device::get_collection_amount()
+    hid_device & hid_device::operator = ( hid_device && assign_move ) noexcept
     {
-        return collection_amount;
+        if( this != &assign_move )
+        {
+            data_preparsed        = std::move( assign_move.data_preparsed );
+            device_pointer        = std::move( assign_move.device_pointer );
+            device_path           = std::move( assign_move.device_path );
+            path_char_amount      = std::move( assign_move.path_char_amount );
+            page                  = std::move( assign_move.page );
+            usage                 = std::move( assign_move.usage );
+            input_report          = std::move( assign_move.input_report );
+            output_report         = std::move( assign_move.output_report );
+            feature_report        = std::move( assign_move.feature_report );
+            capabilities          = std::move( assign_move.capabilities );
+            collection_amount     = std::move( assign_move.collection_amount );
+            attributes            = std::move( assign_move.attributes );
+            attributes_extra      = std::move( assign_move.attributes_extra );
+            manufacturer          = std::move( assign_move.manufacturer );
+            product               = std::move( assign_move.product );
+            physical              = std::move( assign_move.physical );
+            collection            = std::move( assign_move.collection );
+            information           = std::move( assign_move.information );
+            //lines                 = std::move( assign_move.lines );
+            input_buttons         = std::move( assign_move.input_buttons );
+            input_values          = std::move( assign_move.input_values );
+            output_buttons        = std::move( assign_move.output_buttons );
+            output_values         = std::move( assign_move.output_values );
+            button_features       = std::move( assign_move.button_features );
+            value_features        = std::move( assign_move.value_features );
+            draw_information      = std::move( assign_move.draw_information );
+            font_face             = std::move( assign_move.font_face );
+            font_size             = std::move( assign_move.font_size );
+            font_colour           = std::move( assign_move.font_colour );
+            layout_size     = std::move( assign_move.layout_size );
+            //rectangle_margin      = std::move( assign_move.rectangle_margin );
+            //rectangle_line_width  = std::move( assign_move.rectangle_line_width );
+            //rectangle_line_colour = std::move( assign_move.rectangle_line_colour );
+            information_spacing     = std::move( assign_move.information_spacing );
+
+            assign_move.reset();
+        }
+
+        return *this;
+    }
+
+    void hid_device::reset()
+    {
+        data_preparsed    = nullptr;
+        device_pointer    = nullptr;
+        device_path       = L"no device path";
+        path_char_amount  = 0;
+        page              = 0;
+        usage             = 0;
+        collection_amount = 0;
+        draw_information  = false;
+
+        font_face   = L"Cascasia code";
+        font_size   = 15.0f;
+        font_colour = D2D1::ColorF::White;
+
+        //rectangle_margin      = 0.0f;
+        //rectangle_line_width  = 1.0f;
+        //rectangle_line_colour = D2D1::ColorF::DarkCyan;
+        layout_size     = D2D1_SIZE_F{ 200.0f, 200.0f };
+
+        manufacturer.clear();
+        product.clear();
+        physical.clear();
+        collection.clear();
+        //lines.clear();
+
+        input_buttons.clear();
+        input_values.clear();
+        output_buttons.clear();
+        output_values.clear();
+        button_features.clear();
+        value_features.clear();
+
+        input_report.reset();
+        output_report.reset();
+        feature_report.reset();
+        capabilities.reset();
+        attributes.reset();
+        attributes_extra.reset();
+        information.reset();
+    }
+
+    hid_device::~hid_device( void )
+    {
+        OutputDebugString( L"\n hid_device::de-constructor" );
+
+        CloseHandle( device_pointer );
     }
 
     void hid_device::collect_information()
     {
-        NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
+        //NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
 
         page              = capabilities.UsagePage;
         usage             = capabilities.Usage;
         collection_amount = capabilities.NumberLinkCollectionNodes;
 
-        input.byte_amount              = capabilities.InputReportByteLength;
-        input.button_amount            = capabilities.NumberInputButtonCaps;
-        input.value_amount             = capabilities.NumberInputValueCaps;
-        input.data_identifier_amount   = capabilities.NumberInputDataIndices;
+        input_report.byte_amount              = capabilities.InputReportByteLength;
+        input_report.button_amount            = capabilities.NumberInputButtonCaps;
+        input_report.value_amount             = capabilities.NumberInputValueCaps;
+        input_report.data_identifier_amount   = capabilities.NumberInputDataIndices;
 
-        output.byte_amount             = capabilities.OutputReportByteLength;
-        output.button_amount           = capabilities.NumberOutputButtonCaps;
-        output.value_amount            = capabilities.NumberOutputValueCaps;
-        output.data_identifier_amount  = capabilities.NumberOutputDataIndices;
+        output_report.byte_amount             = capabilities.OutputReportByteLength;
+        output_report.button_amount           = capabilities.NumberOutputButtonCaps;
+        output_report.value_amount            = capabilities.NumberOutputValueCaps;
+        output_report.data_identifier_amount  = capabilities.NumberOutputDataIndices;
 
-        feature.byte_amount            = capabilities.FeatureReportByteLength;
-        feature.button_amount          = capabilities.NumberFeatureButtonCaps;
-        feature.value_amount           = capabilities.NumberFeatureValueCaps;
-        feature.data_identifier_amount = capabilities.NumberFeatureDataIndices;
+        feature_report.byte_amount            = capabilities.FeatureReportByteLength;
+        feature_report.button_amount          = capabilities.NumberFeatureButtonCaps;
+        feature_report.value_amount           = capabilities.NumberFeatureValueCaps;
+        feature_report.data_identifier_amount = capabilities.NumberFeatureDataIndices;
 
         // get device path character amount
         GetRawInputDeviceInfoW( get_device_pointer() , request.path , nullptr , & path_char_amount);
@@ -85,10 +215,10 @@ namespace hid
                                     FILE_ATTRIBUTE_NORMAL ,              // flags
                                     0 );                                 // template
 
-        HidD_GetAttributes( get_device_pointer() , &attributes );
-        HidD_GetManufacturerString( get_device_pointer() , manufacturer , string_size );//manufacturer.data() , string_size );
-        HidD_GetProductString( get_device_pointer() , product , string_size );
-        HidD_GetPhysicalDescriptor( get_device_pointer() , physical , string_size );
+        HidD_GetAttributes(         get_device_pointer() , & attributes );
+        HidD_GetManufacturerString( get_device_pointer() , manufacturer.data() , string_size );
+        HidD_GetProductString(      get_device_pointer() , product.data()      , string_size );
+        HidD_GetPhysicalDescriptor( get_device_pointer() , physical.data()     , string_size );
 
         //vector< node > nodes {};
 
@@ -113,28 +243,28 @@ namespace hid
             */
             //collection.push_back( move( new_collection ) );//at( index ) = move( new_item );
 
-        input_buttons.resize( get_input().button_amount );
+        input_buttons.resize( get_input_report().button_amount );
         //                       report type  , data destination       , data size               , source data
-        HidP_GetButtonCaps( HidP_Input , input_buttons.data() , & input.button_amount , get_data_preparsed() );
+        HidP_GetButtonCaps( HidP_Input , input_buttons.data() , & input_report.button_amount , get_data_preparsed() );
 
-        input_values.resize( get_input().value_amount );
-        HidP_GetValueCaps( HidP_Input , input_values.data() , & input.value_amount , get_data_preparsed() );
+        input_values.resize( get_input_report().value_amount );
+        HidP_GetValueCaps( HidP_Input , input_values.data() , & input_report.value_amount , get_data_preparsed() );
 
-        output_buttons.resize( get_output().button_amount );
-        HidP_GetButtonCaps( HidP_Output , output_buttons.data() , & output.button_amount , get_data_preparsed() );
+        output_buttons.resize( get_output_report().button_amount );
+        HidP_GetButtonCaps( HidP_Output , output_buttons.data() , & output_report.button_amount , get_data_preparsed() );
 
-        output_values.resize( get_output().value_amount );
-        HidP_GetValueCaps( HidP_Output , output_values.data() , & output.value_amount , get_data_preparsed() );
+        output_values.resize( get_output_report().value_amount );
+        HidP_GetValueCaps( HidP_Output , output_values.data() , & output_report.value_amount , get_data_preparsed() );
 
-        button_features.resize( get_feature().button_amount );
-        HidP_GetButtonCaps( HidP_Feature , button_features.data() , & feature.button_amount , get_data_preparsed() );
+        button_features.resize( get_feature_report().button_amount );
+        HidP_GetButtonCaps( HidP_Feature , button_features.data() , & feature_report.button_amount , get_data_preparsed() );
 
-        value_features.resize( get_feature().value_amount );
-        HidP_GetValueCaps( HidP_Feature , value_features.data() , & feature.value_amount , get_data_preparsed() );
+        value_features.resize( get_feature_report().value_amount );
+        HidP_GetValueCaps( HidP_Feature , value_features.data() , & feature_report.value_amount , get_data_preparsed() );
 
         for( auto & button : input_buttons ) //input_buttons.release
         {
-            hid_local_item new_button{};
+            hid_local_item new_button;
 
             // type = input
             new_button.set_page( button.UsagePage );
@@ -159,9 +289,9 @@ namespace hid
             {
                 new_button.set_usages_begin( button.Range.UsageMin );
                 new_button.set_usages_end( button.Range.UsageMax );
-
-                new_button.set_datum_index_begin( button.Range.DataIndexMin );
-                new_button.set_datum_index_end( button.Range.DataIndexMax );
+                
+                new_button.set_data_identifiers_begin( button.Range.DataIndexMin );
+                new_button.set_data_identifiers_end( button.Range.DataIndexMax );
 
                 new_button.set_strings_range_begin( button.Range.StringMin ); //HidD_GetIndexedString
                 new_button.set_strings_range_end( button.Range.StringMax );
@@ -172,7 +302,7 @@ namespace hid
             else
             {
                 new_button.set_usage( button.NotRange.Usage );
-                new_button.set_data_index( button.NotRange.DataIndex );
+                new_button.set_data_identifier( button.NotRange.DataIndex );
                 new_button.set_string_index( button.NotRange.StringIndex );
                 new_button.set_designator( button.NotRange.DesignatorIndex );
             }
@@ -185,12 +315,12 @@ namespace hid
             //new_button.gather_information(); get_information_string()
 
             //input.buttons.emplace_back( move( new_button ) );
-            input.buttons.push_back( new_button );
+            input_report.buttons.push_back( new_button );
         }
 
         for( auto & value : input_values )
         {
-            hid_global_item new_value {};
+            hid_global_item new_value;
 
             new_value.set_page( value.UsagePage );
 
@@ -226,8 +356,8 @@ namespace hid
                 new_value.set_usages_begin( value.Range.UsageMin );
                 new_value.set_usages_end( value.Range.UsageMax );
 
-                new_value.set_datum_index_begin( value.Range.DataIndexMin );
-                new_value.set_datum_index_end( value.Range.DataIndexMax );
+                new_value.set_data_identifiers_begin( value.Range.DataIndexMin );
+                new_value.set_data_identifiers_end( value.Range.DataIndexMax );
 
                 new_value.set_strings_range_begin( value.Range.StringMin ); //HidD_GetIndexedString
                 new_value.set_strings_range_end( value.Range.StringMax );
@@ -238,27 +368,22 @@ namespace hid
             else
             {
                 new_value.set_usage( value.NotRange.Usage );
-                new_value.set_data_index( value.NotRange.DataIndex );
+                new_value.set_data_identifier( value.NotRange.DataIndex );
                 new_value.set_string_index( value.NotRange.StringIndex );
                 new_value.set_designator( value.NotRange.DesignatorIndex );
             }
 
             //input.values.emplace_back( move( new_value ) );
-            input.values.push_back( new_value );
+            input_report.values.push_back( new_value );
             //new_item.origin = input.LinkCollection; vector<main_item>::reference
         }
-        
-    }
 
-    hid_device::~hid_device( void )
-    {
-        //OutputDebugString( L"\n hid_device::de-constructor" );
-        CloseHandle( device_pointer );
+        set_text_device();
     }
 
     void hid_device::set_text_device()
     {
-        string content  {};
+        std::wstring content  {};
         vertex position { 30.0f , 30.0f };
 
         content =  L"manufacturer\t: ";
@@ -266,9 +391,9 @@ namespace hid
         content += L"\nproduct\t\t: ";
         content += product;
         content += L"\npage\t\t: ";
-        content += locate::get_usages().page( get_page() );
+        content += locate::get_usages().page( page );
         content += L"\nusage\t\t: ";
-        content += locate::get_usages().usage( get_page() , get_usage() );
+        content += locate::get_usages().usage( page , usage );
 
         /*text device(content ,
                      position ,
@@ -280,9 +405,7 @@ namespace hid
         information.set_content( content );
         information.set_position_top_left( position );
         information.set_layout_size( D2D1_SIZE_F{ 200.0f , 200.0f } );
-        information.set_rectangle_line_colour( rectangle_line_colour );
-
-        //item_texts.push_back( move( device ) );
+        //information.set_rectangle_line_colour( rectangle_line_colour );
 
         // += attributes.VendorID;
         // += attributes.ProductID;
@@ -292,10 +415,10 @@ namespace hid
 
     void hid_device::set_text_collections()
     {
-        float  position_x    = 0;
-        float  position_y    = 0;
+        float  position_x    = 0.0f;
+        float  position_y    = 0.0f;
         
-        vertex item_position = { position_x , position_y };
+        vertex item_position { position_x , position_y };
          
          // sort input.buttons[1..n] by 
 
@@ -374,9 +497,9 @@ namespace hid
         */
     }
 
-    void hid_device::display_information()
+    void hid_device::set_if_display_information( const bool in_bool )
     {
-        draw_information = ! draw_information;  // switch
+        draw_information = in_bool; 
     }
 
     void hid_device::draw()
@@ -386,7 +509,7 @@ namespace hid
         {
             information.draw();
             
-            for( auto & item : collection ) item.draw();
+            //for( auto & item : collection ) item.draw();
             
             //lines.draw
         }

@@ -1,10 +1,10 @@
 // utility.cpp
 
 #include "..\headers\utility.h"
-#include "..\headers\direct_2d.h"
+#include "..\headers\custom_types.h"
 
-#include < windows.h >
-#include < strsafe.h >
+#include <windows.h>
+#include <strsafe.h>
 
 namespace hid
 {

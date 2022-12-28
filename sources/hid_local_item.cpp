@@ -2,16 +2,105 @@
 
 #include "..\headers\locate.h"
 #include "..\headers\hid_usages.h"
-#include < bitset >
+#include <bitset>
 
 namespace hid
 {
-    //hid_local_item::hid_local_item() { OutputDebugString( L"\n hid_local_item::default constructor" ); }
-    //hid_local_item::hid_local_item( const hid_local_item & copy ) { OutputDebugString( L"\n hid_local_item::copy constructor" ); }
-    //hid_local_item::hid_local_item( hid_local_item && move ) { OutputDebugString( L"\n hid_local_item::move constructor" ); }
-    //hid_local_item & hid_local_item::operator = ( const hid_local_item & assignment ) {}
-    //hid_local_item & hid_local_item::operator = ( const hid_local_item && assignment_move ) {}
-    //hid_local_item::~hid_local_item() { OutputDebugString( L"\n hid_local_item::de-constructor" ); }
+    hid_local_item::hid_local_item() 
+    {
+        OutputDebugString( L"\n hid_local_item::default constructor" );
+    }
+    
+    hid_local_item::hid_local_item( const hid_local_item & in_copy ) 
+    { 
+        OutputDebugString( L"\n hid_local_item::copy constructor" );
+        
+        if( this != &in_copy ) *this = in_copy;
+    }
+    
+    hid_local_item::hid_local_item( hid_local_item && in_move ) noexcept
+    {
+        OutputDebugString( L"\n hid_local_item::move constructor" );
+
+        if( this != &in_move ) *this = std::move( in_move );
+    }
+
+    hid_local_item & hid_local_item::operator = ( const hid_local_item & assign_copy ) 
+    {
+        OutputDebugString( L"\n hid_local_item::assign_copy" );
+
+        if( this != &assign_copy )
+        { 
+            report_index     = assign_copy.report_index;
+            report_amount    = assign_copy.report_amount;
+            bit_field        = assign_copy.bit_field;
+            is_absolute      = assign_copy.is_absolute;
+            origin_usage     = assign_copy.origin_usage;
+            is_range         = assign_copy.is_range;
+            usages           = assign_copy.usages;
+            data_identifier  = assign_copy.data_identifier;
+            data_identifiers = assign_copy.data_identifiers;
+            has_strings      = assign_copy.has_strings;
+            string           = assign_copy.string;
+            has_designators  = assign_copy.has_designators;
+            designator       = assign_copy.designator;
+            designators      = assign_copy.designators;
+            information      = assign_copy.information;
+        }
+
+        return *this;
+    }
+
+    hid_local_item & hid_local_item::operator = ( hid_local_item && assign_move ) noexcept
+    {
+        if( this != &assign_move )
+        {
+            report_index     = std::move( assign_move.report_index );
+            report_amount    = std::move( assign_move.report_amount );
+            bit_field        = std::move( assign_move.bit_field );
+            is_absolute      = std::move( assign_move.is_absolute );
+            origin_usage     = std::move( assign_move.origin_usage );
+            is_range         = std::move( assign_move.is_range );
+            usages           = std::move( assign_move.usages );
+            data_identifier  = std::move( assign_move.data_identifier );
+            data_identifiers = std::move( assign_move.data_identifiers );
+            has_strings      = std::move( assign_move.has_strings );
+            string           = std::move( assign_move.string );
+            has_designators  = std::move( assign_move.has_designators );
+            designator       = std::move( assign_move.designator );
+            designators      = std::move( assign_move.designators );
+            information      = std::move( assign_move.information );
+
+            assign_move.reset();
+        }
+
+        return *this;
+    }
+
+    void hid_local_item::reset()
+    {
+        report_index     = 0;
+        report_amount    = 0;
+        bit_field        = 0;
+        is_absolute      = false;
+        origin_usage     = 0;
+        is_range         = false;
+        usages           = range { 0,0 };
+        data_identifier  = 0;
+        data_identifiers = range { 0,0 };
+        has_strings      = false;
+        string           = 0;
+        has_designators  = false;
+        designator       = 0;
+        designators      = range { 0,0 };
+
+        information.reset();
+    }
+
+    hid_local_item::~hid_local_item() 
+    {
+        OutputDebugString( L"\n hid_local_item::de-constructor" );
+    }
 
     void hid_local_item::set_information()
     {
@@ -21,46 +110,46 @@ namespace hid
         text += to_wstring( get_index() );
 
         text += L"\npage\t: ";
-        text += locate::get_usages().page(get_page());
+        text += locate::get_usages().page( get_page() );
 
         text += L"\norigin usage\t: ";
-        text += locate::get_usages().usage( get_origin_page() , get_origin_usage() );
+        text += locate::get_usages().usage( origin_page , origin_usage );
 
         text += L"\norigin page\t: ";
-        text += locate::get_usages().page( get_origin_page() );
+        text += locate::get_usages().page( origin_page );
 
-        if( get_is_range() )
+        if( is_range )
         {
             text += L"\nusages\t: ";
             
-            for( long usage = get_usages_range().begin ; usage < get_usages_range().end ; usage++ )
+            for( long usage = usages.begin ; usage < usages.end ; usage++ )
             {
                 text += L"\nusage\t: ";
-                text += locate::get_usages().usage(get_page() , usage);
+                text += locate::get_usages().usage( get_page() , usage );
             }
         }
         else
         {
             text += L"\nusage\t: ";
-            text += locate::get_usages().usage(get_page() , get_usage());
+            text += locate::get_usages().usage( get_page() , get_usage() );
         }
 
         text += L"\nreport\t: ";
-        text += to_wstring( get_report_index() );
+        text += to_wstring( report_index );
 
-        if( get_report_amount() )
+        if( report_amount )
         {
             text += L"\nreport amount\t: ";
-            text += get_report_amount();
+            text += report_amount;
         }
 
-        if( get_is_absolute() ) text += L"\ndata is absolute";
+        if( is_absolute ) text += L"\ndata is absolute";
         else                    text += L"\ndata is relative";
 
-        if( get_bit_field() )
+        if( bit_field )
         {
             text += L"\nbit field\t: ";
-            text += bitset< 16 >( get_bit_field() ).to_string< wchar_t , char_traits< wchar_t > , allocator< wchar_t > >();
+            text += bitset< 16 >( bit_field ).to_string< wchar_t , char_traits< wchar_t > , allocator< wchar_t > >();
         }
 
         // switch page 

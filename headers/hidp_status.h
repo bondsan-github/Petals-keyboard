@@ -1,16 +1,14 @@
 #pragma once
 
-#include < string >
+#include <string>
 
 namespace hid
 {
-   using namespace std;
-
    class hidp_status
    {
-      public: // functions
+      public:
 
-         string message( long in_code ) const
+         std::string message( long in_code ) const
          {
             if( ( in_code >> 28 ) == 0x08 ) //0x80004400001
                 return "null"; 
@@ -28,9 +26,9 @@ namespace hid
                 return "unknown code";
          };
 
-      private: // variables
+      private:
 
-         const string messages[ 20 ]
+         const std::string messages[ 20 ]
          {
             "success" ,                // 00
             "invalid preparsed data" , // 01

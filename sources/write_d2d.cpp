@@ -27,8 +27,14 @@ namespace hid
         */
     }
 
+    write_d2d::~write_d2d()
+    {
+        if( write ) { write->Release(); write = nullptr; }
+    }
+
+    /*
     void write_d2d::get_format( IDWriteTextFormat * in_format ,
-                                string              in_font_family_name ,
+                                wstring              in_font_family_name ,
                                 ComPtr< IDWriteFontCollection > in_font_collection ,
                                 DWRITE_FONT_WEIGHT  in_font_weight ,
                                 DWRITE_FONT_STYLE   in_font_style ,
@@ -52,7 +58,9 @@ namespace hid
         //trimming trim{};    //trim.granularity = DWRITE_TRIMMING_GRANULARITY_NONE;     
         //format->SetTrimming( & trim , 0 );
     }
+    */
 
+    /*
     void write_d2d::get_layout( IDWriteTextLayout * in_layout,
                                 string                      in_content ,
                                 ComPtr< IDWriteTextFormat > in_format ,
@@ -66,5 +74,6 @@ namespace hid
                                  //in_layout.ReleaseAndGetAddressOf() );
                                  & in_layout ); 
     }
+    */
 
 } // namespace hid

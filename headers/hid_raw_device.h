@@ -1,74 +1,55 @@
 #pragma once
 
-#include < string >
-#include < vector >
-#include < Windows.h >
-#include < hidsdi.h >
+#include <string>
+#include <vector>
+#include <Windows.h>
+#include <hidsdi.h>
 
 //#include "..\headers\utility.h"
-#include "..\headers\direct_2d.h"
-#include "..\headers\hid_local_item.h"
-#include "..\headers\hid_global_item.h"
+#include "..\headers\custom_types.h"
+#include "..\headers\hid_globals.h"
+//#include "..\headers\hid_local_item.h"
+//#include "..\headers\hid_global_item.h"
 
 namespace hid
 {
-    using namespace std;
-
-    struct report
-    {
-        ushort byte_amount            { 0 };
-
-        ushort button_amount          { 0 };
-        ushort value_amount           { 0 };
-        ushort data_identifier_amount { 0 };
-
-        vector< hid_local_item >  buttons { 0 };
-        vector< hid_global_item > values  { 0 };
-    };
-
-    const struct requests
-    {
-        uint data = ( 1 << 29 ) | 0x5;
-        uint path = ( 1 << 29 ) | 0x7; // return value in character amount, not byte size
-        uint info = ( 1 << 29 ) | 0xB;
-
-    };
-
     class hid_raw_device
     {
         private:
 
-            HANDLE device_pointer { nullptr };
+            HANDLE device_pointer                 { nullptr };
 
             PHIDP_PREPARSED_DATA data_preparsed   { nullptr };
-            vector< _int8 >      data_bytes       { 0 };
-            uint                 data_byte_amount { 0 };
+            std::vector< std::byte >  data_bytes; // _int8 || uchar
 
-            HIDP_CAPS capabilities {};
+            hid_capabilities capabilities; //_HIDP_CAPS
 
             ushort page  { 0 };
             ushort usage { 0 };
 
             requests request;
 
-      public:
+        public:
 
-           hid_raw_device( HANDLE in_device );
-          //~hid_raw_device( void );
+            hid_raw_device();
+            ~hid_raw_device();
+            
+            hid_raw_device( HANDLE in_device );
+            
+            hid_raw_device( const hid_raw_device & copy );
+            hid_raw_device( hid_raw_device && move ) noexcept;
+            hid_raw_device & operator = ( const hid_raw_device & assign_copy );
+            hid_raw_device & operator = ( hid_raw_device && assign_move ) noexcept;
 
-          bool is_multi_touch();
+            void reset();
 
-          HANDLE get_device_pointer()
-          { 
-              //if( device_pointer ) return device_pointer;
-              //else error( L"device pointer is null" );
+            bool is_multi_touch();
 
-              return device_pointer;
-          }
-          HIDP_CAPS get_capabilities()  { return capabilities; }
-          PHIDP_PREPARSED_DATA get_preparsed_data()  { return data_preparsed; }
-          ushort get_page()   { return page; }
-          ushort get_usage()  { return usage; }
+            HANDLE               get_device_pointer() const { return device_pointer; }
+            PHIDP_PREPARSED_DATA get_preparsed_data() const { return data_preparsed; }
+            hid_capabilities     get_capabilities()   const { return capabilities;   }
+            ushort               get_page()           const { return page;           }
+            ushort               get_usage()          const { return usage;          }
    };
 
 }

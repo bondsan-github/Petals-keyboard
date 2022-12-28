@@ -1,5 +1,5 @@
 #pragma once
-#include "direct_2d.h"
+#include "custom_types.h"
 
 namespace hid
 {

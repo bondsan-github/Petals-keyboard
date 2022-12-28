@@ -1,10 +1,9 @@
 #pragma once
 
-#include < d2d1.h >
+#include <d2d1.h>
 
 struct vertex
 {
-    // using vertex_two_floats = D2D1_POINT_2F;
     vertex( D2D1_POINT_2F in_point )                : x( in_point.x ) , y( in_point.y ) { }
     vertex( float x_in = 0.0f , float y_in = 0.0f ) : x( x_in )       , y( y_in )       { }
     
@@ -47,7 +46,12 @@ struct vertex
 
     operator D2D1_POINT_2F () 
     {
-        return D2D1_POINT_2F( x , y );
+        D2D1_POINT_2F point;
+        point.x = x;
+        point.y = y;
+
+        //return D2D1_POINT_2F( x , y );
+        return point;
     }
 
     float x {};

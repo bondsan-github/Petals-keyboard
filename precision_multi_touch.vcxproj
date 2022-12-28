@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -142,14 +142,18 @@
     <ClCompile Include="sources\grid_d2d.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="sources\utility.cpp" />
+    <ClCompile Include="sources\utility.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="sources\graphics_d2d.cpp" />
     <ClCompile Include="sources\hid_device.cpp" />
     <ClCompile Include="sources\hid_devices.cpp" />
     <ClCompile Include="sources\hid_global_item.cpp" />
     <ClCompile Include="sources\hid_collection.cpp" />
     <ClCompile Include="sources\hid_raw_device.cpp" />
-    <ClCompile Include="sources\line_d2d.cpp" />
+    <ClCompile Include="sources\line_d2d.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="sources\locate.cpp" />
     <ClCompile Include="sources\hid_multi_touch.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -164,28 +168,34 @@
     <Manifest Include="resources\DeclareDPIAware.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h" />
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h" />
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\um\WinUser.h" />
-    <ClInclude Include="headers\direct_2d.h" />
+    <ClInclude Include="headers\custom_types.h" />
     <ClInclude Include="headers\graphics_d2d.h" />
     <ClInclude Include="headers\grid_d2d.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="headers\hid_globals.h" />
     <ClInclude Include="headers\vertex.h" />
     <ClInclude Include="headers\hid_global_item.h" />
     <ClInclude Include="headers\hid_local_item.h" />
     <ClInclude Include="headers\hid_collection.h" />
-    <ClInclude Include="headers\line_d2d.h" />
+    <ClInclude Include="headers\line_d2d.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="headers\locate.h" />
     <ClInclude Include="headers\service.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="headers\text_d2d.h" />
     <ClInclude Include="headers\hid_usage_text.h" />
-    <ClInclude Include="headers\utility.h" />
-    <ClInclude Include="headers\virtual_desktop.h" />
-    <ClInclude Include="headers\windows_messages.h" />
+    <ClInclude Include="headers\utility.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="headers\virtual_desktop.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="headers\windows_messages.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="headers\write_d2d.h" />
     <ClInclude Include="headers\hidp_status.h" />
     <ClInclude Include="headers\hid_device.h" />

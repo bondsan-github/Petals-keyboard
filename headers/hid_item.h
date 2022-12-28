@@ -1,12 +1,12 @@
 ﻿#pragma once
 
-#include < vector >
-#include < string >
+#include "..\headers\custom_types.h"
+
+#include <vector>
+#include <string>
 
 namespace hid
 {
-    using namespace std;
-
     enum class hid_item_type : unsigned long
     {
         undefined          , // 0x00
@@ -27,7 +27,7 @@ namespace hid
 
     // HID Usage Tables FOR Universal Serial Bus( USB ) Version 1.3
     // usb.org/sites/default/files/hut1_3_0.pdf
-    const vector< wstring > hid_item_type_text
+    const std::vector< std::wstring > hid_item_type_text
     {
         L"undefined"          , //
         L"physical"           , //
@@ -44,11 +44,10 @@ namespace hid
     };
 
     //using link = vector< item >::const_reference;
-
-    using link = ushort;
+    //using link = ushort;
     //using ⛓   = link;
     
-    struct range
+    struct hid_range
     {
         long begin { 0 };
         long end   { 0 };

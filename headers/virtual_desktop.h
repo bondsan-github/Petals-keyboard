@@ -1,7 +1,7 @@
 #pragma once
 
-#include "..\headers\direct_2d.h"
-#include < utility >
+#include "..\headers\custom_types.h"
+#include <utility>
 
 namespace hid
 {
@@ -14,7 +14,7 @@ namespace hid
 
             // displays
             unsigned short  display_index  { 0 };
-            vector< DISPLAY_DEVICE > displays; // { .cb = sizeof( DISPLAY_DEVICE ) };
+            std::vector< DISPLAY_DEVICE > displays; // { .cb = sizeof( DISPLAY_DEVICE ) };
         
             enum class      request : unsigned long { devices , guid };
 

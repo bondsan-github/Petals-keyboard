@@ -1,51 +1,21 @@
 #include "..\headers\gui_microsoft.h"
 
-#include < cassert >
-#include < windows.h >
-#include < sstream >
+#include <cassert>
+//#include <windows.h>
+#include <sstream>
+
 #include "..\headers\locate.h"
 
 namespace hid
 {
-    gui_microsoft::gui_microsoft( void )
-    {
-        OutputDebugString( L"\n gui_microsoft::default constructor" );
-    }
-
-    gui_microsoft::gui_microsoft( const gui_microsoft & copy )
-    {
-        OutputDebugString( L"\n gui_microsoft::copy constructor" );
-        //swap
-        instance = copy.instance;
-    }
-    
-    gui_microsoft & gui_microsoft::operator=( const gui_microsoft & assignment )
-    {
-        OutputDebugString( L"\n gui_microsoft::assignment operator" );
-        if( this != & assignment )
-        {}
-
-        return * this;
-    }
-
-    gui_microsoft & gui_microsoft::operator = ( gui_microsoft && assigned_move )
-    {
-        OutputDebugString( L"\n gui_microsoft::assigned move operator" );
-        return *this;
-    }
-
-    gui_microsoft::gui_microsoft( const gui_microsoft && move )
-    {
-        OutputDebugString( L"\n gui_microsoft::move constructor" );
-    }
+    //gui_microsoft::gui_microsoft( void ) { OutputDebugString( L"\n gui_microsoft::default constructor" ); }
 
     gui_microsoft::gui_microsoft( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags )
     {
-        OutputDebugString( L"\n gui_microsoft::parameterised constructor" );
+        //OutputDebugString( L"\n gui_microsoft::parameterised constructor" );
 
         instance = in_instance; parameters = in_parameters; show_flags = in_show_flags;
 
-        //locate::add_service( service_identifier::window , this );
         locate::set_windows( this );
 
         window_class.cbSize = sizeof( WNDCLASSEX );
@@ -148,12 +118,7 @@ namespace hid
         //message_loop();
     }
 
-    gui_microsoft::~gui_microsoft()
-    {
-        OutputDebugString( L"\n gui_microsoft::de-constructor" );
-
-        //PostQuitMessage( 0 );
-    }
+    //gui_microsoft::~gui_microsoft() { OutputDebugString( L"\n gui_microsoft::de-constructor" ); }
 
     HWND gui_microsoft::get_window() const
     {

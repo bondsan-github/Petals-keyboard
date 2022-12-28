@@ -1,6 +1,9 @@
 #pragma once
 
-#include "..\headers\direct_2d.h"
+#include "..\headers\custom_types.h"
+
+#include <dwrite.h>
+#include <string>
 
 namespace hid
 {
@@ -8,7 +11,7 @@ namespace hid
    {
        private:
 
-           IDWriteFactory *        write;
+           IDWriteFactory * write;
 
            //ComPtr< IDWriteTextFormat >     format;
            //ComPtr< IDWriteTextLayout >     layout;
@@ -17,26 +20,34 @@ namespace hid
            //ComPtr< font_family >           family;
            //ComPtr< font_collection_names > names;
            //ComPtr< text_analyser >         analyser;
-           string                          locale   { L"en-us" }; // en-GB
+           std::wstring locale { L"en-us" }; // en-GB
 
        public:
 
             write_d2d();
-            //~write_d2d();
+            ~write_d2d();
+            //write_d2d( const write_d2d & copy )  = delete;
+            //write_d2d( const write_d2d && move ) noexcept = delete;
+            //write_d2d & operator( write_d2d & assign_copy ) = delete;
+            //write_d2d & operator( write_d2d && assign_move ) noexcept = delete;
          
+            IDWriteFactory & get_write_factory() const { return *write; }
+            /*
             void get_format( IDWriteTextFormat * in_format,
-                             string              in_font_family_name    = L"Times New Roman" ,
-                             ComPtr< IDWriteFontCollection > in_font_collection = nullptr ,
-                             DWRITE_FONT_WEIGHT  in_font_weight = DWRITE_FONT_WEIGHT_NORMAL ,
-                             DWRITE_FONT_STYLE   in_font_style = DWRITE_FONT_STYLE_NORMAL ,
+                             wstring              in_font_family_name   = L"Times New Roman" ,
+                             IDWriteFontCollection * in_font_collection = nullptr ,
+                             DWRITE_FONT_WEIGHT  in_font_weight  = DWRITE_FONT_WEIGHT_NORMAL ,
+                             DWRITE_FONT_STYLE   in_font_style   = DWRITE_FONT_STYLE_NORMAL ,
                              DWRITE_FONT_STRETCH in_font_stretch = DWRITE_FONT_STRETCH_NORMAL ,
                              float               in_font_size    = 15.0f ,
-                             string              in_font_locale  = L"en-us" );
+                             wstring             in_font_locale  = L"en-us" );
 
             void get_layout( IDWriteTextLayout * in_layout ,
                              string              in_content ,
-                             ComPtr< IDWriteTextFormat > in_text_format ,
+                             IDWriteTextFormat * in_text_format ,
                              D2D1_SIZE_F          in_dimensions ={ 200.0f , 200.0f } ); // pixels
+            */
+
            /*
            void add_text( string                in_content         = L"empty"             ,
                           vertex                in_position_center = { 0.5f , 0.5f }      , // dips 0..1
