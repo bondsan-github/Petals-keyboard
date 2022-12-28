@@ -168,6 +168,9 @@
     <Manifest Include="resources\DeclareDPIAware.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h" />
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h" />
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h" />
     <ClInclude Include="headers\custom_types.h" />
     <ClInclude Include="headers\graphics_d2d.h" />
     <ClInclude Include="headers\grid_d2d.h">
@@ -213,9 +216,6 @@
     <None Include="documents\hid1_11.pdf" />
     <None Include="documents\hut1_3_0.pdf" />
     <None Include="headers\ClassDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="documents\Initialsation sequence.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

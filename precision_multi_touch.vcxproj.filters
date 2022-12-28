@@ -154,6 +154,15 @@
     <ClInclude Include="headers\hid_globals.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="headers\ClassDiagram.cd" />
@@ -164,10 +173,5 @@
     <None Include="documents\hut1_3_0.pdf">
       <Filter>Documents</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="documents\Initialsation sequence.txt">
-      <Filter>Documents</Filter>
-    </Text>
   </ItemGroup>
 </Project>

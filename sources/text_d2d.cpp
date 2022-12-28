@@ -313,11 +313,6 @@ namespace hid
         return { position_top_left.x , position_top_left.y };
     }
 
-    void text::set_layout_size( D2D1_SIZE_F in_layout_size )
-    {
-        layout_size = in_layout_size;
-    }
-
     void text::set_font_colour( D2D1::ColorF in_font_colour )
     {
         font_colour = in_font_colour;

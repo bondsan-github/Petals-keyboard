@@ -123,7 +123,7 @@ namespace hid
         std::wstring text;
 
         text = L"index\t: ";
-        text += to_wstring( get_index() );
+        text += std::to_wstring( get_index() );
         text += L"\ntype\t: ";
         //text += L"\nidentifier:\t ";
         //text += 
@@ -136,25 +136,25 @@ namespace hid
         if( siblings )
         {
             text += L"\nsibling amount\t: ";
-            text += to_wstring( get_sibling_amount() );
+            text += std::to_wstring( get_sibling_amount() );
         }
 
         if( origin )
         {
             text += L"\norigin\t: ";
-            text += to_wstring( get_origin() );
+            text += std::to_wstring( get_origin() );
         }
 
         if( next )
         {
             text += L"\nnext\t: ";
-            text += to_wstring( get_next() );
+            text += std::to_wstring( get_next() );
         }
 
         if( first )
         {
             text += L"\nfirst\t: ";
-            text += to_wstring( get_first() );
+            text += std::to_wstring( get_first() );
         }
 
         information.set_content( text );

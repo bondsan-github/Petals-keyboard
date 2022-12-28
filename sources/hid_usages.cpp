@@ -25,7 +25,7 @@ namespace hid
         }
         catch( std::out_of_range const & exception )
         {
-            return format( L"{:x} page" , in_page ); // hex string
+            return std::format( L"{:x} page" , in_page ); // hex string
         }
     };
 
@@ -37,7 +37,7 @@ namespace hid
         }
         catch( std::out_of_range & exception )
         {
-            return format( L"{:x} usage" , in_usage ); // hex string
+            return std::format( L"{:x} usage" , in_usage ); // hex string
         }
 
         try
@@ -46,7 +46,7 @@ namespace hid
         }
         catch( std::out_of_range & exception )
         {
-            return format( L"{:x} usage" , in_usage ); // hex string
+            return std::format( L"{:x} usage" , in_usage ); // hex string
         }
     }
 
@@ -58,7 +58,7 @@ namespace hid
         }
         catch( std::out_of_range & exception ) //out_of_range & error 
         {
-            return format( L"{:x} usage" , in_usage ); // hex string               
+            return std::format( L"{:x} usage" , in_usage ); // hex string               
         }
 
         try
@@ -67,7 +67,7 @@ namespace hid
         }
         catch( std::out_of_range & exception )
         {
-            return format( L"{:x} usage" , in_usage ); // hex string
+            return std::format( L"{:x} usage" , in_usage ); // hex string
         }
     }
 

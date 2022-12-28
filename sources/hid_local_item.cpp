@@ -85,14 +85,14 @@ namespace hid
         is_absolute      = false;
         origin_usage     = 0;
         is_range         = false;
-        usages           = range { 0,0 };
+        usages           = hid_range{ 0l,0l };
         data_identifier  = 0;
-        data_identifiers = range { 0,0 };
+        data_identifiers = hid_range{ 0l,0l };
         has_strings      = false;
         string           = 0;
         has_designators  = false;
         designator       = 0;
-        designators      = range { 0,0 };
+        designators      = hid_range{ 0l,0l };
 
         information.reset();
     }
@@ -104,10 +104,10 @@ namespace hid
 
     void hid_local_item::set_information()
     {
-        wstring text;
+        std::wstring text;
 
         text += L"index\t: ";
-        text += to_wstring( get_index() );
+        text += std::to_wstring( get_index() );
 
         text += L"\npage\t: ";
         text += locate::get_usages().page( get_page() );
@@ -135,7 +135,7 @@ namespace hid
         }
 
         text += L"\nreport\t: ";
-        text += to_wstring( report_index );
+        text += std::to_wstring( report_index );
 
         if( report_amount )
         {
@@ -144,12 +144,12 @@ namespace hid
         }
 
         if( is_absolute ) text += L"\ndata is absolute";
-        else                    text += L"\ndata is relative";
+        else              text += L"\ndata is relative";
 
         if( bit_field )
         {
             text += L"\nbit field\t: ";
-            text += bitset< 16 >( bit_field ).to_string< wchar_t , char_traits< wchar_t > , allocator< wchar_t > >();
+            //text += std::bitset< 16 >( bit_field ).to_string< wchar_t , char_traits< wchar_t > , allocator< wchar_t > >();
         }
 
         // switch page 

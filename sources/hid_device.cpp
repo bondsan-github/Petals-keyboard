@@ -523,7 +523,7 @@ namespace hid
 
     
 }
-/*
+
 // move constructor
       //hid_device( hid_device && destination ) //noexcept
       //~hid_device() { delete [] manufacturer }

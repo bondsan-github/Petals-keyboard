@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\headers\custom_types.h"
+#include "..\headers\hid_item.h"
 #include "..\headers\text_d2d.h"
 
 #include <string>

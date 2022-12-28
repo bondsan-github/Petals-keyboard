@@ -10,7 +10,7 @@ namespace hid
     using _usage      = std::wstring;
     using _modifier   = std::wstring;
     using _pair       = std::pair< _usage , _modifier >;
-    using usage_text  = std::vector< vector < _pair > >;
+    using usage_text  = std::vector< std::vector < _pair > >;
 
     const usage_text usages
     {
