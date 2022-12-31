@@ -28,7 +28,7 @@ namespace hid
         if( this != &assign_copy )
         {
             device_pointer   = assign_copy.device_pointer;
-            data_bytes       = assign_copy.data_bytes;
+            data_preparsed   = assign_copy.data_preparsed;
             capabilities     = assign_copy.capabilities;
             page             = assign_copy.page;
             usage            = assign_copy.usage;
@@ -44,7 +44,7 @@ namespace hid
         if( this != &assign_move )
         {
             device_pointer   = std::move( assign_move.device_pointer );
-            data_bytes       = std::move( assign_move.data_bytes );
+            data_preparsed   = std::move( assign_move.data_preparsed );
             capabilities     = std::move( assign_move.capabilities );
             page             = std::move( assign_move.page );
             usage            = std::move( assign_move.usage );
@@ -59,17 +59,19 @@ namespace hid
     {
         OutputDebugString( L"\n hid_raw_device::parametertised constructor" );
 
+        NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
         uint data_size { 0 };
 
         GetRawInputDeviceInfo( device_pointer , request.data , nullptr , & data_size );
 
-        data_bytes.resize( data_size );
+        data_preparsed.resize( data_size );
 
-        GetRawInputDeviceInfo( device_pointer , request.data , data_bytes.data() , & data_size );
+        GetRawInputDeviceInfo( device_pointer , request.data , data_preparsed.data() , & data_size );
 
-        data_preparsed = reinterpret_cast< PHIDP_PREPARSED_DATA >( data_bytes.data() );
+        //data_preparsed = reinterpret_cast< PHIDP_PREPARSED_DATA >( data_bytes.data() );
 
-        HidP_GetCaps( data_preparsed , & capabilities );
+        // getcaps requires * _hidp_preparsed_data = incomplete type not allowed
+        result = HidP_GetCaps( reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) , &capabilities);
 
         page  = capabilities.UsagePage;
         usage = capabilities.Usage;
@@ -83,9 +85,8 @@ namespace hid
     void hid_raw_device::reset()
     {
         device_pointer = nullptr;
-        data_preparsed = nullptr;
-        data_bytes.clear();
-        capabilities.reset();
+        //data_preparsed.clear();
+        //capabilities.reset();
         page  = 0;
         usage = 0;
     }
@@ -94,7 +95,7 @@ namespace hid
     {
         OutputDebugString( L"\n hid_raw_device::de-constructor" );
 
-        device_pointer = nullptr;
-        data_preparsed = nullptr;
+        //device_pointer = nullptr;
+        //data_preparsed.clear();
     }
 }

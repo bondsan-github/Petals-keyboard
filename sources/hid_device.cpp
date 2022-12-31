@@ -1,6 +1,6 @@
 #include "..\headers\hid_device.h"
 
-//#include "..\headers\utility.h"
+#include "..\headers\utility.h"
 #include "..\headers\locate.h"
 #include "..\headers\hid_usages.h"
 
@@ -13,10 +13,12 @@ namespace hid
         OutputDebugString( L"\n hid_device::default constructor" );
     }
 
-    hid_device::hid_device( const hid_raw_device & raw_device )
+    hid_device::hid_device( hid_raw_device & raw_device )
     {
+        OutputDebugString( L"\n hid_device::hid_raw_device constructor" );
+
         device_pointer   = raw_device.get_device_pointer();
-        data_preparsed   = raw_device.get_preparsed_data();
+        data_preparsed   = std::move( raw_device.get_preparsed_data() );
         capabilities     = raw_device.get_capabilities();
         page             = raw_device.get_page();
         usage            = raw_device.get_usage();
@@ -38,6 +40,8 @@ namespace hid
 
     hid_device & hid_device::operator = ( const hid_device & assign_copy )
     {
+        OutputDebugString( L"\n hid_device::assignment copy" );
+
         if( this != &assign_copy )
         {
             data_preparsed        = assign_copy.data_preparsed;
@@ -81,6 +85,8 @@ namespace hid
 
     hid_device & hid_device::operator = ( hid_device && assign_move ) noexcept
     {
+        OutputDebugString( L"\n hid_device::assignment move" );
+
         if( this != &assign_move )
         {
             data_preparsed        = std::move( assign_move.data_preparsed );
@@ -126,7 +132,7 @@ namespace hid
 
     void hid_device::reset()
     {
-        data_preparsed    = nullptr;
+        data_preparsed.clear();
         device_pointer    = nullptr;
         device_path       = L"no device path";
         path_char_amount  = 0;
@@ -171,12 +177,15 @@ namespace hid
         OutputDebugString( L"\n hid_device::de-constructor" );
 
         CloseHandle( device_pointer );
+        data_preparsed.clear();
+        device_pointer    = nullptr;
     }
 
     void hid_device::collect_information()
     {
-        //NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
+        NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
 
+        /*
         page              = capabilities.UsagePage;
         usage             = capabilities.Usage;
         collection_amount = capabilities.NumberLinkCollectionNodes;
@@ -195,14 +204,18 @@ namespace hid
         feature_report.button_amount          = capabilities.NumberFeatureButtonCaps;
         feature_report.value_amount           = capabilities.NumberFeatureValueCaps;
         feature_report.data_identifier_amount = capabilities.NumberFeatureDataIndices;
+        */
 
         // get device path character amount
-        GetRawInputDeviceInfoW( get_device_pointer() , request.path , nullptr , & path_char_amount);
+        uint return_value = GetRawInputDeviceInfoW( device_pointer , request.path , 0 , & path_char_amount );
+        if( return_value != 0 ) error_exit(L"unable to get device path byte count");
 
         device_path.resize( path_char_amount );
 
-        // get device path
-        GetRawInputDeviceInfoW( get_device_pointer() , request.path , device_path.data() , & path_char_amount);  // wchar_t
+        return_value = 0;
+        // get device path // use wchar_t[] buffer instead of string if driver issue
+        return_value = GetRawInputDeviceInfoW( device_pointer , request.path , device_path.data() , & path_char_amount );
+        if( return_value <= 0 ) error_exit( L"unable to get device path" );
 
         //OutputDebugString( path.data() );
 
@@ -215,16 +228,24 @@ namespace hid
                                     FILE_ATTRIBUTE_NORMAL ,              // flags
                                     0 );                                 // template
 
-        HidD_GetAttributes(         get_device_pointer() , & attributes );
-        HidD_GetManufacturerString( get_device_pointer() , manufacturer.data() , string_size );
-        HidD_GetProductString(      get_device_pointer() , product.data()      , string_size );
-        HidD_GetPhysicalDescriptor( get_device_pointer() , physical.data()     , string_size );
+        HidD_GetAttributes(         device_pointer , & attributes );
+        HidD_GetManufacturerString( device_pointer , manufacturer_buffer , string_size );
+        HidD_GetProductString(      device_pointer , product_buffer      , string_size );
+        HidD_GetPhysicalDescriptor( device_pointer , physical_buffer     , string_size );
+
+        manufacturer = manufacturer_buffer;
+        product = product_buffer;
+        physical = physical_buffer;
 
         //vector< node > nodes {};
 
-        collection.resize( get_collection_amount() );
+        collection_amount = capabilities.NumberLinkCollectionNodes;
+        collection.resize( collection_amount );
 
-        HidP_GetLinkCollectionNodes( collection.data() , & collection_amount , get_data_preparsed() );
+        PHIDP_PREPARSED_DATA data = reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() );
+
+        result = HidP_GetLinkCollectionNodes( collection.data() , &collection_amount , data );
+        if( result == HIDP_STATUS_BUFFER_TOO_SMALL ) error_exit( L"collection buffer size error" );
 
         //ushort index{ 0 };
 
@@ -243,25 +264,27 @@ namespace hid
             */
             //collection.push_back( move( new_collection ) );//at( index ) = move( new_item );
 
-        input_buttons.resize( get_input_report().button_amount );
+        
         //                       report type  , data destination       , data size               , source data
-        HidP_GetButtonCaps( HidP_Input , input_buttons.data() , & input_report.button_amount , get_data_preparsed() );
+        input_buttons.resize( capabilities.NumberInputButtonCaps );
+        result = HidP_GetButtonCaps( HidP_Input , input_buttons.data() , & capabilities.NumberInputButtonCaps , data );
 
-        input_values.resize( get_input_report().value_amount );
-        HidP_GetValueCaps( HidP_Input , input_values.data() , & input_report.value_amount , get_data_preparsed() );
+        input_values.resize( input_report.value_amount );
+        result = HidP_GetValueCaps( HidP_Input , input_values.data() , & input_report.value_amount , data );
 
-        output_buttons.resize( get_output_report().button_amount );
-        HidP_GetButtonCaps( HidP_Output , output_buttons.data() , & output_report.button_amount , get_data_preparsed() );
+        output_buttons.resize( output_report.button_amount );
+        result = HidP_GetButtonCaps( HidP_Output , output_buttons.data() , & output_report.button_amount , data );
 
-        output_values.resize( get_output_report().value_amount );
-        HidP_GetValueCaps( HidP_Output , output_values.data() , & output_report.value_amount , get_data_preparsed() );
+        output_values.resize( output_report.value_amount );
+        result = HidP_GetValueCaps( HidP_Output , output_values.data() , & output_report.value_amount , data );
 
-        button_features.resize( get_feature_report().button_amount );
-        HidP_GetButtonCaps( HidP_Feature , button_features.data() , & feature_report.button_amount , get_data_preparsed() );
+        button_features.resize( feature_report.button_amount );
+        result = HidP_GetButtonCaps( HidP_Feature , button_features.data() , & feature_report.button_amount , data );
 
-        value_features.resize( get_feature_report().value_amount );
-        HidP_GetValueCaps( HidP_Feature , value_features.data() , & feature_report.value_amount , get_data_preparsed() );
+        value_features.resize( feature_report.value_amount );
+        result = HidP_GetValueCaps( HidP_Feature , value_features.data() , & feature_report.value_amount , data );
 
+        /*
         for( auto & button : input_buttons ) //input_buttons.release
         {
             hid_local_item new_button;
@@ -314,10 +337,11 @@ namespace hid
 
             //new_button.gather_information(); get_information_string()
 
-            //input.buttons.emplace_back( move( new_button ) );
-            input_report.buttons.push_back( new_button );
+            input_report.buttons.push_back( move( new_button ) );
+            //input_report.buttons.push_back( new_button );
         }
-
+        */
+        /*
         for( auto & value : input_values )
         {
             hid_global_item new_value;
@@ -373,10 +397,11 @@ namespace hid
                 new_value.set_designator( value.NotRange.DesignatorIndex );
             }
 
-            //input.values.emplace_back( move( new_value ) );
-            input_report.values.push_back( new_value );
+            input_report.values.push_back( move( new_value ) );
+            //input_report.values.push_back( new_value );
             //new_item.origin = input.LinkCollection; vector<main_item>::reference
         }
+        */
 
         set_text_device();
     }
@@ -424,7 +449,7 @@ namespace hid
 
         for( auto & item : collection )
         {
-            item.set_information();
+            //item.set_information();
 
             //position_x = information.formated_rectangle().left;
             //position_y = information.formated_rectangle().bottom + spacer.y;

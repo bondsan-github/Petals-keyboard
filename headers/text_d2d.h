@@ -50,7 +50,7 @@ namespace hid
             
             // A DIP equals 1 / 96 inch = 0.3 mm 
             D2D1_SIZE_F layout_size { 150.0 , 150.0 };
-            DWRITE_TEXT_METRICS metrics;
+            DWRITE_TEXT_METRICS metrics {};
             //text_metrics metrics; // {}
 
             /*
@@ -64,11 +64,11 @@ namespace hid
                                                        .radiusY = rectangle_radius };
             */                                
             
-        private: // functions
+        private:
             
-            void get_format();
-            void get_layout();
-            void get_brush();
+            void reset_format();
+            void reset_layout();
+            void reset_brush();
             //void get_drawn_rectangle ();
             
             D2D1_SIZE_F get_layout_size() { return layout_size; }
@@ -91,6 +91,7 @@ namespace hid
             text & operator = ( const text & assign_copy);
             text & operator = ( text && assign_move) noexcept;
 
+            void re_initialise();
             void reset();
             
             void set_content( std::wstring in_content );

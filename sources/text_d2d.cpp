@@ -60,6 +60,8 @@ namespace hid
 
     text & text::operator = ( text &&assign_move ) noexcept
     {
+        OutputDebugStringW( L"\n text::assignment move" );
+
         if( this != &assign_move )
         {
             if( assign_move.format )
@@ -83,13 +85,13 @@ namespace hid
                 assign_move.brush = nullptr;
             }
 
-            assign_move.reset();
+            assign_move.re_initialise();
         }
 
         return *this;
     }
 
-    void text::reset()
+    void text::re_initialise()
     {
         if( format )     { format->Release();     format     = nullptr; } 
         if( brush )      { brush->Release();      brush      = nullptr; } 
@@ -126,10 +128,29 @@ namespace hid
     {
         OutputDebugString( L"\n text::de-constructor" );
 
-        if( format ) format->Release(); format = nullptr;
-        if( brush  ) brush->Release();  brush  = nullptr;
-        if( layout ) layout->Release(); layout = nullptr;
-        //if( collection ) collection->Release();
+        if( format ) 
+        {
+            format->Release(); 
+            format = nullptr;
+        }
+
+        if( brush  ) 
+        {
+            brush->Release();  
+            brush = nullptr;
+        }
+
+        if( layout ) 
+        {
+            layout->Release(); 
+            layout = nullptr;
+        }
+
+        if( collection ) 
+        {
+            collection->Release();
+            collection = nullptr;
+        }
     }
 
     void text::set_font_locale( std::wstring in_font_locale )
@@ -209,28 +230,22 @@ namespace hid
         rounded_rectangle.radiusY = rectangle_radius;
     }
     */
-
-    /*
+    
     void text::reset()
     {
         reset_format();
         reset_layout();
         reset_brush();
     }
-    */
 
-    void text::get_format()
+    void text::reset_format()
     {
-    /*
-        locate::get_write().get_format( format,
-                                        font_face ,
-                                        nullptr ,//collection ,
-                                        font_weight ,
-                                        font_style ,
-                                        font_stretch ,
-                                        font_size ,
-                                        font_locale );
-                                        */
+        if( format )
+        {
+            format->Release();
+            format = nullptr;
+        }
+
         locate::get_write().get_write_factory().CreateTextFormat( font_face.c_str(),
                                                                   nullptr , // in_font_collection // (NULL sets it to use the system font collection).
                                                                   font_weight ,
@@ -242,23 +257,39 @@ namespace hid
         format->AddRef();
     }
 
-    void text::get_layout()
+    void text::reset_layout()
     {
         //locate::get_write().get_layout( layout , content , format , layout_size );
-        //reset_rectangle();
+        
+        if( layout )
+        {
+            layout->Release();
+            layout = nullptr;
+        }
 
-        locate::get_write().get_write_factory().CreateTextLayout( content.c_str(),
-                                                                  content.size(),
-                                                                  format,
-                                                                  layout_size.width,
-                                                                  layout_size.height,
-                                                                  &layout);
+        locate::get_write().get_write_factory().CreateTextLayout( content.c_str() ,
+                                                                  content.size() ,
+                                                                  format ,
+                                                                  layout_size.width ,
+                                                                  layout_size.height ,
+                                                                  &layout );
+
+        layout->AddRef();
+
+        //reset_rectangle();
     }
 
-    void text::get_brush()
+    void text::reset_brush()
     {
-        locate::get_graphics().get_page().CreateSolidColorBrush( font_colour , &brush );
-        brush->AddRef();
+        if( brush )
+        {
+            brush->Release();
+            brush = nullptr;
+        }
+
+        locate::get_graphics().get_page().CreateSolidColorBrush( font_colour , & brush );
+
+        //brush->AddRef();
     }
 
     float text::get_layout_width()
@@ -317,7 +348,7 @@ namespace hid
     {
         font_colour = in_font_colour;
 
-        get_brush();
+        reset_brush();
     }
 
     /*
@@ -335,13 +366,13 @@ namespace hid
     void text::set_content( std::wstring in_content )
     {
         content = in_content;
-        //reset();
+        reset();
     }
 
     void text::add_content( std::wstring in_string )
     {
         content += in_string;
-        //reset();
+        reset();
     }
 
     void text::draw()
@@ -352,6 +383,7 @@ namespace hid
 
     void text::draw_text()
     {
+        if( layout and brush)
         locate::get_graphics().get_page().DrawTextLayout( position_top_left, //get_position() ,
                                                           layout ,
                                                           brush );

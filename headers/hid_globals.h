@@ -19,8 +19,8 @@ namespace hid
         ushort value_amount           { 0 };
         ushort data_identifier_amount { 0 };
 
-        std::vector< hid_local_item >  buttons { 0 };
-        std::vector< hid_global_item > values  { 0 };
+        //std::vector< hid_local_item >  buttons { 0 };
+        //std::vector< hid_global_item > values  { 0 };
 
         void reset()
         {
@@ -28,8 +28,8 @@ namespace hid
             button_amount          = 0u;
             value_amount           = 0u;
             data_identifier_amount = 0u;
-            buttons.clear();
-            values.clear();
+            //buttons.clear();
+            //values.clear();
         }
     };
 

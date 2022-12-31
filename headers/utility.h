@@ -2,5 +2,7 @@
 
 namespace hid
 {
-    void error( const wchar_t * title_text ); // wchar_t ~ unsigned short
+    void error_exit( const wchar_t * message ); // print error message box and exit application
+
+    void print_debug( const wchar_t * message );
 }

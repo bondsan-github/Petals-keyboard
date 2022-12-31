@@ -41,6 +41,8 @@ namespace hid
 
             hid_local_item();
 
+            hid_local_item( const HIDP_BUTTON_CAPS & button_capabilities ) {}
+
             hid_local_item( const hid_local_item & in_copy );
             hid_local_item( hid_local_item && in_move ) noexcept;
             

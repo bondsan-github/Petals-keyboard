@@ -6,13 +6,30 @@
 #include <windows.h>
 #include <strsafe.h>
 
+#include <iostream>
+#include <sstream>
+
 namespace hid
 {
-    // wchar_t ~ unsigned short
-    void error( const wchar_t * title_text )
+    void print_debug( const wchar_t * message )
+    {
+    /*
+        wchar_t buffer[1024] {};
+
+        va_list AdditionalParameters;
+        va_start( AdditionalParameters , pFormat );
+        wvsprintf( buffer + StringLength , pFormat , AdditionalParameters );
+        va_end( AdditionalParameters );
+        */
+        std::wostringstream ouput_stream {};
+        ouput_stream << message;
+
+        OutputDebugStringW( ouput_stream.str().c_str() );
+    }
+
+    void error_exit( const wchar_t * title_text )
     {
         // Retrieve the system error message for the last-error code
-
         const uint char_amount{ 200 };
 
         wchar_t message[ char_amount ] {};

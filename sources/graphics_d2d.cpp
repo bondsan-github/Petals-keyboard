@@ -8,7 +8,7 @@ namespace hid
 {
     graphics_d2d::graphics_d2d()// HWND in_window )
     {
-        //OutputDebugString( L"\n graphics_d2d::constructor" );
+        OutputDebugString( L"\n graphics_d2d::constructor" );
 
         locate::set_graphics( this );
 
@@ -17,6 +17,8 @@ namespace hid
 
         D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory_options , & factory );
         
+        window = locate::get_windows().get_window();
+
         reset();
     }
 
@@ -24,8 +26,8 @@ namespace hid
     { 
         OutputDebugString( L"\n graphics_d2d::de-constructor" );
 
-        if( factory ) factory->Release(); factory = nullptr;
         if( page )    page->Release();    page = nullptr;
+        if( factory ) factory->Release(); factory = nullptr;
     }
 
     //enum class request_type { page }
@@ -40,6 +42,15 @@ namespace hid
     // help: your first direct2d program
     void graphics_d2d::reset()
     {
+        // if existing page
+        if( page )
+        {
+            page->Release();
+            page = nullptr;
+        }
+        
+        // else first init
+        
         RECT client_size {};
 
         GetClientRect( window , &client_size );
@@ -55,6 +66,8 @@ namespace hid
         factory->CreateHwndRenderTarget( render_properties ,
                                          window_properties , 
                                          &page );
+
+        //page->AddRef();
     }
 
     /*
@@ -192,7 +205,16 @@ namespace hid
 
             page->Clear( colour_clear );
 
+            locate::get_input_devices().draw();
+
             page->EndDraw();
+
+            /*
+            if( hr == D2DERR_RECREATE_TARGET )
+            {
+                hr = S_OK;
+                DiscardDeviceResources();
+            }*/
         }
     }
 

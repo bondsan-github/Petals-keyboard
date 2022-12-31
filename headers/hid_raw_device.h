@@ -19,8 +19,8 @@ namespace hid
 
             HANDLE device_pointer                 { nullptr };
 
-            PHIDP_PREPARSED_DATA data_preparsed   { nullptr };
-            std::vector< std::byte >  data_bytes; // _int8 || uchar
+            //PHIDP_PREPARSED_DATA data_preparsed   { nullptr };
+            std::vector< std::byte >  data_preparsed {}; // _int8 || uchar
 
             hid_capabilities capabilities; //_HIDP_CAPS
 
@@ -46,7 +46,7 @@ namespace hid
             bool is_multi_touch();
 
             HANDLE               get_device_pointer() const { return device_pointer; }
-            PHIDP_PREPARSED_DATA get_preparsed_data() const { return data_preparsed; }
+            std::vector< std::byte > & get_preparsed_data() { return data_preparsed; }
             hid_capabilities     get_capabilities()   const { return capabilities;   }
             ushort               get_page()           const { return page;           }
             ushort               get_usage()          const { return usage;          }

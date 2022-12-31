@@ -12,7 +12,7 @@ namespace hid
 
     gui_microsoft::gui_microsoft( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags )
     {
-        //OutputDebugString( L"\n gui_microsoft::parameterised constructor" );
+        OutputDebugString( L"\n gui_microsoft::parameterised constructor" );
 
         instance = in_instance; parameters = in_parameters; show_flags = in_show_flags;
 
@@ -72,6 +72,7 @@ namespace hid
         }
         */
 
+        // position window to centre of screen
         desktop_size.width  = desktop.right; // static_cast from long to float
         desktop_size.height = desktop.bottom;
 
@@ -127,13 +128,13 @@ namespace hid
 
     int gui_microsoft::message_loop()
     {
-        while( GetMessage( & message , 0 , 0 , 0 ) )
+        while( GetMessage( &window_message , 0 , 0 , 0 ) )
         {
-            TranslateMessage( & message );
-            DispatchMessage( & message );
+            TranslateMessage( &window_message );
+            DispatchMessage( &window_message );
         }
 
-        return message.message;
+        return window_message.message;
     }
 
     // to forward Windows messages from a global window procedure to member function window procedure
@@ -203,8 +204,6 @@ namespace hid
 
             case WM_PAINT:
             {
-                // graphics.draw();
-
                 // UpdateLayeredWindow
                 /*Hit testing of a layered window is based on the shape and transparency of the window.
                 This means that the areas of the window that are color-keyed or whose alpha value is zero
@@ -212,29 +211,10 @@ namespace hid
                 However, if the layered window has the WS_EX_TRANSPARENT extended window style,
                 the shape of the layered window will be ignored
                 and the mouse events will be passed to other windows underneath the layered window.*/
-            //https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/december/windows-with-c-layered-windows-with-direct2d
+                //https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/december/windows-with-c-layered-windows-with-direct2d
 
-                /*
-                page_window_pointer page = locate::graphics().get_page();
+                locate::get_graphics().draw();
 
-                BeginPaint( get_window() , &paint );
-
-                if( page )
-                {
-                    page->BeginDraw();
-
-                    page->SetTransform( Matrix3x2F::Identity() );
-
-                    page->Clear( ColorF( 0.2f , 0.2f , 0.2f , 0.2f ) );
-
-                    input.draw();
-
-                    page->EndDraw();
-
-                    long result = EndPaint( get_window() , &paint );
-                    //if( result < 0 ) discard_resources();
-                }
-                */
             } break;
 
             case WM_SIZE:
@@ -260,7 +240,7 @@ namespace hid
                           //  device.display_information();
                     } break;
                 }
-            }
+            } // WM_KEYDOWN
 
         } // switch( message )
 
@@ -269,6 +249,7 @@ namespace hid
     } // message_handler
 
 } // namespace hid
+
 
 //GetClassInfo( hInst , thisClassName , &wincl ))
 

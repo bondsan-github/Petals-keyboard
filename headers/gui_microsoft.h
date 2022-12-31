@@ -20,6 +20,7 @@ namespace hid
             HINSTANCE  instance         {};
             LPWSTR     parameters       {};
             int        show_flags       { 0 };
+            MSG        window_message  {};
          
             WNDCLASSEX window_class     {};
             HWND       window_principle {};
@@ -37,6 +38,7 @@ namespace hid
               window horizontal origin = on the right edge. // horizontal++ advance to the left.*/
          /*WS_EX_NOACTIVATE*/
 
+            PAINTSTRUCT paint;
             float      x                 { 0.5f }; // vertex
             float      y                 { 0.5f };
             float      client_width      { 0.2f };
@@ -44,14 +46,15 @@ namespace hid
 
             D2D1_SIZE_F desktop_size      {};
             uint        desktop_dpi       { 0 };
+
             D2D1_SIZE_F client_size       { 0.0f , 0.0f };
             uint        client_dpi        { 96 };
+
             D2D1_SIZE_F client_size_half  {};
+
             vertex      position_top_left {};
             vertex      position_center   {};
             vertex      desktop_center    {};
-
-            MSG        message {};
             
             static inline const wchar_t class_name [] { L"precision_input" };
 
@@ -62,8 +65,6 @@ namespace hid
             static  LRESULT CALLBACK main_window_process( HWND window , UINT message , WPARAM w_param , LPARAM l_param );
           
             //void calculate_layout();
-
-        //protected:
 
         public:
       

@@ -12,7 +12,7 @@ namespace hid
         public:
          
             hid_usages();
-            //~hid_usages();
+            ~hid_usages();
             // copy and move 
 
             std::wstring page  ( uint in_page );

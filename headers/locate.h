@@ -6,6 +6,7 @@
 #include "..\headers\hid_usages.h"
 #include "..\headers\write_d2d.h"
 #include "..\headers\gui_microsoft.h"
+#include "..\headers\hid_devices.h"
 
 namespace hid
 {
@@ -17,10 +18,21 @@ namespace hid
             static inline graphics_d2d  * graphics { nullptr };
             static inline write_d2d     * write    { nullptr };
             static inline gui_microsoft * windows  { nullptr };
+            static inline hid_devices   * input_devices  { nullptr };
 
         public:
 
             ~locate();
+
+            static void set_input_devices( hid_devices * in_input_devices )
+            {
+                input_devices = in_input_devices;
+            }
+
+            static hid_devices & get_input_devices()
+            {
+                return *input_devices;
+            }
 
             static void set_graphics( graphics_d2d * in_graphics ) 
             { 

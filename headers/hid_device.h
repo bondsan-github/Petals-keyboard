@@ -3,18 +3,20 @@
 #include "..\headers\custom_types.h"
 
 #include "..\headers\hid_globals.h"
-//#include "..\headers\hid_collection.h"
-//#include "..\headers\hid_local_item.h"
 #include "..\headers\hid_raw_device.h"
 
 #include "..\headers\text_d2d.h"
 //#include "..\headers\line_d2d.h"
 #include "..\headers\hid_usages.h"
-//#include "..\headers\grid_d2d.h"
 
-//#include <memory>
 #include <string>
-#include <hidpi.h>
+
+//https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/hid-architecture
+//https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/hid-over-usb
+
+//https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/introduction-to-hid-concepts
+//https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/obtaining-hid-reports#obtaining-hid-reports-by-user-mode-applications
+//https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/interpreting-hid-reports
 
 namespace hid
 {
@@ -22,7 +24,7 @@ namespace hid
     {
         private:
 
-            PHIDP_PREPARSED_DATA data_preparsed { nullptr };
+            std::vector< std::byte > data_preparsed {};
 
             HANDLE       device_pointer   { nullptr           };
             std::wstring device_path      { L"no device path" }; // or std::filesystem::wpath
@@ -36,39 +38,43 @@ namespace hid
             requests request;
             report   input_report , output_report , feature_report;
 
-            hid_capabilities capabilities {};
-
-            ulong collection_amount{ 0 };
-
+            hid_capabilities          capabilities {};
             hid_attributes            attributes {};
             hid_attributes_extended   attributes_extra {};
 
             // For USB devices, the maximum string length is 126 wide characters 
             // (not including the terminating NULL character).         
-            static const ulong string_size  { 127 };
-            std::wstring manufacturer { string_size };
-            std::wstring product      { string_size };
-            std::wstring physical     { string_size };
+            //static const ushort string_size = 127u; 
+            static const std::string::size_type string_size = 127u;
+            wchar_t manufacturer_buffer[ string_size ] {};
+            wchar_t product_buffer     [ string_size ] {};
+            wchar_t physical_buffer    [ string_size ] {};
+
+            std::wstring manufacturer {};
+            std::wstring product      {};
+            std::wstring physical     {};
             
-            std::vector< hid_collection > collection {};
-            text information;
+            //std::vector< hid_collection > collection {};
+            ulong collection_amount { 0 };
+            std::vector< HIDP_LINK_COLLECTION_NODE > collection {};
+            text information {};
             //vector< text > collection_texts {};
             
             //uint index {};
             //grid_d2d grid {};
             //std::vector< line_d2d > lines {};
 
-            using button_item = HIDP_BUTTON_CAPS;
-            using value_item  = HIDP_VALUE_CAPS;
+            //using button_capabilities = HIDP_BUTTON_CAPS;
+            //using value_item  = HIDP_VALUE_CAPS;
 
-            std::vector< button_item > input_buttons{};
-            std::vector< value_item >  input_values{};
+            std::vector< HIDP_BUTTON_CAPS > input_buttons;
+            std::vector< HIDP_VALUE_CAPS >  input_values;
 
-            std::vector< button_item > output_buttons{};
-            std::vector< value_item >  output_values{};
+            std::vector< HIDP_BUTTON_CAPS > output_buttons;
+            std::vector< HIDP_VALUE_CAPS >  output_values;
 
-            std::vector< button_item > button_features{};
-            std::vector< value_item >  value_features{};
+            std::vector< HIDP_BUTTON_CAPS > button_features;
+            std::vector< HIDP_VALUE_CAPS >  value_features;
 
             bool draw_information{ true };
 
@@ -90,23 +96,23 @@ namespace hid
             void set_text_collections();
             void set_text_input();
 
-            HANDLE get_device_pointer() const { return device_pointer; }
-            ulong get_collection_amount() const { return collection_amount; }
-            PHIDP_PREPARSED_DATA get_data_preparsed() const { return data_preparsed; }
+            //HANDLE get_device_pointer() const { return device_pointer; }
+            //ulong get_collection_amount() const { return collection_amount; }
+            //PHIDP_PREPARSED_DATA get_data_preparsed() const { return data_preparsed; }
 
-            report get_input_report()   const { return input_report; }
-            report get_output_report()  const { return output_report; }
-            report get_feature_report() const { return feature_report; }
+            //report get_input_report()   const { return input_report; }
+            //report get_output_report()  const { return output_report; }
+            //report get_feature_report() const { return feature_report; }
 
-            ushort get_page()  const { return page; }
-            ushort get_usage() const { return usage; }
+            //ushort get_page()  const { return page; }
+            //ushort get_usage() const { return usage; }
 
             void reset();
 
         public:
 
             hid_device();
-            hid_device( const hid_raw_device & raw_device );
+            hid_device( hid_raw_device & raw_device );
             ~hid_device();
 
             hid_device( const hid_device & in_copy );

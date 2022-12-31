@@ -4,7 +4,7 @@
 //#include <vector>
 //#include <functional>
 #include <windows.h>
-#include <wrl.h>
+//#include <wrl.h>
 //#include <d2d1.h>
 //#include <dwrite.h>
 #include <hidsdi.h>
