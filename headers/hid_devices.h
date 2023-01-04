@@ -22,6 +22,8 @@ namespace hid
             hid_devices( void );
             ~hid_devices( void );
 
+            void initialise();
+
             //std::vector< hid_device > & get_input_devices() { return input_devices; }
 
             void draw();

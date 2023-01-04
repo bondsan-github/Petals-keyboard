@@ -24,7 +24,7 @@ namespace hid
 
         void reset()
         {
-            byte_amount            = 0u;
+            byte_amount            = 0u; // change from assign = to initialisation {}
             button_amount          = 0u;
             value_amount           = 0u;
             data_identifier_amount = 0u;

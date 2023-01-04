@@ -10,14 +10,14 @@ namespace hid
 {
     hid_usages::hid_usages()
     {
-        OutputDebugString( L"\n hid_usages::default constructor" );
+        OutputDebugString( L"hid_usages::default constructor\n" );
         
         locate::set_usages( this );
     }
 
     hid_usages::~hid_usages()
     {
-        OutputDebugString( L"\n hid_usages::de-constructor" );
+        OutputDebugString( L"hid_usages::de-constructor\n" );
     };
 
     std::wstring hid_usages::page( uint in_page )
@@ -53,6 +53,19 @@ namespace hid
         }
     }
 
+    std::wstring hid_usages::collection_type( uint in_type )
+    {
+        try
+        {
+            collection_type_text.at( in_type );
+        }
+        catch( std::out_of_range & exception )
+        {
+            return std::format( L"{:x} type" , in_type ); // hex string
+        }
+    }
+
+    /*
     std::wstring hid_usages::type( uint in_page , int in_usage )
     {
         try
@@ -73,5 +86,6 @@ namespace hid
             return std::format( L"{:x} usage" , in_usage ); // hex string
         }
     }
+    */
 
 } // namespace hid

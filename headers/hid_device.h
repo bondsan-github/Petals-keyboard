@@ -57,8 +57,18 @@ namespace hid
             //std::vector< hid_collection > collection {};
             ulong collection_amount { 0 };
             std::vector< HIDP_LINK_COLLECTION_NODE > collection {};
-            text information {};
-            //vector< text > collection_texts {};
+
+            text         device_information      {};
+            vertex       device_text_position    { 30.0f , 30.0f };
+            D2D1_SIZE_F  device_text_layout_size { 300.0f , 150.0f }; // shrink to fit?
+            float        device_text_font_size   { 15.0f };
+            D2D1::ColorF device_text_font_colour { D2D1::ColorF::Yellow };
+            
+            std::vector< text > collection_texts {};
+
+            float        collection_texts_font_size   { 15.0f };
+            D2D1::ColorF collection_texts_font_colour { D2D1::ColorF::Yellow };
+            float        collection_text_spacer       { 30.0f };
             
             //uint index {};
             //grid_d2d grid {};
@@ -80,11 +90,11 @@ namespace hid
 
             std::wstring font_face         { L"Cascasia code" }; // { L"Sitka" };
             float        font_size         { 15.0f };
-            D2D1::ColorF font_colour       { D2D1::ColorF::White };
+            D2D1::ColorF font_colour       { D2D1::ColorF::Yellow };
             
             D2D1_SIZE_F  layout_size { 200.0f , 200.0f }; // layout size
 
-            //float        rectangle_margin      { 0.0f };
+            //float        rectangle_inner_margin      { 0.0f };
             //float        rectangle_line_width  { 1.0f };
             //D2D1::ColorF rectangle_line_colour { D2D1::ColorF::DarkCyan };
 

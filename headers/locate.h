@@ -2,6 +2,7 @@
 
 // gameprogrammingpatterns.com/service-locator.html
 
+#include "..\headers\hid_multiple_touch.h"
 #include "..\headers\graphics_d2d.h"
 #include "..\headers\hid_usages.h"
 #include "..\headers\write_d2d.h"
@@ -14,15 +15,27 @@ namespace hid
     {
         private:
 
-            static inline hid_usages    * usages   { nullptr };
-            static inline graphics_d2d  * graphics { nullptr };
-            static inline write_d2d     * write    { nullptr };
-            static inline gui_microsoft * windows  { nullptr };
-            static inline hid_devices   * input_devices  { nullptr };
+        static inline hid_multiple_touch * application { nullptr };
+        static inline gui_microsoft * windows{ nullptr };
+        static inline graphics_d2d * graphics{ nullptr };
+        static inline write_d2d * write{ nullptr };
+        
+        static inline hid_usages    * usages   { nullptr };
+        static inline hid_devices * input_devices{ nullptr };
 
         public:
 
             ~locate();
+
+            static void set_application( hid_multiple_touch * in_application )
+            {
+                application = in_application;
+            }
+
+            static hid_multiple_touch & get_application()
+            {
+                return *application;
+            }
 
             static void set_input_devices( hid_devices * in_input_devices )
             {

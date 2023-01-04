@@ -11,8 +11,11 @@ namespace hid
 
     write_d2d::write_d2d()
     {
-        //OutputDebugString( L"\n write_d2d::default constructor" );
+        OutputDebugString( L"write_d2d::default constructor\n" );
+    }
 
+    void write_d2d::initialise()
+    {
         HRESULT result = DWriteCreateFactory( //DWRITE_FACTORY_TYPE_ISOLATED,
                                               DWRITE_FACTORY_TYPE_SHARED ,
                                               __uuidof( IDWriteFactory ),

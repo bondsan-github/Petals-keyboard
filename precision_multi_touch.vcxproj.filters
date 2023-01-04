@@ -39,7 +39,7 @@
     <ClCompile Include="sources\write_d2d.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="sources\hid_multi_touch.cpp">
+    <ClCompile Include="sources\hid_multiple_touch.cpp">
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="sources\utility.cpp">
@@ -91,7 +91,7 @@
     <ClInclude Include="headers\hid_item.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\hid_multi_touch.h">
+    <ClInclude Include="headers\hid_multiple_touch.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\hid_raw_device.h">
@@ -148,7 +148,7 @@
     <ClInclude Include="headers\virtual_desktop.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\windows_messages.h">
+    <ClInclude Include="headers\window_messages.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\hid_globals.h">

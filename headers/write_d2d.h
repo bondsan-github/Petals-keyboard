@@ -11,7 +11,7 @@ namespace hid
    {
        private:
 
-           IDWriteFactory * write;
+           IDWriteFactory * write {nullptr};
 
            //ComPtr< IDWriteTextFormat >     format;
            //ComPtr< IDWriteTextLayout >     layout;
@@ -30,7 +30,7 @@ namespace hid
             //write_d2d( const write_d2d && move ) noexcept = delete;
             //write_d2d & operator( write_d2d & assign_copy ) = delete;
             //write_d2d & operator( write_d2d && assign_move ) noexcept = delete;
-         
+            void initialise();
             IDWriteFactory & get_write_factory() const { return *write; }
             /*
             void get_format( IDWriteTextFormat * in_format,

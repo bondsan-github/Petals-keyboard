@@ -6,16 +6,14 @@
 
 namespace hid
 {
-    using namespace std;
-
     hid_device::hid_device() 
     {
-        OutputDebugString( L"\n hid_device::default constructor" );
+        OutputDebugString( L"hid_device::default constructor\n" );
     }
 
     hid_device::hid_device( hid_raw_device & raw_device )
     {
-        OutputDebugString( L"\n hid_device::hid_raw_device constructor" );
+        OutputDebugString( L"hid_device::hid_raw_device constructor\n" );
 
         device_pointer   = raw_device.get_device_pointer();
         data_preparsed   = std::move( raw_device.get_preparsed_data() );
@@ -26,21 +24,21 @@ namespace hid
 
     hid_device::hid_device( const hid_device & in_copy )
     {
-        OutputDebugString( L"\n hid_device::copy constructor" );
+        OutputDebugString( L"hid_device::copy constructor\n" );
 
         if( this != &in_copy ) *this = in_copy;
     }
 
     hid_device::hid_device( hid_device && in_move ) noexcept
     {
-        OutputDebugString( L"\n hid_device::move constructor" );
+        OutputDebugString( L"hid_device::move constructor\n" );
 
         if( this != &in_move ) *this = std::move( in_move );
     }
 
     hid_device & hid_device::operator = ( const hid_device & assign_copy )
     {
-        OutputDebugString( L"\n hid_device::assignment copy" );
+        OutputDebugString( L"hid_device::assignment copy\n" );
 
         if( this != &assign_copy )
         {
@@ -61,7 +59,7 @@ namespace hid
             product               = assign_copy.product;
             physical              = assign_copy.physical;
             collection            = assign_copy.collection;
-            information           = assign_copy.information;
+            device_information    = assign_copy.device_information;
             //lines                 = assign_copy.lines;
             input_buttons         = assign_copy.input_buttons;
             input_values          = assign_copy.input_values;
@@ -85,7 +83,7 @@ namespace hid
 
     hid_device & hid_device::operator = ( hid_device && assign_move ) noexcept
     {
-        OutputDebugString( L"\n hid_device::assignment move" );
+        OutputDebugString( L"hid_device::assignment move\n" );
 
         if( this != &assign_move )
         {
@@ -106,7 +104,7 @@ namespace hid
             product               = std::move( assign_move.product );
             physical              = std::move( assign_move.physical );
             collection            = std::move( assign_move.collection );
-            information           = std::move( assign_move.information );
+            device_information    = std::move( assign_move.device_information );
             //lines                 = std::move( assign_move.lines );
             input_buttons         = std::move( assign_move.input_buttons );
             input_values          = std::move( assign_move.input_values );
@@ -143,7 +141,7 @@ namespace hid
 
         font_face   = L"Cascasia code";
         font_size   = 15.0f;
-        font_colour = D2D1::ColorF::White;
+        font_colour = D2D1::ColorF::Yellow;
 
         //rectangle_margin      = 0.0f;
         //rectangle_line_width  = 1.0f;
@@ -169,16 +167,16 @@ namespace hid
         capabilities.reset();
         attributes.reset();
         attributes_extra.reset();
-        information.reset();
+        device_information.reset();
     }
 
     hid_device::~hid_device( void )
     {
-        OutputDebugString( L"\n hid_device::de-constructor" );
+        OutputDebugString( L"hid_device::de-constructor\n" );
 
         CloseHandle( device_pointer );
-        data_preparsed.clear();
         device_pointer    = nullptr;
+        data_preparsed.clear();
     }
 
     void hid_device::collect_information()
@@ -237,6 +235,7 @@ namespace hid
         product = product_buffer;
         physical = physical_buffer;
 
+        set_text_device();
         //vector< node > nodes {};
 
         collection_amount = capabilities.NumberLinkCollectionNodes;
@@ -246,7 +245,8 @@ namespace hid
 
         result = HidP_GetLinkCollectionNodes( collection.data() , &collection_amount , data );
         if( result == HIDP_STATUS_BUFFER_TOO_SMALL ) error_exit( L"collection buffer size error" );
-
+         
+        set_text_collections();
         //ushort index{ 0 };
 
         //collection.front().information.set_position();
@@ -403,13 +403,42 @@ namespace hid
         }
         */
 
-        set_text_device();
+        
+    }
+
+    void hid_device::set_text_collections()
+    {
+        vertex position 
+        { 
+            device_text_position.x ,
+            device_information.get_bottom() + collection_text_spacer
+        };
+
+        for( const auto & item : collection )
+        {
+            text collection_content {};
+            std::wstring content {};
+
+            content = L"Type\t:";
+            content.append( locate::get_usages().collection_type( item.CollectionType ) );
+            content.append( L"\npage\t\t: ");
+            content.append( locate::get_usages().page( item.LinkUsagePage ) );
+            //content += locate::get_usages().usage( item.LinkUsagePage , item.LinkUsage );
+
+            collection_content.set_content( content );
+            collection_content.set_position_top_left( position );
+            collection_content.set_font_size( collection_texts_font_size );
+            //collection_content.set_font_colour( collection_texts_font_colour );
+
+            collection_texts.push_back( collection_content );
+
+            position.y += collection_content.get_bottom() + collection_text_spacer;
+        }
     }
 
     void hid_device::set_text_device()
     {
         std::wstring content  {};
-        vertex position { 30.0f , 30.0f };
 
         content =  L"manufacturer\t: ";
         content += manufacturer;
@@ -427,9 +456,11 @@ namespace hid
                      rectangle_margin ,
                      text_colour );*/
 
-        information.set_content( content );
-        information.set_position_top_left( position );
-        information.set_layout_size( D2D1_SIZE_F{ 200.0f , 200.0f } );
+        device_information.set_content( content );
+        device_information.set_position_top_left( device_text_position );
+        device_information.set_layout_size( device_text_layout_size );
+        device_information.set_font_size( device_text_font_size );
+        device_information.set_font_colour( device_text_font_colour );
         //information.set_rectangle_line_colour( rectangle_line_colour );
 
         // += attributes.VendorID;
@@ -437,7 +468,7 @@ namespace hid
         // += attributes.VersionNumber;
         // += physical
     }
-
+    /*
     void hid_device::set_text_collections()
     {
         float  position_x    = 0.0f;
@@ -480,6 +511,7 @@ namespace hid
         //point b = write.mid_points( 1 ).top;
         //main_window.paint.add_line( a , b , 0.5 , colours::White );
     }
+    */
 
     void hid_device::set_text_input()
     {
@@ -532,9 +564,9 @@ namespace hid
     // 1. transparent full screen draw contacts
         if( draw_information )
         {
-            information.draw();
+            device_information.draw();
             
-            //for( auto & item : collection ) item.draw();
+            for( const auto & item : collection_texts ) item.draw();
             
             //lines.draw
         }

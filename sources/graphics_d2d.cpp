@@ -1,3 +1,4 @@
+//https://learn.microsoft.com/en-us/cpp/cpp/cpp-built-in-operators-precedence-and-associativity?view=msvc-170
 #include "..\headers\graphics_d2d.h"
 
 #include "..\headers\locate.h"
@@ -6,33 +7,41 @@
 
 namespace hid
 {
-    graphics_d2d::graphics_d2d()// HWND in_window )
+    graphics_d2d::graphics_d2d()
     {
-        OutputDebugString( L"\n graphics_d2d::constructor" );
+        OutputDebugString( L"graphics_d2d::constructor\n" );
+    }
 
+    void graphics_d2d::initialise()
+    {
         locate::set_graphics( this );
 
         D2D1_FACTORY_OPTIONS factory_options {};
         factory_options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
 
         D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED , factory_options , & factory );
-        
-        window = locate::get_windows().get_window();
 
+        //WaitForSingleObject( locate::get_windows().get_instance(), 1000 );
+        
         reset();
+    }
+
+    void graphics_d2d::reset()
+    {
+        reset_page();
+        reset_brush_line();
+        reset_brush_rectangle();
     }
 
     graphics_d2d::~graphics_d2d() 
     { 
-        OutputDebugString( L"\n graphics_d2d::de-constructor" );
+        OutputDebugString( L"graphics_d2d::de-constructor\n" );
 
-        if( page )    page->Release();    page = nullptr;
-        if( factory ) factory->Release(); factory = nullptr;
+        if( page )            page->Release();
+        if( factory )         factory->Release();
+        if( brush_line )      brush_line->Release();
+        if( brush_rectangle ) brush_rectangle->Release();
     }
-
-    //enum class request_type { page }
-    //template< typename type >
-    //type request( ... )
 
     ID2D1HwndRenderTarget & graphics_d2d::get_page() 
     {
@@ -40,7 +49,7 @@ namespace hid
     }
 
     // help: your first direct2d program
-    void graphics_d2d::reset()
+    void graphics_d2d::reset_page()
     {
         // if existing page
         if( page )
@@ -48,27 +57,193 @@ namespace hid
             page->Release();
             page = nullptr;
         }
+
+        HWND window = locate::get_windows().get_window();
         
-        // else first init
-        
+        // full screen size
         RECT client_size {};
-
         GetClientRect( window , &client_size );
-
         D2D1_SIZE_U client_area = D2D1::SizeU( client_size.right , client_size.bottom );
 
+        // enable render target transparency
         D2D1_RENDER_TARGET_PROPERTIES render_properties = D2D1::RenderTargetProperties();
-        
         render_properties.pixelFormat = D2D1::PixelFormat( DXGI_FORMAT_UNKNOWN , D2D1_ALPHA_MODE_PREMULTIPLIED );
-
         D2D1_HWND_RENDER_TARGET_PROPERTIES window_properties = D2D1::HwndRenderTargetProperties( window , client_area );
 
         factory->CreateHwndRenderTarget( render_properties ,
                                          window_properties , 
                                          &page );
-
-        //page->AddRef();
     }
+   
+    void graphics_d2d::reset_brush_line()
+    {
+        if( brush_line )
+        {
+            brush_line->Release();
+            brush_line = nullptr;
+        }
+
+        page->CreateSolidColorBrush( line_colour , &brush_line );
+    }
+
+    void graphics_d2d::reset_brush_rectangle()
+    {
+        if( brush_rectangle )
+        {
+            brush_rectangle->Release();
+            brush_rectangle = nullptr;
+        }
+
+        page->CreateSolidColorBrush( line_colour , &brush_rectangle );
+    }
+
+    /*
+    void graphics_d2d::draw_rectangle( rectangle in_rectangle )
+    {
+        brush_solid_pointer brush = brush_solid();
+        stroke_style_pointer style = stroke_style();
+        float                stroke_width = 1.0f;
+
+        //page->DrawRectangle( in_rectangle , brush.Get() , stroke_width , style.Get());
+
+    }
+    */
+
+    /*
+    void graphics_d2d::draw_rounded_rectangle( D2D1_ROUNDED_RECT in_rectangle,
+                                               float radius ,
+                                               float boundry_width ,
+                                               colours colour )
+    {
+        brush_solid_pointer brush = brush_solid( colour );
+        stroke_style_pointer style = stroke_style();
+
+        page->DrawRoundedRectangle( in_rectangle ,
+                                    brush.Get() ,
+                                    boundry_width ,
+                                    style.Get() );
+    }
+    */
+
+    void graphics_d2d::draw_rounded_rectangle( D2D_SIZE_F in_size              ,
+                                               vertex     in_position_top_left ,
+                                               float      in_corner_radius ,
+                                               ID2D1Brush * in_brush ,
+                                               float        in_line_width )
+                                               //colours in_colour )
+    {
+        //if( page and in_brush )
+        //{
+            vertex            position  { in_position_top_left };
+            D2D1_ROUNDED_RECT rectangle {};
+
+            rectangle.radiusX = rectangle.radiusY = in_corner_radius;
+
+            rectangle.rect.top    = position.y;
+            rectangle.rect.right  = position.x + in_size.width;
+            rectangle.rect.bottom = position.y + in_size.height;
+            rectangle.rect.left   = position.x;
+
+
+            page->DrawRoundedRectangle( rectangle ,
+                                        in_brush ,
+                                        in_line_width ,
+                                        0 );
+        //}
+    }
+
+    void graphics_d2d::draw_begin()
+    {
+        //if( page )
+        //{
+            page->BeginDraw();
+
+            page->SetTransform( D2D1::Matrix3x2F::Identity() );
+
+            page->Clear( colour_clear );
+
+            /*
+            if( hr == D2DERR_RECREATE_TARGET )
+            {
+                hr = S_OK;
+                DiscardDeviceResources();
+            }*/
+        //}
+    }
+
+    void graphics_d2d::draw_end()
+    {
+        page->EndDraw();
+    }
+
+    D2D_SIZE_U graphics_d2d::get_size_pixels()
+    {
+        return { page->GetPixelSize().width , page->GetPixelSize().height };
+    }
+
+    D2D_SIZE_F graphics_d2d::get_size_dips()
+    {
+        return { page->GetSize().width , page->GetSize().height };
+    }
+
+    D2D1_SIZE_F graphics_d2d::get_dpi()
+    {
+        D2D1_SIZE_F page_dpi{ 0.0f , 0.0f };
+
+        page->GetDpi( &page_dpi.width , &page_dpi.height );
+
+        return page_dpi;
+    }
+
+    // void draw_page( page in_page );
+
+    void graphics_d2d::draw_line_solid( vertex in_a , 
+                                        vertex in_b )
+    {
+        //page_dimensions dimensions = get_size_pixels();
+        //D2D1_SIZE_F size = get_size_dips();
+        //page_dpi dpi = get_dpi();
+
+        //stroke_style_pointer style {}; // = stroke_style;
+        //brush_solid_pointer brush = brush_solid( in_colours );
+
+        page->DrawLine( in_a , in_b , brush_line , line_width );
+    }
+
+    void graphics_d2d::resize()
+    {
+        RECT rectangle;
+        HWND window = locate::get_windows().get_window();
+
+        GetClientRect( window , & rectangle);
+
+        D2D1_SIZE_U size = D2D1::SizeU( rectangle.right , rectangle.bottom );
+
+        if( page ) page->Resize( size );
+
+        //calculate_layout();   
+
+        InvalidateRect( window , 0 , false);
+    }
+
+}
+        //page_dpi          dpi         = get_dpi();
+        //dimensions        size_dips   = get_size_dips();
+        //page_dimensions   size_pixels = get_size_pixels();
+        // width  = 3840 , dpi.x = 240, dips.width = 1536 // (desktop 3840 x 2160 )
+        // dips = pixels / ( dpi / 96.0 );
+        //float center_x = in_position_center.x;// * size_dips.width; 
+        //float center_y = in_position_center.y;// * size_dips.height; 
+        //const float width       = in_size.width;// / dpi.width; 
+        //const float height      = in_size.height;// / dpi.height;
+        //const float width_half  = width  / 2.0f;
+        //const float height_half = height / 2.0f;
+        //const float margin      = 5.0f;
+        //float top    = center_y - height_half - margin;
+        //float right  = center_x + width_half  + margin;
+        //float bottom = center_y + height_half + margin;
+        //float left   = center_x - width_half  - margin;
+
 
     /*
     brush_solid_pointer graphics_d2d::get_brush_solid( colours in_colour)
@@ -91,7 +266,7 @@ namespace hid
     }
     */
 
-    /*
+ /*
     ComPtr< stroke_style > graphics_d2d::style( colours in_colour )
     {
         ComPtr< stroke_style > style {};
@@ -122,7 +297,7 @@ namespace hid
         properties.dashStyle   = static_cast< D2D1_DASH_STYLE >( in_dash_style );
         properties.dashOffset  = in_dash_offset;
 
-        
+
         //properties.cap_start   = in_cap_start;
         //properties.dash_start  = in_dash_start;
         //properties.end_start   = in_end_start;
@@ -130,161 +305,12 @@ namespace hid
         //properties.miter_limit = in_miter_limit;
         //properties.dash_style  = in_dash_style;
         //properties.dash_offset = in_dash_offset;
-        
+
 
         factory->CreateStrokeStyle( properties ,
                                     dashes.data() ,
                                     static_cast< uint >( dashes.size() ),
-                                    style.ReleaseAndGetAddressOf() ); 
+                                    style.ReleaseAndGetAddressOf() );
         return style;
     }
     */
-
-    /*
-    void graphics_d2d::draw_rectangle( rectangle in_rectangle )
-    {
-        brush_solid_pointer brush = brush_solid();
-        stroke_style_pointer style = stroke_style();
-        float                stroke_width = 1.0f;
-
-        //page->DrawRectangle( in_rectangle , brush.Get() , stroke_width , style.Get());
-
-    }
-    */
-
-    /*
-    void graphics_d2d::draw_rounded_rectangle( D2D1_ROUNDED_RECT in_rectangle,
-                                               float radius ,
-                                               float boundry_width ,
-                                               colours colour )
-    {
-        brush_solid_pointer brush = brush_solid( colour );
-        stroke_style_pointer style = stroke_style();
-
-        page->DrawRoundedRectangle( in_rectangle ,
-                                    brush.Get() ,
-                                    boundry_width ,
-                                    style.Get() );
-    }
-    */
-
-    /*
-    void graphics_d2d::draw_rounded_rectangle( dimensions in_size              ,
-                                               vertex     in_position_top_left ,
-                                               float      in_radius            ,
-                                               float      in_width             ,
-                                               colours    in_colour            )
-    {
-        vertex            position  { in_position_top_left };
-        D2D1_ROUNDED_RECT rectangle {};
-
-        rectangle.radiusX = rectangle.radiusY = in_radius;
-
-        rectangle.rect.top    = position.y;
-        rectangle.rect.right  = position.x + in_size.width;
-        rectangle.rect.bottom = position.y + in_size.height;
-        rectangle.rect.left   = position.x;
-
-        brush_solid_pointer brush = brush_solid( in_colour );
-        stroke_style_pointer style = stroke_style();
-
-        page->DrawRoundedRectangle( rectangle ,
-                                    brush.Get() ,
-                                    in_width ,
-                                    style.Get() );
-    }
-    */
-
-    void graphics_d2d::draw()
-    {
-        if( page )
-        {
-            page->BeginDraw();
-
-            page->SetTransform( D2D1::Matrix3x2F::Identity() );
-
-            page->Clear( colour_clear );
-
-            locate::get_input_devices().draw();
-
-            page->EndDraw();
-
-            /*
-            if( hr == D2DERR_RECREATE_TARGET )
-            {
-                hr = S_OK;
-                DiscardDeviceResources();
-            }*/
-        }
-    }
-
-    D2D_SIZE_U graphics_d2d::get_size_pixels()
-    {
-        return { page->GetPixelSize().width , page->GetPixelSize().height };
-    }
-
-    D2D_SIZE_F graphics_d2d::get_size_dips()
-    {
-        return { page->GetSize().width , page->GetSize().height };
-    }
-
-    D2D1_SIZE_F graphics_d2d::get_dpi()
-    {
-        D2D1_SIZE_F page_dpi{ 0.0f , 0.0f };
-
-        page->GetDpi( &page_dpi.width , &page_dpi.height );
-
-        return page_dpi;
-    }
-
-    // void draw_page( page in_page );
-
-    /*
-    void graphics_d2d::draw_line( vertex in_a        , // 0..1
-                                  vertex in_b        ,
-                                  float in_width     ,
-                                  colours in_colours )
-    {
-        //page_dimensions dimensions = get_size_pixels();
-        //D2D1_SIZE_F size = get_size_dips();
-        //page_dpi dpi = get_dpi();
-
-        stroke_style_pointer style {}; // = stroke_style;
-        brush_solid_pointer brush = brush_solid( in_colours );
-
-        page->DrawLine( in_a , in_b , brush.Get() , in_width , style.Get());
-    }
-    */
-
-    void graphics_d2d::resize()
-    {
-        RECT rectangle;
-
-        GetClientRect( window , & rectangle);
-
-        D2D1_SIZE_U size = D2D1::SizeU( rectangle.right , rectangle.bottom );
-
-        if( page ) page->Resize( size );
-
-        //calculate_layout();   
-
-        InvalidateRect( window , 0 , false);
-    }
-
-}
-        //page_dpi          dpi         = get_dpi();
-        //dimensions        size_dips   = get_size_dips();
-        //page_dimensions   size_pixels = get_size_pixels();
-        // width  = 3840 , dpi.x = 240, dips.width = 1536 // (desktop 3840 x 2160 )
-        // dips = pixels / ( dpi / 96.0 );
-        //float center_x = in_position_center.x;// * size_dips.width; 
-        //float center_y = in_position_center.y;// * size_dips.height; 
-        //const float width       = in_size.width;// / dpi.width; 
-        //const float height      = in_size.height;// / dpi.height;
-        //const float width_half  = width  / 2.0f;
-        //const float height_half = height / 2.0f;
-        //const float margin      = 5.0f;
-        //float top    = center_y - height_half - margin;
-        //float right  = center_x + width_half  + margin;
-        //float bottom = center_y + height_half + margin;
-        //float left   = center_x - width_half  - margin;

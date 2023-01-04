@@ -1,5 +1,8 @@
 #pragma once
 
+//https://learn.microsoft.com/en-us/windows/win32/direct2d/improving-direct2d-performance#use-a-multithreaded-device-context
+//https://learn.microsoft.com/en-us/windows/win32/directwrite/rendering-by-using-direct2d
+
 #include "..\headers\custom_types.h"
 #include "..\headers\vertex.h"
 //#include "..\headers\hid_globals.h"
@@ -15,7 +18,8 @@ namespace hid
         private:
 
             IDWriteTextFormat     * format     { nullptr };
-            ID2D1SolidColorBrush  * brush      { nullptr };
+            ID2D1SolidColorBrush  * brush_font { nullptr };
+            //ID2D1SolidColorBrush  * brush_layout_rectangle { nullptr };
             IDWriteTextLayout     * layout     { nullptr };
             IDWriteFontCollection * collection { nullptr };
 
@@ -29,7 +33,6 @@ namespace hid
             float                 font_size         { 15.0f                }; // * dpi? // MS "size * 96.0f/72.0f"
             D2D1::ColorF          font_colour       { D2D1::ColorF::Black       };
             float                 font_opacity      { 1.0f                 };
-            
             DWRITE_FONT_STYLE     font_style        { DWRITE_FONT_STYLE_NORMAL };
             DWRITE_FONT_WEIGHT    font_weight       { DWRITE_FONT_WEIGHT_NORMAL };
             DWRITE_FONT_STRETCH   font_stretch      { DWRITE_FONT_STRETCH_NORMAL };
@@ -47,39 +50,33 @@ namespace hid
             // alignment_horizontal
             // direction_reading
             // direction_flow
-            
-            // A DIP equals 1 / 96 inch = 0.3 mm 
-            D2D1_SIZE_F layout_size { 150.0 , 150.0 };
-            DWRITE_TEXT_METRICS metrics {};
-            //text_metrics metrics; // {}
 
-            /*
-            bool              rectangle_show         { false                };
-            D2D1_SIZE_F       rectangle_size         { 150.0f , 150.0f      };
-            float             rectangle_inner_margin { 0.0f                 };
-            float             rectangle_line_width   { 1.0f                 };
-            D2D1::ColorF      rectangle_line_colour  { D2D1::ColorF::Yellow };
-            float             rectangle_radius       { 0.0f                 };
-            D2D1_ROUNDED_RECT rounded_rectangle      { .radiusX = rectangle_radius ,
-                                                       .radiusY = rectangle_radius };
-            */                                
+            static inline uint identifier {0};
+            
+            D2D1_SIZE_F         layout_size { 150.0 , 150.0 };
+            DWRITE_TEXT_METRICS layout_metrics {};
+
+            bool  bounding_rectangle_show { true };
+            float bounding_rectangle_line_width { 2.0f };
+            D2D1::ColorF bounding_rectangle_line_colour { D2D1::ColorF::Yellow };
+            float bounding_rectangle_corner_radius { 1.0f };
+            float bounding_rectangle_inner_margin { 5.0f };
             
         private:
             
             void reset_format();
             void reset_layout();
             void reset_brush();
-            //void get_drawn_rectangle ();
             
-            D2D1_SIZE_F get_layout_size() { return layout_size; }
+            D2D1_SIZE_F get_layout_size() const;
             float       get_layout_width();
             float       get_layout_width_half();
             float       get_layout_height();
             float       get_layout_height_half();
             //planes      get_middle_planes();
 
-            void draw_text();
-            //void draw_rectangle();
+            void draw_text() const;
+            void draw_bounding_rectangle() const;
             
         public:
 
@@ -94,6 +91,8 @@ namespace hid
             void re_initialise();
             void reset();
             
+            uint get_id() const { return identifier; }
+
             void set_content( std::wstring in_content );
             void add_content( std::wstring in_string ); // add to end // concatenate
 
@@ -120,16 +119,14 @@ namespace hid
             //font_options get_font_options();
             vertex get_position_top_left();
             //dimensions get_layout_size();
-            //rectangle get_rectangle_size() ;
+            float get_bottom();
 
             //rectangle_edge_middles get_middle_vertices();
             //rectangle            get_formated_rectangle();
 
-            void draw();
+            void draw() const;
 
     }; // class text
 
 } // namespace hid
 
-//https://learn.microsoft.com/en-us/windows/win32/direct2d/improving-direct2d-performance#use-a-multithreaded-device-context
-//https://learn.microsoft.com/en-us/windows/win32/directwrite/rendering-by-using-direct2d

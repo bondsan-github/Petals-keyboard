@@ -44,9 +44,9 @@ struct vertex
         return * this;
     }
 
-    operator D2D1_POINT_2F () 
+    operator D2D1_POINT_2F () const
     {
-        D2D1_POINT_2F point;
+        D2D1_POINT_2F point {};
         point.x = x;
         point.y = y;
 

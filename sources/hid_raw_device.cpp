@@ -4,26 +4,26 @@ namespace hid
 {
     hid_raw_device::hid_raw_device() 
     {
-        OutputDebugString( L"\n hid_raw_device::default constructor" );
+        OutputDebugString( L"hid_raw_device::default constructor\n" );
     }
 
     hid_raw_device::hid_raw_device( const hid_raw_device & copy )
     {
-        OutputDebugString( L"\n hid_raw_device::copy constructor" );
+        OutputDebugString( L"hid_raw_device::copy constructor\n" );
 
         if( this != &copy ) *this = copy;
     }
 
     hid_raw_device::hid_raw_device( hid_raw_device && in_move ) noexcept
     {
-        OutputDebugString( L"\n hid_raw_device::move constructor" );
+        OutputDebugString( L"hid_raw_device::move constructor\n" );
 
         if( this != &in_move ) *this = std::move( in_move );
     }
 
     hid_raw_device & hid_raw_device::operator = ( const hid_raw_device & assign_copy )
     {
-        OutputDebugString( L"\n hid_raw_device::assign copy" );
+        OutputDebugString( L"hid_raw_device::assign copy\n" );
 
         if( this != &assign_copy )
         {
@@ -39,7 +39,7 @@ namespace hid
 
     hid_raw_device & hid_raw_device::operator = ( hid_raw_device && assign_move ) noexcept
     {
-        OutputDebugString( L"\n hid_raw_device::assign move" );
+        OutputDebugString( L"hid_raw_device::assign move\n" );
 
         if( this != &assign_move )
         {
@@ -57,7 +57,7 @@ namespace hid
 
     hid_raw_device::hid_raw_device( HANDLE in_device ) : device_pointer( in_device )
     {
-        OutputDebugString( L"\n hid_raw_device::parametertised constructor" );
+        //OutputDebugString( L"hid_raw_device::parametertised constructor\n" );
 
         NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
         uint data_size { 0 };
@@ -93,7 +93,7 @@ namespace hid
 
     hid_raw_device::~hid_raw_device() 
     {
-        OutputDebugString( L"\n hid_raw_device::de-constructor" );
+        //OutputDebugString( L"hid_raw_device::de-constructor\n" );
 
         //device_pointer = nullptr;
         //data_preparsed.clear();

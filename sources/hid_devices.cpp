@@ -11,8 +11,11 @@ namespace hid
 {
     hid_devices::hid_devices( void )
     {
-        OutputDebugString( L"\n hid_devices::default constructor" );
+        OutputDebugString( L"hid_devices::default constructor\n" );
+    }
 
+    void hid_devices::initialise()
+    {
         locate::set_input_devices( this );
 
         // get device amount
@@ -34,13 +37,11 @@ namespace hid
 
             if( new_raw_device.is_multi_touch() )
             {
-                //hid_device new_hid_device( new_raw_device );
-                //input_devices.push_back( new_hid_device );
                 input_devices.emplace_back( new_raw_device );
             }
         }
 
-        //raw_device_list.clear();
+        raw_device_list.clear();
 
         for( auto & device : input_devices )
         {
@@ -55,15 +56,12 @@ namespace hid
 
     hid_devices::~hid_devices( void ) 
     {
-        OutputDebugString( L"\n hid_devices::de-constructor" );
+        OutputDebugString( L"hid_devices::de-constructor\n" );
     }
 
     void hid_devices::draw()
     {
         //information.draw();
-        //if( not input_devices.empty() )
-        //{
             for( auto & device : input_devices ) device.draw();
-        //}
     }
 }

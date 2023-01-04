@@ -5,7 +5,7 @@
 //#include <functional>
 #include <windows.h>
 //#include <wrl.h>
-//#include <d2d1.h>
+#include <d2d1.h>
 //#include <dwrite.h>
 #include <hidsdi.h>
 #include <hidpi.h>
@@ -24,9 +24,11 @@ namespace hid // human interface device
     using      ulong                   = unsigned long;  //    long same as int
     //using      string                  = std::wstring;
 
-    //using      result_win              = HRESULT;
+    enum class states { starting , paused , running , ending };
+
+    //using      result                  = HRESULT;
     //using      raw_device_list         = RAWINPUTDEVICELIST;
-    //using      hid_node                    = HIDP_LINK_COLLECTION_NODE;
+    //using      hid_node                = HIDP_LINK_COLLECTION_NODE;
     enum class raw_device_type         { mouse , keyboard , hid }; // Microsoft windows input types
     //enum class factory_type            { force_dword = -1 , single_thread , multiple_threads };
 
@@ -35,15 +37,20 @@ namespace hid // human interface device
     //using      paint_structure         = PAINTSTRUCT;
     
     //using size = D2D1_SIZE_F;
-    //using      dimensions              = D2D1_SIZE_F;
-
-    //struct dimensions 
-    //{ 
-    //    float width  { 0 }; 
-    //    float height { 0 };
-    //};
 
     //using      colours                 = D2D1::ColorF;
+    /*
+    class colours : public D2D1::ColorF //_D3DCOLORVALUE
+    {
+    public:
+        friend bool operator not_eq ( const D2D1::ColorF & in_left , const D2D1::ColorF & in_right )
+        {
+            return { in_left.r == in_right.r and
+                     in_left.g == in_right.g and 
+                     in_left.b == in_right.b };
+        }
+    };
+    */
 
     //using      page_window             = ID2D1HwndRenderTarget;
     //using      page_window_pointer     = ComPtr< page_window >;

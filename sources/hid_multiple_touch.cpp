@@ -1,31 +1,43 @@
-#include "..\headers\hid_multi_touch.h"
-#include "..\headers\hid_device.h"
+#include "..\headers\hid_multiple_touch.h"
 
 #include "..\headers\locate.h"
 
 namespace hid
 {
-    using namespace std;
-
-    hid_multi_touch::hid_multi_touch( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
-    //: gui_microsoft::gui_microsoft( instance , parameters , show_flags )
+    hid_multiple_touch::hid_multiple_touch( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
     {
+        OutputDebugString( L"hid_multi_touch::paramatised constructor\n" );
 
-        OutputDebugString( L"\n hid_multi_touch::constructor" );
+        locate::set_application( this );
 
-        //graphics.initialise( get_window() );
-        ////grid.initialise();
-        //write.initialise();
+        window.initialise( instance , parameters , show_flags );
+        graphics.initialise();
+        write.initialise();
         //usages.initialise();
+        input.initialise();
 
-        //input.initialise();
-
-        //message_loop();
     }
 
-    hid_multi_touch::~hid_multi_touch()
+    void hid_multiple_touch::start()
     {
-        OutputDebugString( L"\n hid_multi_touch::de-constructor" );
+        update();
+    }
+
+    void hid_multiple_touch::update()
+    {
+        while( state == states::running )
+        {
+            window.update();
+            graphics.draw_begin();
+            //input.update();
+            input.draw();
+            graphics.draw_end();
+        }
+    }
+
+    hid_multiple_touch::~hid_multiple_touch()
+    {
+        OutputDebugString( L"hid_multi_touch::de-constructor\n" );
     }
 
 } // namespace hid
