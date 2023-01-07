@@ -4,205 +4,25 @@
 #include "..\headers\locate.h"
 #include "..\headers\hid_usages.h"
 
+#include <hidpi.h>
+
 namespace hid
 {
-    hid_device::hid_device() 
-    {
-        OutputDebugString( L"hid_device::default constructor\n" );
-    }
-
-    hid_device::hid_device( hid_raw_device & raw_device )
+    hid_device::hid_device( const hid_raw_device & raw_device )
     {
         OutputDebugString( L"hid_device::hid_raw_device constructor\n" );
 
         device_pointer   = raw_device.get_device_pointer();
         data_preparsed   = std::move( raw_device.get_preparsed_data() );
+        //data_preparsed   = raw_device.get_preparsed_data();
         capabilities     = raw_device.get_capabilities();
         page             = raw_device.get_page();
         usage            = raw_device.get_usage();
     }
-
-    hid_device::hid_device( const hid_device & in_copy )
-    {
-        OutputDebugString( L"hid_device::copy constructor\n" );
-
-        if( this != &in_copy ) *this = in_copy;
-    }
-
-    hid_device::hid_device( hid_device && in_move ) noexcept
-    {
-        OutputDebugString( L"hid_device::move constructor\n" );
-
-        if( this != &in_move ) *this = std::move( in_move );
-    }
-
-    hid_device & hid_device::operator = ( const hid_device & assign_copy )
-    {
-        OutputDebugString( L"hid_device::assignment copy\n" );
-
-        if( this != &assign_copy )
-        {
-            data_preparsed        = assign_copy.data_preparsed;
-            device_pointer        = assign_copy.device_pointer;
-            device_path           = assign_copy.device_path;
-            path_char_amount      = assign_copy.path_char_amount;
-            page                  = assign_copy.page;
-            usage                 = assign_copy.usage;
-            input_report          = assign_copy.input_report;
-            output_report         = assign_copy.output_report;
-            feature_report        = assign_copy.feature_report;
-            capabilities          = assign_copy.capabilities;
-            collection_amount     = assign_copy.collection_amount;
-            attributes            = assign_copy.attributes;
-            attributes_extra      = assign_copy.attributes_extra;
-            manufacturer          = assign_copy.manufacturer;
-            product               = assign_copy.product;
-            physical              = assign_copy.physical;
-            collection            = assign_copy.collection;
-            device_information    = assign_copy.device_information;
-            //lines                 = assign_copy.lines;
-            input_buttons         = assign_copy.input_buttons;
-            input_values          = assign_copy.input_values;
-            output_buttons        = assign_copy.output_buttons;
-            output_values         = assign_copy.output_values;
-            button_features       = assign_copy.button_features;
-            value_features        = assign_copy.value_features;
-            draw_information      = assign_copy.draw_information;
-            font_face             = assign_copy.font_face;
-            font_size             = assign_copy.font_size;
-            font_colour           = assign_copy.font_colour;
-            layout_size     = assign_copy.layout_size;
-            //rectangle_margin      = assign_copy.rectangle_margin;
-            //rectangle_line_width  = assign_copy.rectangle_line_width;
-            //rectangle_line_colour = assign_copy.rectangle_line_colour;
-            information_spacing     = assign_copy.information_spacing;
-        }
-
-        return *this;
-    }
-
-    hid_device & hid_device::operator = ( hid_device && assign_move ) noexcept
-    {
-        OutputDebugString( L"hid_device::assignment move\n" );
-
-        if( this != &assign_move )
-        {
-            data_preparsed        = std::move( assign_move.data_preparsed );
-            device_pointer        = std::move( assign_move.device_pointer );
-            device_path           = std::move( assign_move.device_path );
-            path_char_amount      = std::move( assign_move.path_char_amount );
-            page                  = std::move( assign_move.page );
-            usage                 = std::move( assign_move.usage );
-            input_report          = std::move( assign_move.input_report );
-            output_report         = std::move( assign_move.output_report );
-            feature_report        = std::move( assign_move.feature_report );
-            capabilities          = std::move( assign_move.capabilities );
-            collection_amount     = std::move( assign_move.collection_amount );
-            attributes            = std::move( assign_move.attributes );
-            attributes_extra      = std::move( assign_move.attributes_extra );
-            manufacturer          = std::move( assign_move.manufacturer );
-            product               = std::move( assign_move.product );
-            physical              = std::move( assign_move.physical );
-            collection            = std::move( assign_move.collection );
-            device_information    = std::move( assign_move.device_information );
-            //lines                 = std::move( assign_move.lines );
-            input_buttons         = std::move( assign_move.input_buttons );
-            input_values          = std::move( assign_move.input_values );
-            output_buttons        = std::move( assign_move.output_buttons );
-            output_values         = std::move( assign_move.output_values );
-            button_features       = std::move( assign_move.button_features );
-            value_features        = std::move( assign_move.value_features );
-            draw_information      = std::move( assign_move.draw_information );
-            font_face             = std::move( assign_move.font_face );
-            font_size             = std::move( assign_move.font_size );
-            font_colour           = std::move( assign_move.font_colour );
-            layout_size     = std::move( assign_move.layout_size );
-            //rectangle_margin      = std::move( assign_move.rectangle_margin );
-            //rectangle_line_width  = std::move( assign_move.rectangle_line_width );
-            //rectangle_line_colour = std::move( assign_move.rectangle_line_colour );
-            information_spacing     = std::move( assign_move.information_spacing );
-
-            assign_move.reset();
-        }
-
-        return *this;
-    }
-
-    void hid_device::reset()
-    {
-        data_preparsed.clear();
-        device_pointer    = nullptr;
-        device_path       = L"no device path";
-        path_char_amount  = 0;
-        page              = 0;
-        usage             = 0;
-        collection_amount = 0;
-        draw_information  = false;
-
-        font_face   = L"Cascasia code";
-        font_size   = 15.0f;
-        font_colour = D2D1::ColorF::Yellow;
-
-        //rectangle_margin      = 0.0f;
-        //rectangle_line_width  = 1.0f;
-        //rectangle_line_colour = D2D1::ColorF::DarkCyan;
-        layout_size     = D2D1_SIZE_F{ 200.0f, 200.0f };
-
-        manufacturer.clear();
-        product.clear();
-        physical.clear();
-        collection.clear();
-        //lines.clear();
-
-        input_buttons.clear();
-        input_values.clear();
-        output_buttons.clear();
-        output_values.clear();
-        button_features.clear();
-        value_features.clear();
-
-        input_report.reset();
-        output_report.reset();
-        feature_report.reset();
-        capabilities.reset();
-        attributes.reset();
-        attributes_extra.reset();
-        device_information.reset();
-    }
-
-    hid_device::~hid_device( void )
-    {
-        OutputDebugString( L"hid_device::de-constructor\n" );
-
-        CloseHandle( device_pointer );
-        device_pointer    = nullptr;
-        data_preparsed.clear();
-    }
-
+    
     void hid_device::collect_information()
     {
         NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
-
-        /*
-        page              = capabilities.UsagePage;
-        usage             = capabilities.Usage;
-        collection_amount = capabilities.NumberLinkCollectionNodes;
-
-        input_report.byte_amount              = capabilities.InputReportByteLength;
-        input_report.button_amount            = capabilities.NumberInputButtonCaps;
-        input_report.value_amount             = capabilities.NumberInputValueCaps;
-        input_report.data_identifier_amount   = capabilities.NumberInputDataIndices;
-
-        output_report.byte_amount             = capabilities.OutputReportByteLength;
-        output_report.button_amount           = capabilities.NumberOutputButtonCaps;
-        output_report.value_amount            = capabilities.NumberOutputValueCaps;
-        output_report.data_identifier_amount  = capabilities.NumberOutputDataIndices;
-
-        feature_report.byte_amount            = capabilities.FeatureReportByteLength;
-        feature_report.button_amount          = capabilities.NumberFeatureButtonCaps;
-        feature_report.value_amount           = capabilities.NumberFeatureValueCaps;
-        feature_report.data_identifier_amount = capabilities.NumberFeatureDataIndices;
-        */
 
         // get device path character amount
         uint return_value = GetRawInputDeviceInfoW( device_pointer , request.path , 0 , & path_char_amount );
@@ -236,174 +56,108 @@ namespace hid
         physical = physical_buffer;
 
         set_text_device();
-        //vector< node > nodes {};
 
+        // -- collections -------------------------------------------
         collection_amount = capabilities.NumberLinkCollectionNodes;
-        collection.resize( collection_amount );
+        collections.resize( collection_amount );
 
         PHIDP_PREPARSED_DATA data = reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() );
 
-        result = HidP_GetLinkCollectionNodes( collection.data() , &collection_amount , data );
-        if( result == HIDP_STATUS_BUFFER_TOO_SMALL ) error_exit( L"collection buffer size error" );
-         
-        set_text_collections();
-        //ushort index{ 0 };
-
-        //collection.front().information.set_position();
-
-            //using link = vector< item >::reference;
-            /*
-            if( node.Parent ) // one parent , above
-               new_item.origin = & items.at( node.Parent - 1 );
-
-            if( node.NextSibling ) // to right
-               new_item.next   = & items.at( node.NextSibling - 1 );
-
-            if( node.FirstChild ) // left-most
-               new_item.first  = & items.at( node.FirstChild - 1 );
-            */
-            //collection.push_back( move( new_collection ) );//at( index ) = move( new_item );
-
+        _HIDP_LINK_COLLECTION_NODE * nodes = new _HIDP_LINK_COLLECTION_NODE[ collection_amount ];
         
-        //                       report type  , data destination       , data size               , source data
-        input_buttons.resize( capabilities.NumberInputButtonCaps );
-        result = HidP_GetButtonCaps( HidP_Input , input_buttons.data() , & capabilities.NumberInputButtonCaps , data );
-
-        input_values.resize( input_report.value_amount );
-        result = HidP_GetValueCaps( HidP_Input , input_values.data() , & input_report.value_amount , data );
-
-        output_buttons.resize( output_report.button_amount );
-        result = HidP_GetButtonCaps( HidP_Output , output_buttons.data() , & output_report.button_amount , data );
-
-        output_values.resize( output_report.value_amount );
-        result = HidP_GetValueCaps( HidP_Output , output_values.data() , & output_report.value_amount , data );
-
-        button_features.resize( feature_report.button_amount );
-        result = HidP_GetButtonCaps( HidP_Feature , button_features.data() , & feature_report.button_amount , data );
-
-        value_features.resize( feature_report.value_amount );
-        result = HidP_GetValueCaps( HidP_Feature , value_features.data() , & feature_report.value_amount , data );
-
-        /*
-        for( auto & button : input_buttons ) //input_buttons.release
+        result = HidP_GetLinkCollectionNodes( nodes , &collection_amount , data );
+        if( result == HIDP_STATUS_BUFFER_TOO_SMALL ) error_exit( L"collection buffer size error" );
+        
+        uint index{ 0 };
+        for( auto & node : collections )
         {
-            hid_local_item new_button;
-
-            // type = input
-            new_button.set_page( button.UsagePage );
-
-            new_button.set_report_index( button.ReportID ); // report identifier
-            new_button.set_report_amount( button.ReportCount );
-
-            new_button.set_bit_field( button.BitField );
-
-            new_button.set_origin( button.LinkCollection );
-            new_button.set_origin_page( button.LinkUsagePage );
-            new_button.set_origin_usage( button.LinkUsage );
-
-            new_button.set_is_range( button.IsRange );
-            new_button.set_is_absolute( button.IsAbsolute );
-            new_button.set_is_alias( button.IsAlias ); // does button have multiple usages
-
-            new_button.set_has_designators( button.IsDesignatorRange );
-            new_button.set_has_strings( button.IsStringRange );
-
-            if( new_button.get_is_range() )
-            {
-                new_button.set_usages_begin( button.Range.UsageMin );
-                new_button.set_usages_end( button.Range.UsageMax );
-                
-                new_button.set_data_identifiers_begin( button.Range.DataIndexMin );
-                new_button.set_data_identifiers_end( button.Range.DataIndexMax );
-
-                new_button.set_strings_range_begin( button.Range.StringMin ); //HidD_GetIndexedString
-                new_button.set_strings_range_end( button.Range.StringMax );
-
-                new_button.set_designators_range_begin( button.Range.DesignatorMin ); // physical descriptor
-                new_button.set_designators_range_end( button.Range.DesignatorMax );
-            }
-            else
-            {
-                new_button.set_usage( button.NotRange.Usage );
-                new_button.set_data_identifier( button.NotRange.DataIndex );
-                new_button.set_string_index( button.NotRange.StringIndex );
-                new_button.set_designator( button.NotRange.DesignatorIndex );
-            }
-
-            //if( new_button.get_has_strings() )
-            //{} else {}
-            //if( new_button.get_has_designators() )
-            //{} else {}
-
-            //new_button.gather_information(); get_information_string()
-
-            input_report.buttons.push_back( move( new_button ) );
-            //input_report.buttons.push_back( new_button );
+            node = nodes[ index ];
+            index++;
         }
-        */
-        /*
+
+        delete[] nodes;
+        set_text_collections();
+        // -- collections -------------------------------------------
+
+
+        _HIDP_BUTTON_CAPS * input_button_array = new _HIDP_BUTTON_CAPS[ capabilities.NumberInputButtonCaps ];
+        input_buttons.resize( capabilities.NumberInputButtonCaps );
+        result = HidP_GetButtonCaps( HidP_Input , input_button_array , & capabilities.NumberInputButtonCaps , data );
+
+        index = 0;
+        for( auto & button : input_buttons )
+        {
+            button = input_button_array[ index ];
+            index++;
+        }
+
+        delete[] input_button_array;
+        set_text_input_buttons();
+
+        _HIDP_VALUE_CAPS * input_value_array = new _HIDP_VALUE_CAPS[ capabilities.NumberInputValueCaps ];
+        input_values.resize( capabilities.NumberInputValueCaps );
+        result = HidP_GetValueCaps( HidP_Input , input_value_array , &capabilities.NumberInputValueCaps , data );
+        
+        index = 0;
         for( auto & value : input_values )
         {
-            hid_global_item new_value;
-
-            new_value.set_page( value.UsagePage );
-
-            new_value.set_origin( value.LinkCollection );   // A unique internal index pointer
-            new_value.set_origin_usage( value.LinkUsage );
-            new_value.set_origin_page( value.LinkUsagePage );
-
-            new_value.set_is_alias( value.IsAlias );
-            new_value.set_is_range( value.IsRange );
-
-            new_value.set_is_range( value.IsDesignatorRange );
-            new_value.set_is_absolute( value.IsAbsolute );
-
-            new_value.set_has_strings( value.IsStringRange );
-            new_value.set_has_null( value.HasNull );
-
-            new_value.set_bit_amount( value.BitSize );
-            new_value.set_bit_field( value.BitField );
-
-            new_value.set_report_index( value.ReportID );
-            new_value.set_report_amount( value.ReportCount );
-
-            new_value.set_unit_exponent( value.UnitsExp );
-            new_value.set_unit( value.Units );
-
-            new_value.set_logical_limit_minimum( value.LogicalMin );
-            new_value.set_logical_limit_maximum( value.LogicalMax );
-            new_value.set_physical_limit_minimum( value.PhysicalMin );
-            new_value.set_physical_limit_maximum( value.PhysicalMax );
-
-            if( new_value.get_is_range() )
-            {
-                new_value.set_usages_begin( value.Range.UsageMin );
-                new_value.set_usages_end( value.Range.UsageMax );
-
-                new_value.set_data_identifiers_begin( value.Range.DataIndexMin );
-                new_value.set_data_identifiers_end( value.Range.DataIndexMax );
-
-                new_value.set_strings_range_begin( value.Range.StringMin ); //HidD_GetIndexedString
-                new_value.set_strings_range_end( value.Range.StringMax );
-
-                new_value.set_designators_range_begin( value.Range.DesignatorMin ); // physical descriptor
-                new_value.set_designators_range_end( value.Range.DesignatorMax );
-            }
-            else
-            {
-                new_value.set_usage( value.NotRange.Usage );
-                new_value.set_data_identifier( value.NotRange.DataIndex );
-                new_value.set_string_index( value.NotRange.StringIndex );
-                new_value.set_designator( value.NotRange.DesignatorIndex );
-            }
-
-            input_report.values.push_back( move( new_value ) );
-            //input_report.values.push_back( new_value );
-            //new_item.origin = input.LinkCollection; vector<main_item>::reference
+            value = input_value_array[ index ];
+            index++;
         }
-        */
 
-        
+        delete[] input_value_array;
+        //set_text_input_values();
+
+        output_buttons.resize( capabilities.NumberOutputButtonCaps );
+        result = HidP_GetButtonCaps( HidP_Output , output_buttons.data() , &capabilities.NumberOutputButtonCaps , data );
+
+        output_values.resize( capabilities.NumberOutputValueCaps );
+        result = HidP_GetValueCaps( HidP_Output , output_values.data() , &capabilities.NumberOutputValueCaps , data );
+
+        button_features.resize( capabilities.NumberFeatureButtonCaps );
+        result = HidP_GetButtonCaps( HidP_Feature , button_features.data() , &capabilities.NumberFeatureButtonCaps , data );
+
+        value_features.resize( capabilities.NumberFeatureValueCaps );
+        result = HidP_GetValueCaps( HidP_Feature , value_features.data() , &capabilities.NumberFeatureValueCaps , data );
+
+            //button.IsAlias ); // does button have multiple usages
+            //button.Range.StringMin ); //HidD_GetIndexedString
+            //button.Range.DesignatorMin ); // physical descriptor
+    }
+
+    hid_collection & hid_device::get_collection( const hid_button & in_button )
+    {
+        for( auto & node : collections )
+        {
+            if( node.LinkUsagePage == in_button.LinkUsagePage and 
+                node.LinkUsage     == in_button.LinkUsage )
+            {
+                return node;
+                break;
+            }
+        }
+    }
+
+    void hid_device::set_text_input_buttons()
+    {
+        vertex position {};// = collection.right , collection.top
+        //uint index { 1 };
+
+        //for( auto & button : input_buttons  )
+        for( uint index = 0; index < input_buttons.size(); index++ )
+        {
+            position.y = get_collection( input_buttons.at(index) ).get_text_position_top();
+
+            position.x = get_collection( input_buttons.at( index ) ).get_text_position_right();
+            position.x += information_spacing.x;
+            if( index > 0 )position.x += input_buttons.at( index - 1u ).get_text_position_right();
+            position.x += information_spacing.x;
+
+            input_buttons.at( index ).set_information_text();
+            input_buttons.at( index ).set_text_position( position );
+            
+            //position.x += information_spacing.x;
+        }
     }
 
     void hid_device::set_text_collections()
@@ -414,31 +168,18 @@ namespace hid
             device_information.get_bottom() + collection_text_spacer
         };
 
-        for( const auto & item : collection )
+        for( auto & node : collections )
         {
-            text collection_content {};
-            std::wstring content {};
+            node.set_information_text();
+            node.set_text_position( position );
 
-            content = L"Type\t:";
-            content.append( locate::get_usages().collection_type( item.CollectionType ) );
-            content.append( L"\npage\t\t: ");
-            content.append( locate::get_usages().page( item.LinkUsagePage ) );
-            //content += locate::get_usages().usage( item.LinkUsagePage , item.LinkUsage );
-
-            collection_content.set_content( content );
-            collection_content.set_position_top_left( position );
-            collection_content.set_font_size( collection_texts_font_size );
-            //collection_content.set_font_colour( collection_texts_font_colour );
-
-            collection_texts.push_back( collection_content );
-
-            position.y += collection_content.get_bottom() + collection_text_spacer;
+            position.y = node.get_text_position_bottom() + collection_text_spacer;
         }
     }
 
     void hid_device::set_text_device()
     {
-        std::wstring content  {};
+        std::wstring content;
 
         content =  L"manufacturer\t: ";
         content += manufacturer;
@@ -448,13 +189,6 @@ namespace hid
         content += locate::get_usages().page( page );
         content += L"\nusage\t\t: ";
         content += locate::get_usages().usage( page , usage );
-
-        /*text device(content ,
-                     position ,
-                     text_size ,
-                     text_boundry ,
-                     rectangle_margin ,
-                     text_colour );*/
 
         device_information.set_content( content );
         device_information.set_position_top_left( device_text_position );
@@ -468,90 +202,11 @@ namespace hid
         // += attributes.VersionNumber;
         // += physical
     }
-    /*
-    void hid_device::set_text_collections()
-    {
-        float  position_x    = 0.0f;
-        float  position_y    = 0.0f;
-        
-        vertex item_position { position_x , position_y };
-         
-         // sort input.buttons[1..n] by 
-
-        for( auto & item : collection )
-        {
-            //item.set_information();
-
-            //position_x = information.formated_rectangle().left;
-            //position_y = information.formated_rectangle().bottom + spacer.y;
-            
-            //item.information.set_position( { position_x , position_y } );
-
-            //new_item.set_rectangle_colour( rectangle_colour );
-            //new_item.set_rectangle_width( rectangle_width );
-
-            //item_texts.push_back( new_item );
-
-            //item = collection.at( item.next );
-        } 
-
-        // line from device to first main item
-        //vertex a = item.mid_points( 0 ).bottom;
-        //vertex b = item.mid_points( 1 ).top;
-        //main_window.paint.add_line( a , b , 0.5 , colours::White );
-        // items main
-        
-        // second item
-        // column += 2;
-        //item++;
-        // for all other items
-          //      a = text.mid_points
-          //      b = write.mid_points( item->next ).top;
-        //point a = *text;//&text.mid_points( text ).bottom;
-        //point b = write.mid_points( 1 ).top;
-        //main_window.paint.add_line( a , b , 0.5 , colours::White );
-    }
-    */
+   
 
     void hid_device::set_text_input()
     {
-        //find( begin( items ) , end( items ) ,  )
-        /*
-        index = 0;
         
-        for( auto & button : input.buttons )
-        {
-            button.index = index; index++;
-
-            //string content  = button.text();
-            vertex position {};
-
-           // find if matching collection (page && usage)  , 
-               //  align position.top with collection
-               
-            vector< hid_collection >::iterator item { collection.begin() };
-            
-            item = find_if( collection.begin() ,
-                            collection.end()   ,
-                            [ & button ] ( hid_collection const & collection ) 
-                            { 
-                                return collection.page == button.page; 
-                            } );
-
-            if( item != collection.end() )
-            {
-               // position = item_texts.at( item->index ).position().y
-                //position.y = 
-                // 
-            //item_position.y = ;
-            //item_position.x += 100; // main_item//item_texts.back().formated_rectangle(). + spacer;   
-            }
-
-            text button_text( content , position , text_size , text_boundry , rectangle_margin );
-            //item_texts.push_back( move( button_text ) );
-        }
-
-        */
     }
 
     void hid_device::set_if_display_information( const bool in_bool )
@@ -566,7 +221,8 @@ namespace hid
         {
             device_information.draw();
             
-            for( const auto & item : collection_texts ) item.draw();
+            for( const auto & item : collections ) item.draw();
+            for( const auto & button : input_buttons ) button.draw();
             
             //lines.draw
         }
@@ -581,6 +237,19 @@ namespace hid
     
 }
 
+//using link = vector< item >::reference;
+            /*
+            if( node.Parent ) // one parent , above
+               new_item.origin = & items.at( node.Parent - 1 );
+
+            if( node.NextSibling ) // to right
+               new_item.next   = & items.at( node.NextSibling - 1 );
+
+            if( node.FirstChild ) // left-most
+               new_item.first  = & items.at( node.FirstChild - 1 );
+            */
+            //collection.push_back( move( new_collection ) );//at( index ) = move( new_item );
+            
 // move constructor
       //hid_device( hid_device && destination ) //noexcept
       //~hid_device() { delete [] manufacturer }

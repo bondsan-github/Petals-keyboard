@@ -76,30 +76,30 @@ namespace hid
             long   get_designators_range_begin() const { return designators.begin;   }
             long   get_designators_range_end()   const { return designators.end;     }
 
-            void set_report_index        ( const ushort  in_report_index       ) { report_index     = in_report_index;     }
-            void set_report_amount       ( const ushort  in_report_amount      ) { report_amount    = in_report_amount;    }
-            void set_bit_field           ( const ushort  in_bit_field          ) { bit_field        = in_bit_field;        }
-            void set_is_absolute         ( const bool    in_is_absolute        ) { is_absolute      = in_is_absolute;      }
-            void set_origin_usage        ( const ushort  in_origin_usage       ) { origin_usage     = in_origin_usage;     }
-            void set_origin_page         ( const ushort  in_origin_page        ) { origin_page      = in_origin_page;      }
-            void set_is_range            ( const bool    in_is_range           ) { is_range         = in_is_range;         }
-            void set_usages              ( const hid_range   in_usages             ) { usages           = in_usages;           }
-            void set_usages_begin        ( const ushort  in_usages_begin       ) { usages.begin     = in_usages_begin;     }
-            void set_usages_end          ( const ushort  in_usages_end         ) { usages.end       = in_usages_end;       }
-            void set_data_identifier     ( const ushort  in_data_identifier    ) { data_identifier  = in_data_identifier;  }
-            void set_data_identifiers    ( const hid_range   in_data_identifiers   ) { data_identifiers = in_data_identifiers; }
-            void set_data_identifiers_begin  ( const ushort  in_data_identifiers_begin  ) { data_identifiers.begin = in_data_identifiers_begin; }
-            void set_data_identifiers_end    ( const ushort  in_data_identifiers_end    ) { data_identifiers.end   = in_data_identifiers_end;   }
-            void set_has_strings         ( const bool    in_has_strings        ) { has_strings      = in_has_strings;      } 
-            void set_string_index        ( const ushort  in_string             ) { string           = in_string;           }
-            void set_strings_range       ( const hid_range   in_strings            ) { strings          = in_strings;          }
-            void set_strings_range_begin ( const long in_range_begin           ) { strings.begin    = in_range_begin;      }
-            void set_strings_range_end   ( const long in_range_end             ) { strings.end      = in_range_end;        }
-            void set_has_designators     ( const bool    in_has_designators    ) { has_designators  = in_has_designators;  }
-            void set_designator          ( const ushort  in_designator         ) { designator       = in_designator;       }
-            void set_designators_range   ( const hid_range   in_designators        ) { designators      = in_designators;      }
-            void set_designators_range_begin ( const long in_designators_range_begin ) { designators.begin = in_designators_range_begin; }
-            void set_designators_range_end   ( const long in_designators_range_end   ) { designators.end   = in_designators_range_end;   }
+            void set_report_index        ( const ushort  &in_report_index       ) { report_index     = in_report_index;     }
+            void set_report_amount       ( const ushort & in_report_amount      ) { report_amount    = in_report_amount;    }
+            void set_bit_field           ( const ushort & in_bit_field          ) { bit_field        = in_bit_field;        }
+            void set_is_absolute         ( const bool & in_is_absolute        ) { is_absolute      = in_is_absolute;      }
+            void set_origin_usage        ( const ushort & in_origin_usage       ) { origin_usage     = in_origin_usage;     }
+            void set_origin_page         ( const ushort & in_origin_page        ) { origin_page      = in_origin_page;      }
+            void set_is_range            ( const bool & in_is_range           ) { is_range         = in_is_range;         }
+            void set_usages              ( const hid_range & in_usages             ) { usages           = in_usages;           }
+            void set_usages_begin        ( const ushort & in_usages_begin       ) { usages.begin     = in_usages_begin;     }
+            void set_usages_end          ( const ushort & in_usages_end         ) { usages.end       = in_usages_end;       }
+            void set_data_identifier     ( const ushort & in_data_identifier    ) { data_identifier  = in_data_identifier;  }
+            void set_data_identifiers    ( const hid_range & in_data_identifiers   ) { data_identifiers = in_data_identifiers; }
+            void set_data_identifiers_begin  ( const ushort & in_data_identifiers_begin  ) { data_identifiers.begin = in_data_identifiers_begin; }
+            void set_data_identifiers_end    ( const ushort & in_data_identifiers_end    ) { data_identifiers.end   = in_data_identifiers_end;   }
+            void set_has_strings         ( const bool & in_has_strings        ) { has_strings      = in_has_strings;      }
+            void set_string_index        ( const ushort & in_string             ) { string           = in_string;           }
+            void set_strings_range       ( const hid_range & in_strings            ) { strings          = in_strings;          }
+            void set_strings_range_begin ( const long & in_range_begin           ) { strings.begin    = in_range_begin;      }
+            void set_strings_range_end   ( const long & in_range_end             ) { strings.end      = in_range_end;        }
+            void set_has_designators     ( const bool & in_has_designators    ) { has_designators  = in_has_designators;  }
+            void set_designator          ( const ushort & in_designator         ) { designator       = in_designator;       }
+            void set_designators_range   ( const hid_range & in_designators        ) { designators      = in_designators;      }
+            void set_designators_range_begin ( const long & in_designators_range_begin ) { designators.begin = in_designators_range_begin; }
+            void set_designators_range_end   ( const long & in_designators_range_end   ) { designators.end   = in_designators_range_end;   }
             //void set_information_string ( const wstring in_information_string ) { set_information( in_information_string ); }
     };
 }

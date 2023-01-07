@@ -5,25 +5,25 @@
 
 #include "..\headers\custom_types.h"
 #include "..\headers\vertex.h"
-//#include "..\headers\hid_globals.h"
 
 #include <d2d1.h>
 #include <dwrite.h>
 #include <string>
+
+#include <wrl/client.h>
 
 namespace hid
 {
     class text
     {
         private:
+       
+        Microsoft::WRL::ComPtr <IDWriteTextFormat> format{ nullptr };
+        Microsoft::WRL::ComPtr <ID2D1SolidColorBrush> brush_font { nullptr };
+        Microsoft::WRL::ComPtr <IDWriteTextLayout> layout     { nullptr };
+        Microsoft::WRL::ComPtr <IDWriteFontCollection> collection { nullptr };
 
-            IDWriteTextFormat     * format     { nullptr };
-            ID2D1SolidColorBrush  * brush_font { nullptr };
-            //ID2D1SolidColorBrush  * brush_layout_rectangle { nullptr };
-            IDWriteTextLayout     * layout     { nullptr };
-            IDWriteFontCollection * collection { nullptr };
-
-            std::wstring          content           { L"empty"             };
+            std::wstring          content {};
             
           //vertex                position_center   { 10.0f , 10.0f        }; // dips
             vertex                position_top_left { 0.0f , 0.0f          }; // in dips
@@ -37,10 +37,6 @@ namespace hid
             DWRITE_FONT_WEIGHT    font_weight       { DWRITE_FONT_WEIGHT_NORMAL };
             DWRITE_FONT_STRETCH   font_stretch      { DWRITE_FONT_STRETCH_NORMAL };
             
-            //font_style          style    { font_style::normal   };
-            //font_options        options  { font_options::none   };
-            //font_weight         weight   { font_weight::regular };
-            
             // collection
             // family
             // spacing
@@ -51,10 +47,7 @@ namespace hid
             // direction_reading
             // direction_flow
 
-            static inline uint identifier {0};
-            
             D2D1_SIZE_F         layout_size { 150.0 , 150.0 };
-            DWRITE_TEXT_METRICS layout_metrics {};
 
             bool  bounding_rectangle_show { true };
             float bounding_rectangle_line_width { 2.0f };
@@ -64,62 +57,52 @@ namespace hid
             
         private:
             
+            void reset();
             void reset_format();
             void reset_layout();
             void reset_brush();
             
-            D2D1_SIZE_F get_layout_size() const;
-            float       get_layout_width();
-            float       get_layout_width_half();
-            float       get_layout_height();
-            float       get_layout_height_half();
+            D2D1_SIZE_F get_formated_size() const;
+            
+            float       get_formated_width_half() const ;
+            float       get_formated_height() const ;
+            float       get_layout_height_half() const ;
             //planes      get_middle_planes();
 
             void draw_text() const;
             void draw_bounding_rectangle() const;
             
         public:
-
-            text();
-            ~text();
-            text( const text & in_copy);
-            text( text && in_move) noexcept;
-
-            text & operator = ( const text & assign_copy);
-            text & operator = ( text && assign_move) noexcept;
-
-            void re_initialise();
-            void reset();
             
-            uint get_id() const { return identifier; }
+            void set_content( std::wstring &in_content );
+            void add_content( std::wstring &in_string ); // add to end // concatenate
 
-            void set_content( std::wstring in_content );
-            void add_content( std::wstring in_string ); // add to end // concatenate
+            void set_font_locale( const std::wstring &in_locale );
+            void set_font_face( const std::wstring &in_font_face );
+            void set_font_size( const float &in_font_size );
+            void set_font_colour( const D2D1::ColorF &in_font_colour );
+            void set_font_opacity( const float &in_font_opacity );
+            void set_font_style( const DWRITE_FONT_STYLE &in_font_style );
+            void set_font_weight( const DWRITE_FONT_WEIGHT &in_font_weight );
+            void set_font_stretch( const DWRITE_FONT_STRETCH &in_font_stretch );
 
-            void set_font_locale( std::wstring in_locale );
-            void set_font_face( std::wstring in_font_face );
-            void set_font_size( float in_font_size );
-            void set_font_colour( D2D1::ColorF in_font_colour );
-            void set_font_opacity( float in_font_opacity );
-            void set_font_style( DWRITE_FONT_STYLE in_font_style );
-            void set_font_weight( DWRITE_FONT_WEIGHT in_font_weight );
-            void set_font_stretch( DWRITE_FONT_STRETCH in_font_stretch );
+            void set_position_top_left( const vertex &in_position );
+            void set_layout_size( const D2D1_SIZE_F &in_layout_size );
 
-            void set_position_top_left( vertex in_position );
-            void set_layout_size( D2D1_SIZE_F in_layout_size );
-
-            //void set_rectangle_size( D2D_RECT_F in_rectangle_size );
             //void set_rectangle_radius( float in_radius );
             //void set_rectangle_line_colour( D2D1::ColorF in_colour );
             //void set_rectangle_line_width( float in_width );
             //void set_font_options( font_options in_font_options );
 
-            std::wstring get_content() { return content; }
-            std::wstring get_font_locale() { return font_locale; }
+            std::wstring get_content() const { return content; }
+            std::wstring get_font_locale() const { return font_locale; }
             //font_options get_font_options();
-            vertex get_position_top_left();
+            vertex get_position_top_left() const;
             //dimensions get_layout_size();
-            float get_bottom();
+            float get_top() const;
+            float get_right() const;
+            float get_bottom() const;
+            float get_formated_width() const ;
 
             //rectangle_edge_middles get_middle_vertices();
             //rectangle            get_formated_rectangle();

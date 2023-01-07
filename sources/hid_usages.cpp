@@ -20,7 +20,7 @@ namespace hid
         OutputDebugString( L"hid_usages::de-constructor\n" );
     };
 
-    std::wstring hid_usages::page( uint in_page )
+    std::wstring hid_usages::page( const uint &in_page )
     {
         try
         {
@@ -32,17 +32,8 @@ namespace hid
         }
     };
 
-    std::wstring hid_usages::usage( uint in_page , uint in_usage )
+    std::wstring hid_usages::usage( const uint &in_page , const uint &in_usage )
     {
-        try
-        {
-            pages.at( in_page );
-        }
-        catch( std::out_of_range & exception )
-        {
-            return std::format( L"{:x} usage" , in_usage ); // hex string
-        }
-
         try
         {
             return usages.at( in_page ).at( in_usage ).first;
@@ -53,11 +44,12 @@ namespace hid
         }
     }
 
-    std::wstring hid_usages::collection_type( uint in_type )
+    std::wstring hid_usages::collection_type( const uint &in_type )
     {
+        // remove try catch
         try
         {
-            collection_type_text.at( in_type );
+            return collection_type_text.at( in_type );
         }
         catch( std::out_of_range & exception )
         {

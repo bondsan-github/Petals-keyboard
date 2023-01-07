@@ -34,7 +34,7 @@ namespace hid
             hid_raw_device();
             ~hid_raw_device();
             
-            hid_raw_device( HANDLE in_device );
+            hid_raw_device( const HANDLE &in_device );
             
             hid_raw_device( const hid_raw_device & copy );
             hid_raw_device( hid_raw_device && move ) noexcept;
@@ -46,7 +46,7 @@ namespace hid
             bool is_multi_touch();
 
             HANDLE               get_device_pointer() const { return device_pointer; }
-            std::vector< std::byte > & get_preparsed_data() { return data_preparsed; }
+            std::vector< std::byte > get_preparsed_data() const { return data_preparsed; }
             hid_capabilities     get_capabilities()   const { return capabilities;   }
             ushort               get_page()           const { return page;           }
             ushort               get_usage()          const { return usage;          }

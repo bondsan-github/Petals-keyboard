@@ -11,7 +11,6 @@ namespace hid
     {
         private:
             
-            uint                              device_amount   { 0 };
             std::vector< RAWINPUTDEVICELIST > raw_device_list {};
             std::vector< hid_device >         input_devices   {};
 
@@ -19,12 +18,7 @@ namespace hid
 
         public:
 
-            hid_devices( void );
-            ~hid_devices( void );
-
             void initialise();
-
-            //std::vector< hid_device > & get_input_devices() { return input_devices; }
 
             void draw();
     };

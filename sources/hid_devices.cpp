@@ -9,15 +9,11 @@
 
 namespace hid
 {
-    hid_devices::hid_devices( void )
-    {
-        OutputDebugString( L"hid_devices::default constructor\n" );
-    }
-
     void hid_devices::initialise()
     {
         locate::set_input_devices( this );
 
+        uint device_amount { 0 };
         // get device amount
         int result = GetRawInputDeviceList( 0 , & device_amount , sizeof( RAWINPUTDEVICELIST ) );
 
@@ -30,7 +26,7 @@ namespace hid
         // get device list
         GetRawInputDeviceList( raw_device_list.data() , & device_amount , sizeof( RAWINPUTDEVICELIST ) );
 
-        // copy only multiple touch devices to input vector
+        // todo: search device list for same company and device
         for( auto & device : raw_device_list )
         {
             hid_raw_device new_raw_device( device.hDevice );
@@ -52,11 +48,6 @@ namespace hid
         //    information.set_content( L"no precision multiple touch devices found" );
         //else
         //    information.set_content( L"" );
-    }
-
-    hid_devices::~hid_devices( void ) 
-    {
-        OutputDebugString( L"hid_devices::de-constructor\n" );
     }
 
     void hid_devices::draw()

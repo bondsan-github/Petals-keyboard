@@ -60,16 +60,19 @@
     <ClCompile Include="sources\hid_collection.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="sources\hid_local_item.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
     <ClCompile Include="sources\hid_devices.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="sources\hid_global_item.cpp">
+    <ClCompile Include="sources\grid_d2d.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="sources\grid_d2d.cpp">
+    <ClCompile Include="..\..\Touchpad\markt\touchpad\reference sources\hid.c">
+      <Filter>reference</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\hid_button.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\hid_value.cpp">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,12 +124,6 @@
     <ClInclude Include="headers\hid_collection.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\hid_local_item.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_global_item.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="headers\locate.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -161,6 +158,12 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\hid_button.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\hid_value.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

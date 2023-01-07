@@ -3,6 +3,8 @@
 
 // markt precision multiple touch input controls
 
+//#define _ITERATOR_DEBUG_LEVEL 0
+
 #pragma comment( lib , "hid.lib" )
 #pragma comment( lib , "d2d1" )
 #pragma comment( lib , "dwrite.lib" )

@@ -15,14 +15,14 @@ namespace hid
             ~hid_usages();
             // copy and move 
 
-            std::wstring page( uint in_page ); // const
-            std::wstring usage( uint in_page , uint in_usage );
-            std::wstring collection_type( uint in_type );
+            std::wstring page( const uint &in_page ); // const
+            std::wstring usage( const uint &in_page , const uint &in_usage );
+            std::wstring collection_type( const uint &in_type );
             //std::wstring type  ( uint in_page , int in_usage );
 
         private:
 
-            std::vector< std::wstring > pages
+            const std::vector< std::wstring > pages
             {
                 L"undefined" ,               // 0x00
                 L"generic desktop" ,         // 0x01
@@ -47,7 +47,7 @@ namespace hid
             };
 
             // hid 6.2.2.6
-            enum class collection_type : unsigned int // char
+            const enum class collection_type : unsigned int // char
             {
                 physical ,                   // 0x00
                 application ,                // 0x01
@@ -85,7 +85,7 @@ namespace hid
             };
 
             // hid 3.4.1
-            enum class modifier_type
+            const enum class modifier_type
             {
                 undefined ,
                 reserved ,

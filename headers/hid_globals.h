@@ -1,12 +1,11 @@
 #pragma once
 
 #include "..\headers\custom_types.h"
-#include "..\headers\hid_local_item.h"
-#include "..\headers\hid_global_item.h"
 
 #include <hidpi.h>
 #include <hidsdi.h>
 
+#include <dwrite.h>
 #include <vector>
 
 namespace hid

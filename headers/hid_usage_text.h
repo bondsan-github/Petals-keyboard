@@ -11,7 +11,7 @@ namespace hid
     using _modifier   = std::wstring;
     using _pair       = std::pair< _usage , _modifier >;
     using usage_text  = std::vector< std::vector < _pair > >;
-
+    // replace with std::unordered_map< uint page , pair< wstring usage_name , wstring usage_type > >
     const usage_text usages
     {
        {  // page 0x00 undefined 
@@ -158,7 +158,7 @@ namespace hid
        } ,
        {  // page 0x0D digitisers
           std::make_pair( L"undefined"                     , L"collection application" ) , // 0x00
-          std::make_pair( L"digitizer"                     , L"collection application" ) , // 0x01
+          std::make_pair( L"digitiser"                     , L"collection application" ) , // 0x01
           std::make_pair( L"pen"                           , L"collection application" ) , // 0x02
           std::make_pair( L"light pen"                     , L"collection application" ) , // 0x03
           std::make_pair( L"touch screen"                  , L"collection application" ) , // 0x04
@@ -169,10 +169,10 @@ namespace hid
           std::make_pair( L"stereo plotter"                , L"collection application" ) , // 0x9
           std::make_pair( L"articulated arm"               , L"collection application" ) , // 0xA
           std::make_pair( L"armature"                      , L"collection application" ) , // 0xB
-          std::make_pair( L"multiple point digitizer"      , L"collection application" ) , // 0xC
+          std::make_pair( L"multiple point digitiser"      , L"collection application" ) , // 0xC
           std::make_pair( L"free space wand"               , L"collection application" ) , // 0xD
           std::make_pair( L"device configuration"          , L"collection application" ) , // 0xE
-          std::make_pair( L"capacitive heat map digitizer" , L"collection application" ) , // 0xF
+          std::make_pair( L"capacitive heat map digitiser" , L"collection application" ) , // 0xF
           std::make_pair( L"reserved" , L"reserved" ) , // 0x10
           std::make_pair( L"reserved" , L"reserved" ) , // 0x11
           std::make_pair( L"reserved" , L"reserved" ) , // 0x12

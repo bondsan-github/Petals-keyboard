@@ -9,18 +9,18 @@ namespace hid
 
     hid_raw_device::hid_raw_device( const hid_raw_device & copy )
     {
-        OutputDebugString( L"hid_raw_device::copy constructor\n" );
+        //OutputDebugString( L"hid_raw_device::copy constructor\n" );
 
         if( this != &copy ) *this = copy;
     }
 
     hid_raw_device::hid_raw_device( hid_raw_device && in_move ) noexcept
     {
-        OutputDebugString( L"hid_raw_device::move constructor\n" );
+        //OutputDebugString( L"hid_raw_device::move constructor\n" );
 
         if( this != &in_move ) *this = std::move( in_move );
     }
-
+    
     hid_raw_device & hid_raw_device::operator = ( const hid_raw_device & assign_copy )
     {
         OutputDebugString( L"hid_raw_device::assign copy\n" );
@@ -49,13 +49,13 @@ namespace hid
             page             = std::move( assign_move.page );
             usage            = std::move( assign_move.usage );
 
-            assign_move.reset();
+            //assign_move.reset();
         }
 
         return *this;
     }
 
-    hid_raw_device::hid_raw_device( HANDLE in_device ) : device_pointer( in_device )
+    hid_raw_device::hid_raw_device( const HANDLE &in_device ) : device_pointer( in_device )
     {
         //OutputDebugString( L"hid_raw_device::parametertised constructor\n" );
 
@@ -85,8 +85,8 @@ namespace hid
     void hid_raw_device::reset()
     {
         device_pointer = nullptr;
-        //data_preparsed.clear();
-        //capabilities.reset();
+        data_preparsed.clear();
+        capabilities.reset();
         page  = 0;
         usage = 0;
     }

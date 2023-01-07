@@ -13,14 +13,14 @@ namespace hid
     
     hid_local_item::hid_local_item( const hid_local_item & in_copy ) 
     { 
-        OutputDebugString( L"\n hid_local_item::copy constructor" );
+        //OutputDebugString( L"\n hid_local_item::copy constructor" );
         
         if( this != &in_copy ) *this = in_copy;
     }
     
     hid_local_item::hid_local_item( hid_local_item && in_move ) noexcept
     {
-        OutputDebugString( L"\n hid_local_item::move constructor" );
+        //OutputDebugString( L"\n hid_local_item::move constructor" );
 
         if( this != &in_move ) *this = std::move( in_move );
     }
@@ -99,15 +99,15 @@ namespace hid
 
     hid_local_item::~hid_local_item() 
     {
-        OutputDebugString( L"\n hid_local_item::de-constructor" );
+        OutputDebugStringW( L"\n hid_local_item::de-constructor" );
     }
 
     void hid_local_item::set_information()
     {
         std::wstring text;
 
-        text += L"index\t: ";
-        text += std::to_wstring( get_index() );
+        //text += L"index\t: ";
+        //text += std::to_wstring( get_index() );
 
         text += L"\npage\t: ";
         text += locate::get_usages().page( get_page() );
