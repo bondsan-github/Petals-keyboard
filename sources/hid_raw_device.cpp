@@ -1,12 +1,13 @@
 #include "..\headers\hid_raw_device.h"
 
+//#include <hidpi.h>
+//#include <hidsdi.h>
+
 namespace hid
 {
-    hid_raw_device::hid_raw_device() 
-    {
-        OutputDebugString( L"hid_raw_device::default constructor\n" );
-    }
-
+    //hid_raw_device::hid_raw_device() { //OutputDebugString( L"hid_raw_device::default constructor\n" ); }
+   
+   /*
     hid_raw_device::hid_raw_device( const hid_raw_device & copy )
     {
         //OutputDebugString( L"hid_raw_device::copy constructor\n" );
@@ -23,7 +24,7 @@ namespace hid
     
     hid_raw_device & hid_raw_device::operator = ( const hid_raw_device & assign_copy )
     {
-        OutputDebugString( L"hid_raw_device::assign copy\n" );
+        //OutputDebugString( L"hid_raw_device::assign copy\n" );
 
         if( this != &assign_copy )
         {
@@ -39,7 +40,7 @@ namespace hid
 
     hid_raw_device & hid_raw_device::operator = ( hid_raw_device && assign_move ) noexcept
     {
-        OutputDebugString( L"hid_raw_device::assign move\n" );
+        //OutputDebugString( L"hid_raw_device::assign move\n" );
 
         if( this != &assign_move )
         {
@@ -54,22 +55,27 @@ namespace hid
 
         return *this;
     }
+    */
 
-    hid_raw_device::hid_raw_device( const HANDLE &in_device ) : device_pointer( in_device )
+    hid_raw_device::hid_raw_device( const HANDLE &in_device ) 
     {
         //OutputDebugString( L"hid_raw_device::parametertised constructor\n" );
+        //https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/
+
+        device_pointer = in_device;
 
         NTSTATUS result { HIDP_STATUS_INVALID_PREPARSED_DATA };
         uint data_size { 0 };
 
-        GetRawInputDeviceInfo( device_pointer , request.data , nullptr , & data_size );
+        //RIDI_DEVICEINFO
+        GetRawInputDeviceInfoW( device_pointer , request.data , nullptr , & data_size );
 
         data_preparsed.resize( data_size );
+        
+        GetRawInputDeviceInfoW( device_pointer , request.data , data_preparsed.data() , & data_size );
+        //GetRawInputDeviceInfoW( device_pointer , request.data , data , & data_size );
 
-        GetRawInputDeviceInfo( device_pointer , request.data , data_preparsed.data() , & data_size );
-
-        //data_preparsed = reinterpret_cast< PHIDP_PREPARSED_DATA >( data_bytes.data() );
-
+        //GetPreparsedData( device_pointer , data );
         // getcaps requires * _hidp_preparsed_data = incomplete type not allowed
         result = HidP_GetCaps( reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) , &capabilities);
 
@@ -82,6 +88,7 @@ namespace hid
         return ( page == HID_USAGE_PAGE_DIGITIZER && usage == HID_USAGE_DIGITIZER_TOUCH_PAD );
     }
 
+    /*
     void hid_raw_device::reset()
     {
         device_pointer = nullptr;
@@ -90,12 +97,14 @@ namespace hid
         page  = 0;
         usage = 0;
     }
+    */
 
+    /*
     hid_raw_device::~hid_raw_device() 
     {
         //OutputDebugString( L"hid_raw_device::de-constructor\n" );
-
         //device_pointer = nullptr;
         //data_preparsed.clear();
     }
+    */
 }

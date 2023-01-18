@@ -21,7 +21,7 @@ namespace hid
         Microsoft::WRL::ComPtr <IDWriteTextFormat> format{ nullptr };
         Microsoft::WRL::ComPtr <ID2D1SolidColorBrush> brush_font { nullptr };
         Microsoft::WRL::ComPtr <IDWriteTextLayout> layout     { nullptr };
-        Microsoft::WRL::ComPtr <IDWriteFontCollection> collection { nullptr };
+        //Microsoft::WRL::ComPtr <IDWriteFontCollection> collection { nullptr };
 
             std::wstring          content {};
             
@@ -65,7 +65,7 @@ namespace hid
             D2D1_SIZE_F get_formated_size() const;
             
             float       get_formated_width_half() const ;
-            float       get_formated_height() const ;
+            
             float       get_layout_height_half() const ;
             //planes      get_middle_planes();
 
@@ -74,6 +74,8 @@ namespace hid
             
         public:
             
+            ~text();
+
             void set_content( std::wstring &in_content );
             void add_content( std::wstring &in_string ); // add to end // concatenate
 
@@ -101,8 +103,10 @@ namespace hid
             //dimensions get_layout_size();
             float get_top() const;
             float get_right() const;
+            float get_left() const;
             float get_bottom() const;
             float get_formated_width() const ;
+            float get_formated_height() const ;
 
             //rectangle_edge_middles get_middle_vertices();
             //rectangle            get_formated_rectangle();

@@ -29,7 +29,6 @@ namespace hid
         public:
 
             hid_multiple_touch( const HINSTANCE instance , const LPWSTR parameters , const int show_flags );
-            ~hid_multiple_touch();
 
             void start();
             void update();

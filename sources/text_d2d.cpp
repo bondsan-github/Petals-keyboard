@@ -7,6 +7,15 @@
 
 namespace hid
 {
+    text::~text()
+    {
+        //brush_font.Reset();
+        //format.Reset();
+        //layout.Reset();
+        //collection.Reset();
+        //content.clear();
+    }
+
     void text::set_font_locale( const std::wstring &in_font_locale )
     {
         if( in_font_locale.empty() )
@@ -247,12 +256,17 @@ namespace hid
 
     float text::get_bottom() const
     {
-        return position_top_left.y + get_formated_height() + bounding_rectangle_inner_margin;
+        return position_top_left.y + get_formated_height();// + bounding_rectangle_inner_margin;
+    }
+
+    float text::get_left() const
+    {
+        return position_top_left.x;// - bounding_rectangle_inner_margin;
     }
 
     float text::get_right() const
     {
-        return position_top_left.x + get_formated_width() + bounding_rectangle_inner_margin;
+        return position_top_left.x + get_formated_width();// + bounding_rectangle_inner_margin;
     }
 
     /*

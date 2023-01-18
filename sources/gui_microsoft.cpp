@@ -5,18 +5,18 @@
 #include <format>
 
 #include "..\headers\locate.h"
-//#include "..\headers\window_messages.h"
+#include "..\headers\window_messages.h"
 
 namespace hid
 {
     gui_microsoft::gui_microsoft( void )    
     {
-        OutputDebugString( L"gui_microsoft::default constructor\n" );
+        //OutputDebugString( L"gui_microsoft::default constructor\n" );
     }
 
     void gui_microsoft::initialise( const HINSTANCE in_instance , const LPWSTR in_parameters , const int in_show_flags )
     {
-        OutputDebugString( L"gui_microsoft::initialise\n" );
+        //OutputDebugString( L"gui_microsoft::initialise\n" );
 
         instance = in_instance; parameters = in_parameters; show_flags = in_show_flags;
 
@@ -49,15 +49,14 @@ namespace hid
         atom = RegisterClassExW( & window_class );
         //error( L"register class ex" );
         
+        /*
         RECT desktop {};
         RECT size    {};
-
         GetWindowRect( GetDesktopWindow() , & desktop );
 
-        /*
         int result = GetDpiForWindow( GetDesktopWindow() );
 
-        enum class dpi_aware : int { invalid = -1 , unaware , system , per_monitor }; // (UINT) -1
+        const enum class dpi_aware : int { invalid = -1 , unaware , system , per_monitor }; // (UINT) -1
         
         if( result > 2 )
         {
@@ -76,6 +75,7 @@ namespace hid
         }
         */
 
+        /*
         // position window to centre of screen
         desktop_size.width  = static_cast< uint >( desktop.right ); // static_cast from long to float
         desktop_size.height = static_cast< uint >( desktop.bottom );
@@ -94,19 +94,20 @@ namespace hid
 
         //size = { 0l, 0l, static_cast< long >( width ), static_cast< long >( height ) };
         //AdjustWindowRect( & size , WS_OVERLAPPEDWINDOW , FALSE );
+        */
 
         window_principle = CreateWindowExW( style_extra ,
-                                           class_name ,
-                                           title_text ,
-                                           style ,
-                                           position_top_left.x ,
-                                           position_top_left.y ,
-                                           client_size.width ,
-                                           client_size.height ,
-                                           parent_window , 
-                                           menu ,
-                                           instance ,
-                                           this );
+                                            class_name ,
+                                            title_text ,
+                                            style ,
+                                            position_top_left.x ,
+                                            position_top_left.y ,
+                                            client_size.width ,
+                                            client_size.height ,
+                                            parent_window ,
+                                            menu ,
+                                            instance ,
+                                            this );
 
         //if( window_principle == nullptr ) error_exit( L"create window ex" );
         SetLayeredWindowAttributes( window_principle ,
@@ -114,8 +115,17 @@ namespace hid
                                     230 , // alpha value
                                     LWA_ALPHA );
 
-        ShowWindow( window_principle , SW_MAXIMIZE );
-        UpdateWindow( window_principle );
+        //ShowWindow( window_principle , SW_MAXIMIZE );
+        //UpdateWindow( window_principle );
+    }
+
+    RECT gui_microsoft::get_client_rectangle()
+    {
+        RECT client {};
+
+        GetWindowRect( window_principle , &client );
+
+        return client;
     }
 
     HWND gui_microsoft::get_window() const
@@ -123,15 +133,20 @@ namespace hid
         return window_principle;
     }
 
-    bool gui_microsoft::update()
+    uint gui_microsoft::update()
     {
+        
         while( PeekMessageW( &window_message , nullptr , 0 , 0 , PM_REMOVE ) )
+        //while( GetMessageW( &window_message , 0 , 0 , 0 ) )
         {
             TranslateMessage( &window_message );
             DispatchMessage( &window_message );
 
             if( window_message.message == WM_QUIT ) 
+            {
                 locate::get_application().set_state( states::ending );
+                return 0;
+            }
         }
         return window_message.message;
     }
@@ -140,7 +155,7 @@ namespace hid
     {
         if( message == WM_NCCREATE )
         {
-            OutputDebugString( L"window_setup::WM_NCCREATE\n" );
+            //OutputDebugString( L"window_setup::WM_NCCREATE\n" );
 
             const CREATESTRUCT * const create_ptr = reinterpret_cast< CREATESTRUCT * >( l_param );
             
@@ -161,9 +176,12 @@ namespace hid
 
     LRESULT CALLBACK gui_microsoft::message_handler( HWND in_window , UINT message , WPARAM wParam , LPARAM lParam )
     {
-        //static window_messages messages;
-        //std::wstring win_message = messages.message_text( message );
-        //OutputDebugString( win_message.c_str() );
+        
+        /*
+        static window_messages messages;
+        std::wstring win_message = messages.message_text( message );
+        OutputDebugString( win_message.c_str() );
+        */
 
         switch( message )
         {
@@ -172,6 +190,27 @@ namespace hid
             case WM_DESTROY:
             {
                 PostQuitMessage( 0 );
+                return 0;
+            } break;
+
+            case WM_INPUT:
+            {
+                RAWINPUT raw_input;// { nullptr };
+                uint raw_input_size { 0 };
+                
+                GetRawInputData( ( HRAWINPUT )lParam , RID_INPUT , 0 , &raw_input_size , sizeof( RAWINPUTHEADER ) );
+                GetRawInputData( ( HRAWINPUT )lParam , RID_INPUT , &raw_input , &raw_input_size , sizeof( RAWINPUTHEADER ) );
+
+                //uint hid_data_size = raw_input.data.hid.dwCount * raw_input.data.hid.dwSizeHid;
+                //uchar * data = new uchar[ hid_data_size ];
+                //memmove(data, raw_input.data.hid.bRawData, hid_data_size );
+                locate::get_input_devices().update_devices( raw_input );
+
+                //std::string message = "\n" + std::to_string(data[hid_data_size]);
+                //OutputDebugStringA( message.c_str() );
+
+                //delete[] data;
+                return 0;
             } break;
 
             /*
@@ -238,10 +277,10 @@ namespace hid
 
     gui_microsoft::~gui_microsoft()
     {
-        OutputDebugString( L"gui_microsoft::de-constructor\n" );
+        //OutputDebugString( L"gui_microsoft::de-constructor\n" );
 
-        DestroyWindow( window_principle );
-        UnregisterClassW( class_name , instance );
+        //DestroyWindow( window_principle );
+        //UnregisterClassW( class_name , instance );
     }
 
 } // namespace hid

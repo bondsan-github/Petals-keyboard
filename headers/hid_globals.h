@@ -10,6 +10,27 @@
 
 namespace hid
 {
+    const enum class item_type { input , output , feature };
+
+    struct device_identity
+    {
+        ulong vendor  {};
+        ulong product {};
+
+        bool operator == ( const device_identity & in_identity ) const
+        {
+            bool same = false;
+             same = ( vendor == in_identity.vendor && product == in_identity.product );
+             return same;
+        }
+    };
+
+    struct page_and_usage
+    {
+        unsigned short page  {};
+        unsigned short usage {};
+    };
+
     struct report
     {
         ushort byte_amount            { 0 };
@@ -32,10 +53,9 @@ namespace hid
         }
     };
 
-    //const struct requests
-    struct requests
+    const struct requests
     {
-        uint data = ( 1 << 29 ) | 0x5;
+        uint data = ( 1 << 29 ) | 0x5; // 0x20'000'005
         uint path = ( 1 << 29 ) | 0x7; // return value in character amount, not byte size
         uint info = ( 1 << 29 ) | 0xB;
     };

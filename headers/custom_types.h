@@ -24,7 +24,7 @@ namespace hid // human interface device
     using      ulong                   = unsigned long;  //    long same as int
     //using      string                  = std::wstring;
 
-    enum class states { starting , paused , running , ending };
+    enum class states { starting , ready , running , paused , ending };
 
     //using      result                  = HRESULT;
     //using      raw_device_list         = RAWINPUTDEVICELIST;

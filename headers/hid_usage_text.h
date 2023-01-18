@@ -5,8 +5,6 @@
 
 namespace hid
 {
-    //using namespace std;
-
     using _usage      = std::wstring;
     using _modifier   = std::wstring;
     using _pair       = std::pair< _usage , _modifier >;

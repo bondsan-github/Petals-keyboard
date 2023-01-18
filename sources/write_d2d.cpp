@@ -11,7 +11,7 @@ namespace hid
 
     write_d2d::write_d2d()
     {
-        OutputDebugString( L"write_d2d::default constructor\n" );
+        //OutputDebugString( L"write_d2d::default constructor\n" );
     }
 
     void write_d2d::initialise()
@@ -32,7 +32,7 @@ namespace hid
 
     write_d2d::~write_d2d()
     {
-        if( write ) { write->Release(); write = nullptr; }
+        //if( write ) { write->Release(); write = nullptr; }
     }
 
     /*

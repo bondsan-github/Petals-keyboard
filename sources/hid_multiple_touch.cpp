@@ -6,20 +6,25 @@ namespace hid
 {
     hid_multiple_touch::hid_multiple_touch( const HINSTANCE instance , const LPWSTR parameters , const int show_flags )
     {
-        OutputDebugString( L"hid_multi_touch::paramatised constructor\n" );
+        //OutputDebugString( L"hid_multi_touch::paramatised constructor\n" );
 
         locate::set_application( this );
 
+        // window takes several cycles to fully initialise 
         window.initialise( instance , parameters , show_flags );
-        graphics.initialise();
-        write.initialise();
-        //usages.initialise();
-        input.initialise();
-
     }
 
     void hid_multiple_touch::start()
     {
+        // calls to unitialised window fail
+        graphics.initialise();
+        write.initialise();
+        input.initialise();
+
+        //if( window == ready
+        //    graphics.get_state() == states::ready and
+        //    write.get_state() == states::ready
+
         update();
     }
 
@@ -35,10 +40,10 @@ namespace hid
         }
     }
 
-    hid_multiple_touch::~hid_multiple_touch()
+    /*hid_multiple_touch::~hid_multiple_touch()
     {
-        OutputDebugString( L"hid_multi_touch::de-constructor\n" );
-    }
+        //OutputDebugString( L"hid_multi_touch::de-constructor\n" );
+    }*/
 
 } // namespace hid
 

@@ -8,25 +8,33 @@
 
 namespace hid
 {
+    class hid_device;
+
     class hid_button : public _HIDP_BUTTON_CAPS
     {
         private:
 
+            bool on { false };
             text information;
+            hid_device * device { nullptr };
+            //_HIDP_BUTTON_CAPS capabilities {};
 
         public:
 
-            //hid_button( const _HIDP_BUTTON_CAPS & button_capabilities ) {}
-            void operator = ( const _HIDP_BUTTON_CAPS & in_button );
-
+            hid_button( hid_device * in_device , const _HIDP_BUTTON_CAPS & construct_button );
+            
             void set_information_text();
+            void append_information_text( std::wstring in_text ) { information.add_content(in_text); }
             void set_text_position(const vertex & in_position ) { information.set_position_top_left(in_position); }
             void set_layout_size( const D2D1_SIZE_F & in_size ) { information.set_layout_size( in_size ); }
 
             vertex get_text_position() const { return information.get_position_top_left(); }
+            float get_text_top() const { return information.get_top(); }
+            float get_text_right() const { return information.get_right(); }
             float get_text_width() const { return information.get_formated_width();  }
-            float get_text_position_right() const { return information.get_right(); }
+            float get_text_height() const { return information.get_formated_height(); }
             
+            void update( RAWHID in_raw_data );
             void draw() const { information.draw(); }
 
             /*

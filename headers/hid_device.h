@@ -7,6 +7,8 @@
 #include "..\headers\hid_collection.h"
 #include "..\headers\text_d2d.h"
 //#include "..\headers\line_d2d.h"
+
+#include "..\headers\hid_collections.h"
 #include "..\headers\hid_usages.h"
 #include "..\headers\hid_button.h"   
 #include "..\headers\hid_value.h"
@@ -16,6 +18,8 @@
 //#include <bitset>
 
 /*
+*  SHEN ZHEN HAI LUCK ELECTRONIC TECHNOLOGY CO., LTD
+* 
 HAILUCK CO.,LTD=0x258A
 Usb Touch=0x2016
 (model T063P)
@@ -43,16 +47,20 @@ namespace hid
     {
         private:
 
-            std::vector< std::byte > data_preparsed {};
-
-            HANDLE       device_pointer   { nullptr           };
-            std::wstring device_path      { L"no device path" }; // or std::filesystem::wpath
-            uint         path_char_amount { 0                 };
+            device_identity identity {};
+            HANDLE       raw_handle  { nullptr };
+            HANDLE       file_handle { nullptr };
+            std::wstring path        { L"no device path" }; // or std::filesystem::wpath
+            uint         path_char_amount { 0 };
+            
+            RID_DEVICE_INFO info { .cbSize = sizeof( RID_DEVICE_INFO ) };
 
             ushort page  { 0 };
             ushort usage { 0 };
             //NTSTATUS       hid_result   { HIDP_STATUS_NULL };
             //hidp_status    status       { };
+
+            std::vector< unsigned char > data_preparsed{};
 
             requests request;
             report   input_report , output_report , feature_report;
@@ -61,40 +69,26 @@ namespace hid
             hid_attributes            attributes {};
             hid_attributes_extended   attributes_extra {};
 
-            static const std::string::size_type string_size = 127u;
-            //static const std::wstring::size_type string_size = 127u; // todo: check if wstring size works
-            wchar_t manufacturer_buffer[ string_size ] {};
-            wchar_t product_buffer     [ string_size ] {};
-            wchar_t physical_buffer    [ string_size ] {};
+            static const uint string_size { 127u };
+
+            wchar_t manufacturer_buffer [ string_size ] {};
+            wchar_t product_buffer      [ string_size ] {};
+            wchar_t physical_buffer     [ string_size ] {};
 
             std::wstring manufacturer {};
             std::wstring product      {};
             std::wstring physical     {};
             
-            ulong collection_amount { 0 };
-            std::vector< hid_collection > collections {};
+            hid_collections collections;
 
-            text         device_information      {};
-            vertex       device_text_position    { 30.0f , 30.0f };
-            D2D1_SIZE_F  device_text_layout_size { 300.0f , 80.0f }; // shrink to fit?
-            float        device_text_font_size   { 15.0f };
-            D2D1::ColorF device_text_font_colour { D2D1::ColorF::Yellow };
-            
-            float        collection_text_spacer       { 60.0f };
-
-            void set_text_input_buttons();
+            text         information      {};
+            vertex       text_position    { 10.0f , 10.0f };
+            D2D1_SIZE_F  text_layout_size { 300.0f , 80.0f }; // shrink to fit?
+            float        text_font_size   { 10.0f };
+            D2D1::ColorF text_font_colour { D2D1::ColorF::Yellow };
             
             //grid_d2d grid {};
             //std::vector< line_d2d > lines {};
-
-            std::vector< hid_button > input_buttons;
-            std::vector< hid_value >  input_values;
-
-            std::vector< hid_button > output_buttons;
-            std::vector< hid_value >  output_values;
-
-            std::vector< hid_button > button_features;
-            std::vector< hid_value >  value_features;
 
             bool draw_information{ true };
 
@@ -106,38 +100,33 @@ namespace hid
 
             vertex       information_spacing     { 15.0f, 15.0f }; // spacers
 
-            //using map_key = bitset<32>
-            //using map_data = std::wstring
-            //map 0x0  = 0b0
-            //map 0x01 = 0b01
-            //map 0x02 = 0b10
-            /*std::unordered_map< std::bitset<32> , std::wstring> data_types
-            {
-                { {0b0} , L"Data" } , // bit 0 = Data |Constant
-                { {0b1} , L"Constant" } ,
-                { {0b00} , L"Array" } ,
-                { {0b10} , L"Array" } ,
-            };*/
-
         private:
             
             void set_text_device();
             void set_text_collections();
-            void set_text_input();
-
-            hid_collection & get_collection( const hid_button & in_button );
-            std::vector<hid_collection>::const_iterator get_collection( const hid_value & in_value ) const;
-
-            //HANDLE get_device_pointer() const { return device_pointer; }
-            //PHIDP_PREPARSED_DATA get_data_preparsed() const { return data_preparsed; }
 
         public:
 
-            hid_device( const hid_raw_device & raw_device );
+            //hid_device( const HANDLE & in_device );
+            hid_device( HANDLE in_device );
+            ~hid_device();
+
+            bool is_multi_touch();
+            std::wstring get_path();
+            device_identity get_identity() const { return identity; }
+            HANDLE get_raw_handle() const { return raw_handle; }
+            page_and_usage get_page_and_usage() { return { page , usage }; }
+            bool is_same_device( const device_identity in_identity ) const { return identity == in_identity; }
+            unsigned char * get_data() { return data_preparsed.data(); }
+            
+            void update( RAWHID in_report );
 
             void collect_information();
-            void set_if_display_information(const bool in_bool);
-            void texts_items_input();
+            void set_if_display_information( const bool in_bool );
+            float get_text_top() const { return information.get_top(); }
+            float get_text_bottom() const { return information.get_bottom(); }
+            float get_text_right()  const { return information.get_right(); }
+            float get_text_left()  const { return information.get_left(); }
             void draw();
     };
 }

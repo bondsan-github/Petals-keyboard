@@ -142,10 +142,17 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="implementations\main.cpp" />
+    <ClCompile Include="reference sources\hid_parse\hidparse.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="reference sources\PS3SampleApp\usbps3\usbps3.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="sources\grid_d2d.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="sources\hid_button.cpp" />
+    <ClCompile Include="sources\hid_collections.cpp" />
     <ClCompile Include="sources\hid_value.cpp" />
     <ClCompile Include="sources\utility.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -174,6 +181,7 @@
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h" />
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h" />
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h" />
+    <ClInclude Include="headers\hid_collections.h" />
     <ClInclude Include="headers\custom_types.h" />
     <ClInclude Include="headers\graphics_d2d.h" />
     <ClInclude Include="headers\grid_d2d.h">
@@ -214,6 +222,9 @@
     <ClInclude Include="headers\hid_raw_device.h" />
     <ClInclude Include="headers\hid_usages.h" />
     <ClInclude Include="headers\gui_microsoft.h" />
+    <ClInclude Include="reference sources\PS3SampleApp\usbps3\usbps3.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

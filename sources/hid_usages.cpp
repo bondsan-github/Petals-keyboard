@@ -10,14 +10,14 @@ namespace hid
 {
     hid_usages::hid_usages()
     {
-        OutputDebugString( L"hid_usages::default constructor\n" );
+        //OutputDebugString( L"hid_usages::default constructor\n" );
         
         locate::set_usages( this );
     }
 
     hid_usages::~hid_usages()
     {
-        OutputDebugString( L"hid_usages::de-constructor\n" );
+        //OutputDebugString( L"hid_usages::de-constructor\n" );
     };
 
     std::wstring hid_usages::page( const uint &in_page )

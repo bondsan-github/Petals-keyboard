@@ -75,6 +75,15 @@
     <ClCompile Include="sources\hid_value.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="sources\hid_collections.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="reference sources\hid_parse\hidparse.cpp">
+      <Filter>reference</Filter>
+    </ClCompile>
+    <ClCompile Include="reference sources\PS3SampleApp\usbps3\usbps3.cpp">
+      <Filter>reference</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="resources\DeclareDPIAware.manifest">
@@ -165,6 +174,12 @@
     </ClInclude>
     <ClInclude Include="headers\hid_value.h">
       <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\hid_collections.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="reference sources\PS3SampleApp\usbps3\usbps3.h">
+      <Filter>reference</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 #include <windows.h>
 
 #include "..\headers\custom_types.h"
+#include "..\headers\hid_globals.h"
 #include "..\headers\window_messages.h"
 #include "..\headers\vertex.h"
 //https://learn.microsoft.com/en-us/windows/win32/winmsg/using-windows
@@ -35,10 +36,10 @@ namespace hid
          /*WS_EX_NOACTIVATE*/
 
             PAINTSTRUCT paint;
-            float      x                 { 0.5f }; // vertex
-            float      y                 { 0.5f };
-            float      client_width      { 0.2f };
-            float      client_height     { 0.2f };
+            float       x                 { 0.0f }; // vertex
+            float       y                 { 0.0f };
+            float       client_width      { 800.0f };
+            float       client_height     { 600.0f };
 
             D2D1_SIZE_U desktop_size      {};
             uint        desktop_dpi       { 0 };
@@ -72,13 +73,23 @@ namespace hid
             gui_microsoft & operator = ( const gui_microsoft & assignment ) = delete;
             gui_microsoft & operator = ( gui_microsoft && assigned_move ) = delete;
             
-            //HINSTANCE get_instance() { return instance; }
+            RECT get_client_rectangle();
+
+            void register_input_device( const page_and_usage & in_device )
+            {
+                RAWINPUTDEVICE device;
+                device.usUsagePage = in_device.page;
+                device.usUsage = in_device.usage;
+                device.dwFlags = RIDEV_DEVNOTIFY; // | RIDEV_EXINPUTSINK | RIDEV_INPUTSINK
+                device.hwndTarget = window_principle;
+
+                RegisterRawInputDevices( &device, 1, sizeof( RAWINPUTDEVICE ) );
+            }
 
             ~gui_microsoft();
 
             HWND get_window() const;
-            //int  message_loop();
-            bool update();
+            uint update();
             //uint dpi();
     };
 }
