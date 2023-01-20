@@ -7,6 +7,7 @@
 #include "..\headers\hid_collection.h"
 #include "..\headers\text_d2d.h"
 //#include "..\headers\line_d2d.h"
+#include "..\headers\circle_d2d.h"
 
 #include "..\headers\hid_collections.h"
 #include "..\headers\hid_usages.h"
@@ -99,6 +100,8 @@ namespace hid
             D2D1_SIZE_F  layout_size { 200.0f , 200.0f }; // layout size
 
             vertex       information_spacing     { 15.0f, 15.0f }; // spacers
+
+            std::vector<circle> circles {};
 
         private:
             

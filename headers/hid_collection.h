@@ -57,6 +57,9 @@ namespace hid
             float get_text_position_bottom() const { return information.get_bottom(); }
             float get_text_position_top()    const { return information.get_top(); }
 
+            //std::vector<hid_button>::iterator get_input_buttons() { return input_buttons.begin(); }
+            uint contacts_maximum();
+            
             void update( RAWHID in_raw_data );
             void draw() const;
     };

@@ -86,6 +86,7 @@ namespace hid
         text += locate::get_usages().usage( LinkUsagePage , LinkUsage );
         text += L"\ncollection\t: ";
         text += locate::get_usages().collection_type( CollectionType );
+        text += IsAlias ? L"\nis alias" : L"\nnot alias";
 
         information.set_content( text );
         information.set_layout_size( { 200.0f, 100.0f } );
@@ -338,5 +339,21 @@ namespace hid
 
         for( const auto & button : feature_buttons ) button.draw();
         for( const auto & value  : feature_values  ) value.draw();
+    }
+
+    uint hid_collection::contacts_maximum()
+    {
+        uint amount{ 0 };
+
+        for( auto value : input_values )
+        {
+            if( value.NotRange.Usage == 0x54 )
+            {
+                amount = value.LogicalMax;
+                break;
+            }
+        }
+
+        return amount;
     }
 }

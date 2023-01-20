@@ -36,7 +36,7 @@ namespace hid
     {
         try
         {
-            return usages.at( in_page ).at( in_usage ).first;
+            return usages.at( in_page ).at( in_usage );
         }
         catch( std::out_of_range & exception )
         {

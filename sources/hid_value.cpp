@@ -120,6 +120,18 @@ namespace hid
             { 0x20 , L"luminous intensity" } , // 0b100'000 , 0x20 , 32 
         };
 
+        //https://github.com/microsoft/hidtools/blob/main/Waratah/HidSpecification/HidConstants.cs
+        /*public enum UnitItemSystemKind
+        {
+            None = 0x00 ,
+            SiLinear = 0x01 ,
+            SiRotation = 0x02 ,
+            EnglishLinear = 0x03 ,
+            EnglishRotation = 0x04 ,
+            // 0x05 - 0xE are reserved.
+            Vendor = 0x0F ,
+        }*/
+
         // 0x1 = 0b1
         // 0x2  = 0b
         // 0x3  = 0b
@@ -215,6 +227,14 @@ namespace hid
         if( BitField & 0b100000000 ) content += L"\nbuffered bytes";// bit 8
         */
 
+        ulong usage_amount = HidP_MaxUsageListLength(
+            HidP_Input ,
+            UsagePage,
+            reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() )
+        );
+
+        content += L"\nusage amount\t: " + std::to_wstring( usage_amount );
+
         content += IsRange ? L"\nis range" : L"\nnot range";
         content += L"\nbit size\t:" + std::to_wstring( BitSize );
         content += L"\nreport count\t:" + std::to_wstring( ReportCount );
@@ -245,6 +265,22 @@ namespace hid
                             reinterpret_cast< char * >( in_raw_data.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
                             in_raw_data.dwSizeHid * in_raw_data.dwCount );
 
+        /*
+        uint values_size = BitSize * ReportCount;
+        if( value % 2 != 0 ) values_size += 1; // round up to nearest byte
+        //char * values = new char[ BitSize * ReportCount ];
+        std::vector<char> values( in_raw_data.dwSizeHid * in_raw_data.dwCount );//values_size);
+
+        HidP_GetUsageValueArray( HidP_Input ,
+                                 UsagePage ,
+                                 LinkCollection ,
+                                 NotRange.Usage ,
+                                 values.data() ,
+                                 values_size ,
+                                 reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() ) ,
+                                 reinterpret_cast< char * >( in_raw_data.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
+                                 in_raw_data.dwSizeHid * in_raw_data.dwCount );
+        */
         set_information_text();
     }
 }

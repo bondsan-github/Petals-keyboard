@@ -84,6 +84,9 @@
     <ClCompile Include="reference sources\PS3SampleApp\usbps3\usbps3.cpp">
       <Filter>reference</Filter>
     </ClCompile>
+    <ClCompile Include="sources\circle_d2d.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="resources\DeclareDPIAware.manifest">
@@ -180,6 +183,9 @@
     </ClInclude>
     <ClInclude Include="reference sources\PS3SampleApp\usbps3\usbps3.h">
       <Filter>reference</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\circle_d2d.h">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

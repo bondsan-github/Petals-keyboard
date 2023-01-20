@@ -95,9 +95,26 @@ namespace hid
         {
             collection_itr->set_text_position( collection_position );
 
-            collection_position.y += 120;//spacer_y;
+            collection_position.y += 160;//spacer_y; // search all collections for highest text bottom
 
             collection_itr->set_item_positions();
         }
     }
-}
+
+    uint hid_collections::contacts_maximum()
+    {
+        uint amount { 0 };
+
+        for( auto collection : collections )
+        {
+            if( collection.contacts_maximum() > 0 )
+            {
+                amount = collection.contacts_maximum();
+                break;
+            }
+        }
+
+        return amount;
+    }
+
+} // namespace hid

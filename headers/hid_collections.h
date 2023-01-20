@@ -28,6 +28,7 @@ namespace hid {
             void add_buttons( hid_device * in_device , item_type in_type , _HIDP_BUTTON_CAPS * in_buttons , uint in_size );
             void add_values( hid_device * in_device , item_type in_type , _HIDP_VALUE_CAPS * in_value , uint in_size );
 
+            uint contacts_maximum();
 
             void update( RAWHID in_raw_data )
             {

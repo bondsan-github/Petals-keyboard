@@ -155,9 +155,10 @@ namespace hid
         result = HidP_GetValueCaps( HidP_Feature , value_array , &capabilities.NumberFeatureValueCaps , data );
         collections.add_values( this , item_type::feature , value_array , capabilities.NumberFeatureValueCaps );
         delete[] value_array;
-
+        
         collections.set_collections_positions( *this );
 
+        circles.resize( collections.contacts_maximum() );
         //CloseHandle(device_pointer);
         //device_pointer = INVALID_HANDLE_VALUE;
     }
@@ -195,11 +196,20 @@ namespace hid
 
     void hid_device::update( RAWHID input_report )
     {
+    /*
+        if( collections.contact_identifier() )
+        {
+            collections.get_x();
+            collections.get_y();
 
+            locate::graphics
+        }
+        */
+        collections.update( input_report );
+
+        //HidD_GetNumInputBuffers
         //if( HidD_GetInputReport( device_pointer , buffer , buffer_size ) ) {}
         //else print_error(L"\n unable to get input report" );
-
-        collections.update( input_report );
     }
 
     void hid_device::draw()

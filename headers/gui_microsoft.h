@@ -80,7 +80,7 @@ namespace hid
                 RAWINPUTDEVICE device;
                 device.usUsagePage = in_device.page;
                 device.usUsage = in_device.usage;
-                device.dwFlags = RIDEV_DEVNOTIFY; // | RIDEV_EXINPUTSINK | RIDEV_INPUTSINK
+                device.dwFlags = RIDEV_DEVNOTIFY; // | RIDEV_EXINPUTSINK | RIDEV_INPUTSINK // attached and detached
                 device.hwndTarget = window_principle;
 
                 RegisterRawInputDevices( &device, 1, sizeof( RAWINPUTDEVICE ) );

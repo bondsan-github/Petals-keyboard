@@ -135,7 +135,6 @@ namespace hid
 
     uint gui_microsoft::update()
     {
-        
         while( PeekMessageW( &window_message , nullptr , 0 , 0 , PM_REMOVE ) )
         //while( GetMessageW( &window_message , 0 , 0 , 0 ) )
         {
@@ -201,15 +200,31 @@ namespace hid
                 GetRawInputData( ( HRAWINPUT )lParam , RID_INPUT , 0 , &raw_input_size , sizeof( RAWINPUTHEADER ) );
                 GetRawInputData( ( HRAWINPUT )lParam , RID_INPUT , &raw_input , &raw_input_size , sizeof( RAWINPUTHEADER ) );
 
-                //uint hid_data_size = raw_input.data.hid.dwCount * raw_input.data.hid.dwSizeHid;
-                //uchar * data = new uchar[ hid_data_size ];
-                //memmove(data, raw_input.data.hid.bRawData, hid_data_size );
+                uint data_size = raw_input.data.hid.dwSizeHid * raw_input.data.hid.dwCount;
+                
+                std::vector<char> data(data_size);
+
+                for( uint index{ 0 }; index < data_size; index++ )
+                {
+                    data[index] = raw_input.data.hid.bRawData[index];
+                }
+                
                 locate::get_input_devices().update_devices( raw_input );
 
-                //std::string message = "\n" + std::to_string(data[hid_data_size]);
-                //OutputDebugStringA( message.c_str() );
+                //printf("update\n");
 
-                //delete[] data;
+                //OutputDebugStringA( "\n" );
+                //OutputDebugStringA( data.data() );
+
+                //data[0] = report id 
+                //data[] = 
+                //data[] = 
+                //data[] = 
+                //data[] = 
+                //https://github.com/torvalds/linux/tree/master/drivers/hid
+                //https://eleccelerator.com/tutorial-about-usb-hid-report-descriptors/
+                data.clear();
+
                 return 0;
             } break;
 

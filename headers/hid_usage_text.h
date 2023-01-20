@@ -5,117 +5,120 @@
 
 namespace hid
 {
-    using _usage      = std::wstring;
-    using _modifier   = std::wstring;
-    using _pair       = std::pair< _usage , _modifier >;
-    using usage_text  = std::vector< std::vector < _pair > >;
-    // replace with std::unordered_map< uint page , pair< wstring usage_name , wstring usage_type > >
+    using usage_text = std::vector< std::vector< std::wstring > >;
+    
     const usage_text usages
     {
        {  // page 0x00 undefined 
-         std::make_pair( L"undefined" , L"undefined" )
+          L"undefined" 
        } ,
 
        {  // page 0x01 generic desktop
-          std::make_pair( L"undefined"                     , L"undefined" ) ,
-          std::make_pair( L"pointer"                       , L"collection physical" ) ,
-          std::make_pair( L"mouse"                         , L"collection application" ) ,
-          std::make_pair( L"reserved"                      , L"reserved" ) ,
-          std::make_pair( L"joystick"                      , L"collection application" ) ,
-          std::make_pair( L"gamepad"                       , L"collection application" ) ,
-          std::make_pair( L"keyboard"                      , L"collection application" ) ,
-          std::make_pair( L"keypad"                        , L"collection application" ) ,
-          std::make_pair( L"multi-axis controller"         , L"collection application" ) ,
-          std::make_pair( L"tablet pc system"              , L"collection application" ) ,
-          std::make_pair( L"water cooling device"          , L"collection application" ) ,
-          std::make_pair( L"computer chassis device"       , L"collection application" ) ,
-          std::make_pair( L"wireless radio controls"       , L"collection application" ) ,
-          std::make_pair( L"portable device control"       , L"collection application" ) ,
-          std::make_pair( L"system multi-axis controller"  , L"collection application" ) ,
-          std::make_pair( L"spatial controller"            , L"collection application" ) ,
-          std::make_pair( L"assistive control"             , L"collection application" ) ,
-          std::make_pair( L"device dock"                   , L"collection application" ) ,
-          std::make_pair( L"dockable device"               , L"collection application" ) ,
-          std::make_pair( L"call state management control" , L"collection application" ) ,
+           L"undefined"                      ,// 0x00
+           L"pointer"                        ,// 0x01
+           L"mouse"                          ,// 0x02
+           L"reserved"                       ,// 0x03
+           L"joystick"                       ,// 0x04
+           L"gamepad"                        ,// 0x05
+           L"keyboard"                       ,// 0x06
+           L"keypad"                         ,// 0x07
+           L"multi-axis controller"          ,// 0x08
+           L"tablet pc system"               ,// 0x09
+           L"water cooling device"           ,// 0x0a
+           L"computer chassis device"        ,// 0x0b
+           L"wireless radio controls"        ,// 0x0c
+           L"portable device control"        ,// 0x0d
+           L"system multi-axis controller"   ,// 0x0e
+           L"spatial controller"             ,// 0x0f
+           L"assistive control"              ,// 0x10
+           L"device dock"                    ,// 0x11
+           L"dockable device"                ,// 0x12
+           L"call state management control"  ,// 0x13
 
-             // 0x1F to 0x2F
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
-          std::make_pair( L"reserved" , L"reserved" ) ,
+           // 0x14 to 0x2F
+           L"reserved"  ,// 0x14
+           L"reserved"  ,// 0x15
+           L"reserved"  ,// 0x16
+           L"reserved"  ,// 0x17
+           L"reserved"  ,// 0x18
+           L"reserved"  ,// 0x19
+           L"reserved"  ,// 0x1a
+           L"reserved"  ,// 0x1b
+           L"reserved"  ,// 0x1c
+           L"reserved"  ,// 0x1d
+           L"reserved"  ,// 0x1e
+           L"reserved"  ,// 0x1f
+           L"reserved"  ,// 0x20
+           L"reserved"  ,// 0x21
+           L"reserved"  ,// 0x22
+           L"reserved"  ,// 0x23
+           L"reserved"  ,// 0x24
+           L"reserved"  ,// 0x25
+           L"reserved"  ,// 0x26
+           L"reserved"  ,// 0x27
+           L"reserved"  ,// 0x28
+           L"reserved"  ,// 0x29
+           L"reserved"  ,// 0x2a
+           L"reserved"  ,// 0x2b
+           L"reserved"  ,// 0x2c
+           L"reserved"  ,// 0x2d
+           L"reserved"  ,// 0x2e
+           L"reserved"  ,// 0x2f
 
-             // 0x30
-          std::make_pair( L"x"              , L"dynamic value" ) ,
-          std::make_pair( L"y"              , L"dynamic value" ) ,
-          std::make_pair( L"z"              , L"dynamic value" ) ,
-          std::make_pair( L"rx"             , L"dynamic value" ) ,
-          std::make_pair( L"ry"             , L"dynamic value" ) ,
-          std::make_pair( L"rz"             , L"dynamic value" ) ,
-          std::make_pair( L"slider"         , L"dynamic value" ) ,
-          std::make_pair( L"dial"           , L"dynamic value" ) ,
-          std::make_pair( L"wheel"          , L"dynamic value" ) ,
-          std::make_pair( L"hat switch"     , L"dynamic value" ) ,
-          std::make_pair( L"counted buffer" , L"collection logical" ) ,
-          std::make_pair( L"byte count"     , L"dynamic value" ) ,
-          std::make_pair( L"motion wakeup"  , L"one shot control / dynamic flag" ) ,
-          std::make_pair( L"start"          , L"on/off control" ) ,
-          std::make_pair( L"select"         , L"on/off control" ) ,
-          std::make_pair( L"reserved"       , L"reserved" ) ,
-          std::make_pair( L"vx"             , L"dynamic value" ) ,
-          std::make_pair( L"vy"             , L"dynamic value" ) ,
-          std::make_pair( L"vz"             , L"dynamic value" ) ,
-          std::make_pair( L"vbr"            , L"dynamic value" ) ,
-          std::make_pair( L"vbry"           , L"dynamic value" ) ,
-          std::make_pair( L"vbrz"           , L"dynamic value" ) ,
-          std::make_pair( L"vno"            , L"dynamic value" ) ,
-          std::make_pair( L"feature notification"  , L"dynamic value / dynamic flag" ) ,
-          std::make_pair( L"resolution multiplier" , L"dynamic value" ) ,
-          std::make_pair( L"qx"             , L"dynamic value" ) ,
-          std::make_pair( L"qy"             , L"dynamic value" ) ,
-          std::make_pair( L"qz"             , L"dynamic value" ) ,
-          std::make_pair( L"qw"             , L"dynamic value" ) ,
+           // 0x30
+           L"x"               ,// 0x30
+           L"y"               ,// 0x
+           L"z"               ,// 0x
+           L"rx"              ,// 0x
+           L"ry"              ,// 0x
+           L"rz"              ,// 0x
+           L"slider"          ,// 0x
+           L"dial"            ,// 0x
+           L"wheel"           ,// 0x
+           L"hat switch"      ,// 0x
+           L"counted buffer"  ,
+           L"byte count"      ,
+           L"motion wakeup"   ,
+           L"start"           ,
+           L"select"          ,
+           L"reserved"        ,
+           L"vx"              ,
+           L"vy"              ,
+           L"vz"              ,
+           L"vbr"             ,
+           L"vbry"            ,
+           L"vbrz"            ,
+           L"vno"             ,
+           L"feature notification"   ,
+           L"resolution multiplier"  ,
+           L"qx"              ,
+           L"qy"              ,
+           L"qz"              ,
+           L"qw"              ,
           // ... to 0xffff
        } ,
+
        {  // page 0x02 
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x03 
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x04
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x05
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x06
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x07
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x08
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x09 button 
 
           // Buttons can be defined as;
@@ -129,205 +132,206 @@ namespace hid
           //   + One - Shot  
           // depending on the context of their declaration.
 
-          std::make_pair( L"no button pressed" , L"" ) ,
-          std::make_pair( L"button 1"  , L"" ) ,
-          std::make_pair( L"button 2"  , L"" ) ,
-          std::make_pair( L"button 3"  , L"" ) ,
-          std::make_pair( L"button 4"  , L"" ) ,
-          std::make_pair( L"button 5"  , L"" ) ,
-          std::make_pair( L"button 6"  , L"" ) ,
-          std::make_pair( L"button 7"  , L"" ) ,
-          std::make_pair( L"button 8"  , L"" ) ,
-          std::make_pair( L"button 9"  , L"" ) ,
-          std::make_pair( L"button 10" , L"" ) ,
-          std::make_pair( L"button 11" , L"" ) ,
-          std::make_pair( L"button 12" , L"" ) ,
-          std::make_pair( L"button 13" , L"" ) ,
-          std::make_pair( L"button 14" , L"" ) ,
+           L"no button pressed"  ,
+           L"button 1"   ,
+           L"button 2"   ,
+           L"button 3"   ,
+           L"button 4"   ,
+           L"button 5"   ,
+           L"button 6"   ,
+           L"button 7"   ,
+           L"button 8"   ,
+           L"button 9"   ,
+           L"button 10"  ,
+           L"button 11"  ,
+           L"button 12"  ,
+           L"button 13"  ,
+           L"button 14"  ,
        } ,
+
        {  // page 0x0A
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x0B
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x0C
-          std::make_pair( L"" , L"" ) ,
        } ,
+
        {  // page 0x0D digitisers
-          std::make_pair( L"undefined"                     , L"collection application" ) , // 0x00
-          std::make_pair( L"digitiser"                     , L"collection application" ) , // 0x01
-          std::make_pair( L"pen"                           , L"collection application" ) , // 0x02
-          std::make_pair( L"light pen"                     , L"collection application" ) , // 0x03
-          std::make_pair( L"touch screen"                  , L"collection application" ) , // 0x04
-          std::make_pair( L"touch pad"                     , L"collection application" ) , // 0x05
-          std::make_pair( L"whiteboard"                    , L"collection application" ) , // 0x6
-          std::make_pair( L"coordinate measuring machine"  , L"collection application" ) , // 0x7
-          std::make_pair( L"3d digitizer"                  , L"collection application" ) , // 0x8
-          std::make_pair( L"stereo plotter"                , L"collection application" ) , // 0x9
-          std::make_pair( L"articulated arm"               , L"collection application" ) , // 0xA
-          std::make_pair( L"armature"                      , L"collection application" ) , // 0xB
-          std::make_pair( L"multiple point digitiser"      , L"collection application" ) , // 0xC
-          std::make_pair( L"free space wand"               , L"collection application" ) , // 0xD
-          std::make_pair( L"device configuration"          , L"collection application" ) , // 0xE
-          std::make_pair( L"capacitive heat map digitiser" , L"collection application" ) , // 0xF
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x10
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x11
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x12
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x13
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x14
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x15
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x16
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x17
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x18
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x19
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x1A
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x1B
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x1C
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x1D
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x1E
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x1F
-          std::make_pair( L"stylus"            , L"collection application | collection logical" ) , // 0x20 // ? no controls = ca , additional controls = L"hid_collection logical" ) , ?
-          std::make_pair( L"puck"              , L"collection logical" ) , // 0x21
-          std::make_pair( L"finger"            , L"collection logical" ) , // 0x22
-          std::make_pair( L"device settings"   , L"collection logical" ) , // 0x23
-          std::make_pair( L"character gesture" , L"collection logical" ) , // 0x24
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x25
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x26
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x27
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x28
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x29
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x2A
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x2B
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x2C
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x2D
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x2E
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x2F
-          std::make_pair( L"tip pressure"         , L"dynamic value" ) ,        // 0x30
-          std::make_pair( L"barrel pressure"      , L"dynamic value" ) ,        // 0x31
-          std::make_pair( L"in range"             , L"momentary collection" ) , // 0x32
-          std::make_pair( L"touch"                , L"momentary collection" ) , // 0x33
-          std::make_pair( L"untouch"              , L"one shot control" ) ,     // 0x34
-          std::make_pair( L"tap"                  , L"one shot control" ) ,     // 0x35
-          std::make_pair( L"quality"              , L"dynamic value" ) ,        // 0x36
-          std::make_pair( L"data valid"           , L"momentary collection" ) , // 0x37
-          std::make_pair( L"transducer index"     , L"dynamic value" ) ,        // 0x
-          std::make_pair( L"tablet function keys" , L"collection logical" ) ,   // 0x
-          std::make_pair( L"program change keys"  , L"collection logical" ) ,   // 0x
-          std::make_pair( L"battery strength"     , L"dynamic value" ) ,// 0x
-          std::make_pair( L"invert" , L"momentary collection" ) , // 0x
-          std::make_pair( L"x tilt" , L"dynamic value" ) , // 0x
-          std::make_pair( L"y tilt" , L"dynamic value" ) , // 0x
-          std::make_pair( L"azimuth" , L"dynamic value" ) ,  // 0x
-          std::make_pair( L"altitude" , L"dynamic value" ) , // 0x
-          std::make_pair( L"twist" , L"dynamic value" ) , // 0x
-          std::make_pair( L"tip switch" , L"momentary collection" ) ,  // 0x
-          std::make_pair( L"secondary tip switch" , L"momentary collection" ) ,  // 0x
-          std::make_pair( L"barrel switch" , L"momentary collection" ) ,  // 0x
-          std::make_pair( L"eraser" , L"momentary collection" ) ,  // 0x
-          std::make_pair( L"tablet pick" , L"momentary collection" ) ,  // 0x
-          std::make_pair( L"touch valid" , L"momentary collection" ) ,  // 0x
-          std::make_pair( L"width" , L"dynamic value" ) , // 0x
-          std::make_pair( L"height" , L"dynamic value" ) , // 0x
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x4A
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x4B
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x4C
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x4D
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x4E
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x4F
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x50
-          std::make_pair( L"contact identifier" , L"dynamic value" ) , // 0x
-          std::make_pair( L"device mode" , L"dynamic value" ) , // 0x
-          std::make_pair( L"device identifier" , L"dynamic value or static value" ) , // 0x
-          std::make_pair( L"contact count" , L"dynamic value" ) , // 0x
-          std::make_pair( L"contact count maximum" , L"static value" ) , // 0x
-          std::make_pair( L"scan time" , L"dynamic value" ) , // 0x
-          std::make_pair( L"surface switch" , L"dynamic flag" ) , // 0x
-          std::make_pair( L"button switch" , L"dynamic flag" ) , // 0x
-          std::make_pair( L"pad type" , L"static flag" ) , // 0x
-          std::make_pair( L"secondary barrel switch" , L"momentary collection" ) ,  // 0x
-          std::make_pair( L"transducer serial number" , L"static value" ) , // 0x
-          std::make_pair( L"preferred color" , L"dynamic value" ) , // 0x
-          std::make_pair( L"preferred color is locked" , L"momentary collection" ) ,  // 0x
-          std::make_pair( L"preferred line width" , L"dynamic value" ) , // 0x
-          std::make_pair( L"preferred line width is locked" , L"momentary collection" ) ,  // 0x
-          std::make_pair( L"latency mode" , L"dynamic flag" ) , // 0x
-          std::make_pair( L"gesture character quality" , L"dynamic value" ) , // 0x
-          std::make_pair( L"character gesture data length" , L"dynamic value" ) , // 0x
-          std::make_pair( L"character gesture data" , L"dynamic value" ) , // 0x
-          std::make_pair( L"gesture character encoding" , L"named array" ) , // 0x
-          std::make_pair( L"utf8 character gesture encoding" , L"selector" ) , // 0x
-          std::make_pair( L"utf16 little endian character gesture encoding" , L"selector" ) , // 0x
-          std::make_pair( L"utf16 big endian character gesture encoding" , L"selector" ) ,    // 0x
-          std::make_pair( L"utf32 little endian character gesture encoding" , L"selector" ) , // 0x
-          std::make_pair( L"utf32 big endian character gesture encoding" , L"selector" ) , // 0x
-          std::make_pair( L"capacitive heat map protocol vendor id" , L"static value" ) , // 0x
-          std::make_pair( L"capacitive heat map protocol version" , L"static value" ) , // 0x
-          std::make_pair( L"capacitive heat map frame data" , L"dynamic value" ) , // 0x
-          std::make_pair( L"gesture character enable" , L"dynamic flag" ) , // 0x
-          std::make_pair( L"transducer serial number part 2" , L"static value" ) ,                // 0x
-          std::make_pair( L"no preferred color" , L"static value" ) ,                            // 0x
-          std::make_pair( L"preferred line style" , L"dynamic flag" ) ,                          // 0x
-          std::make_pair( L"preferred line style is locked" , L"momentary collection" ) ,                  // 0x
-          std::make_pair( L"ink" , L"selector" ) ,                                            // 0x
-          std::make_pair( L"pencil" , L"selector" ) ,                                         // 0x
-          std::make_pair( L"highlighter" , L"selector" ) ,                                   // 0x
-          std::make_pair( L"highlighter" , L"selector" ) ,                                   // 0x
-          std::make_pair( L"highlighter" , L"selector" ) ,                                   // 0x
-          std::make_pair( L"chisel marker" , L"selector" ) ,                                  // 0x
-          std::make_pair( L"brush" , L"selector" ) ,                                         // 0x
-          std::make_pair( L"no preference" , L"selector" ) ,                                 // 0x
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x78
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x79
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x7A
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x7B
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x7C
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x7D
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x7E
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x7F
-          std::make_pair( L"digitizer diagnostic" , L"collection logical" ) , // 0x80
-          std::make_pair( L"digitizer error" , L"named array" ) , // 0x81
-          std::make_pair( L"err normal status" , L"selector" ) , // 0x82
-          std::make_pair( L"err transducers exceeded" , L"selector" ) ,                       // 0x83
-          std::make_pair( L"err full trans features unavailable" , L"selector" ) ,           // 0x84
-          std::make_pair( L"err charge low" , L"selector" ) ,                                // 0x85
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x86
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x87
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x88
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x89
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x8A
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x8B
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x8C
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x8D
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x8E
-          std::make_pair( L"reserved" , L"reserved" ) ,                                       // 0x8F
-          std::make_pair( L"transducer software info" , L"collection logical" ) ,                      // 0x90
-          std::make_pair( L"transducer vendor id" , L"static value" ) ,                          // 0x91
-          std::make_pair( L"transducer product id" , L"static value" ) ,                         // 0x92
-          std::make_pair( L"device supported protocols" , L"named array or collection logical" ) ,                     // 0x93
-          std::make_pair( L"transducer supported protocols" , L"named array or collection logical" ) ,                // 0x94
-          std::make_pair( L"no protocol" , L"selector" ) ,                                    // 0x95
-          std::make_pair( L"wacom aes protocol" , L"selector" ) ,                             // 0x96
-          std::make_pair( L"usi protocol" , L"selector" ) ,                                  // 0x97
-          std::make_pair( L"microsoft pen protocol" , L"selector" ) ,                        // 0x98
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x99
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x9A
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x9B
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x9C
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x9D
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x9E
-          std::make_pair( L"reserved" , L"reserved" ) , // 0x9F
-          std::make_pair( L"supported report rates" , L"static value or collection logical" ) ,                        // 0xA0
-          std::make_pair( L"report rate" , L"dynamic value" ) ,                                    // 0xA1
-          std::make_pair( L"transducer connected" , L"static flag" ) ,                           // 0xA2
-          std::make_pair( L"switch disabled" , L"selector" ) ,                               // 0xA3
-          std::make_pair( L"switch unimplemented" , L"selector" ) ,                          // 0xA4
-          std::make_pair( L"transducer switches" , L"selector" ) ,                           // 0xA5
-          std::make_pair( L"reserved" , L"reserved" ) , // 0xA6 
+           L"undefined"                      , // 0x00
+           L"digitiser"                      , // 0x01
+           L"pen"                            , // 0x02
+           L"light pen"                      , // 0x03
+           L"touch screen"                   , // 0x04
+           L"touch pad"                      , // 0x05
+           L"whiteboard"                     , // 0x6
+           L"coordinate measuring machine"   , // 0x7
+           L"3d digitizer"                   , // 0x8
+           L"stereo plotter"                 , // 0x9
+           L"articulated arm"                , // 0xA
+           L"armature"                       , // 0xB
+           L"multiple point digitiser"       , // 0xC
+           L"free space wand"                , // 0xD
+           L"device configuration"           , // 0xE
+           L"capacitive heat map digitiser"  , // 0xF
+           L"reserved"  , // 0x10
+           L"reserved"  , // 0x11
+           L"reserved"  , // 0x12
+           L"reserved"  , // 0x13
+           L"reserved"  , // 0x14
+           L"reserved"  , // 0x15
+           L"reserved"  , // 0x16
+           L"reserved"  , // 0x17
+           L"reserved"  , // 0x18
+           L"reserved"  , // 0x19
+           L"reserved"  , // 0x1A
+           L"reserved"  , // 0x1B
+           L"reserved"  , // 0x1C
+           L"reserved"  , // 0x1D
+           L"reserved"  , // 0x1E
+           L"reserved"  , // 0x1F
+           L"stylus"             , // 0x20 // ? no controls = ca , additional controls = L"hid_collection logical" ) , ?
+           L"puck"               , // 0x21
+           L"finger"             , // 0x22
+           L"device settings"    , // 0x23
+           L"character gesture"  , // 0x24
+           L"reserved"  , // 0x25
+           L"reserved"  , // 0x26
+           L"reserved"  , // 0x27
+           L"reserved"  , // 0x28
+           L"reserved"  , // 0x29
+           L"reserved"  , // 0x2A
+           L"reserved"  , // 0x2B
+           L"reserved"  , // 0x2C
+           L"reserved"  , // 0x2D
+           L"reserved"  , // 0x2E
+           L"reserved"  , // 0x2F
+           L"tip pressure"          ,        // 0x30
+           L"barrel pressure"       ,        // 0x31
+           L"in range"              , // 0x32
+           L"touch"                 , // 0x33
+           L"untouch"               ,     // 0x34
+           L"tap"                   ,     // 0x35
+           L"quality"               ,        // 0x36
+           L"data valid"            , // 0x37
+           L"transducer index"      ,        // 0x
+           L"tablet function keys"  ,   // 0x
+           L"program change keys"   ,   // 0x
+           L"battery strength"      ,// 0x
+           L"invert"  , // 0x
+           L"x tilt"  , // 0x
+           L"y tilt"  , // 0x
+           L"azimuth"  ,  // 0x
+           L"altitude"  , // 0x
+           L"twist"  , // 0x
+           L"tip switch"  ,  // 0x
+           L"secondary tip switch"  ,  // 0x
+           L"barrel switch"  ,  // 0x
+           L"eraser"  ,  // 0x
+           L"tablet pick"  ,  // 0x
+           L"touch valid"  ,  // 0x
+           L"width"  , // 0x
+           L"height"  , // 0x
+           L"reserved"  , // 0x4A
+           L"reserved"  , // 0x4B
+           L"reserved"  , // 0x4C
+           L"reserved"  , // 0x4D
+           L"reserved"  , // 0x4E
+           L"reserved"  , // 0x4F
+           L"reserved"  , // 0x50
+           L"contact identifier"  , // 0x
+           L"device mode"         , // 0x
+           L"device identifier"   , // 0x
+           L"contact count"       , // 0x
+           L"contact count maximum"  , // 0x
+           L"scan time"  , // 0x
+           L"surface switch"  , // 0x
+           L"button switch"  , // 0x
+           L"pad type" , // 0x
+           L"secondary barrel switch"  ,  // 0x
+           L"transducer serial number"  , // 0x
+           L"preferred color"  , // 0x
+           L"preferred color is locked"  ,  // 0x
+           L"preferred line width"  , // 0x
+           L"preferred line width is locked"  ,  // 0x
+           L"latency mode"  , // 0x
+           L"gesture character quality"  , // 0x
+           L"character gesture data length"  , // 0x
+           L"character gesture data"  , // 0x
+           L"gesture character encoding"  , // 0x
+           L"utf8 character gesture encoding"  , // 0x
+           L"utf16 little endian character gesture encoding"  , // 0x
+           L"utf16 big endian character gesture encoding"  ,    // 0x
+           L"utf32 little endian character gesture encoding"  , // 0x
+           L"utf32 big endian character gesture encoding"  , // 0x
+           L"capacitive heat map protocol vendor id"  , // 0x
+           L"capacitive heat map protocol version"  , // 0x
+           L"capacitive heat map frame data"  , // 0x
+           L"gesture character enable"  , // 0x
+           L"transducer serial number part 2"  ,                // 0x
+           L"no preferred color"  ,                            // 0x
+           L"preferred line style"  ,                          // 0x
+           L"preferred line style is locked"  ,                  // 0x
+           L"ink"  ,                                            // 0x
+           L"pencil"  ,                                         // 0x
+           L"highlighter"  ,                                   // 0x
+           L"highlighter"  ,                                   // 0x
+           L"highlighter"  ,                                   // 0x
+           L"chisel marker"  ,                                  // 0x
+           L"brush"  ,                                         // 0x
+           L"no preference"  ,                                 // 0x
+           L"reserved"  , // 0x78
+           L"reserved"  , // 0x79
+           L"reserved"  , // 0x7A
+           L"reserved"  , // 0x7B
+           L"reserved"  , // 0x7C
+           L"reserved"  , // 0x7D
+           L"reserved"  , // 0x7E
+           L"reserved"  , // 0x7F
+           L"digitizer diagnostic"  , // 0x80
+           L"digitizer error"  , // 0x81
+           L"err normal status"  , // 0x82
+           L"err transducers exceeded"  ,                       // 0x83
+           L"err full trans features unavailable"  ,           // 0x84
+           L"err charge low"  ,                                // 0x85
+           L"reserved"  ,                                       // 0x86
+           L"reserved"  ,                                       // 0x87
+           L"reserved"  ,                                       // 0x88
+           L"reserved"  ,                                       // 0x89
+           L"reserved"  ,                                       // 0x8A
+           L"reserved"  ,                                       // 0x8B
+           L"reserved"  ,                                       // 0x8C
+           L"reserved"  ,                                       // 0x8D
+           L"reserved"  ,                                       // 0x8E
+           L"reserved"  ,                                       // 0x8F
+           L"transducer software info"  ,                      // 0x90
+           L"transducer vendor id"  ,                          // 0x91
+           L"transducer product id"  ,                         // 0x92
+           L"device supported protocols"  ,                     // 0x93
+           L"transducer supported protocols"  ,                // 0x94
+           L"no protocol"  ,                                    // 0x95
+           L"wacom aes protocol"  ,                             // 0x96
+           L"usi protocol"  ,                                  // 0x97
+           L"microsoft pen protocol"  ,                        // 0x98
+           L"reserved"  , // 0x99
+           L"reserved"  , // 0x9A
+           L"reserved"  , // 0x9B
+           L"reserved"  , // 0x9C
+           L"reserved"  , // 0x9D
+           L"reserved"  , // 0x9E
+           L"reserved"  , // 0x9F
+           L"supported report rates"  ,                        // 0xA0
+           L"report rate"  ,                                    // 0xA1
+           L"transducer connected" ,                           // 0xA2
+           L"switch disabled"  ,                               // 0xA3
+           L"switch unimplemented"  ,                          // 0xA4
+           L"transducer switches"  ,                           // 0xA5
+           L"reserved"  , // 0xA6 
           // to 0xFFFF                    // 0xA6 to 0xFFFF
        } ,
+
        {  // page 0x0E haptics
-          std::make_pair( L"" , L"" ) ,
        } ,
 
     }; // string usages
