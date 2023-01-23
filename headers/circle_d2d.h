@@ -19,6 +19,8 @@ namespace hid
         D2D1::ColorF colour_fill { D2D1::ColorF::Cyan };
         D2D1_ELLIPSE ellipse {};
         Microsoft::WRL::ComPtr <ID2D1SolidColorBrush> brush{ nullptr };
+        const enum class states { off, on, fading, moving };
+        states state { states::off };
 
         public:
         

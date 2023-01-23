@@ -321,7 +321,7 @@ namespace hid
         // --------------------------------------------------------------------
     }
 
-    void hid_collection::update( RAWHID in_raw_data )
+    void hid_collection::update( RAWINPUT in_raw_data )
     {
         for( auto & button : input_buttons ) button.update( in_raw_data );
         for( auto & value : input_values ) value.update( in_raw_data );
@@ -341,19 +341,69 @@ namespace hid
         for( const auto & value  : feature_values  ) value.draw();
     }
 
-    uint hid_collection::contacts_maximum()
+    /*
+    uint hid_collection::get_contact_amount()
     {
-        uint amount{ 0 };
+        uint amount { 0 };
 
-        for( auto value : input_values )
+        for( auto & value : input_values )
         {
-            if( value.NotRange.Usage == 0x54 )
+            if( value.UsagePage == 0x0d and value.NotRange.Usage == 0x54 )
             {
-                amount = value.LogicalMax;
+                amount = value.get_value();
                 break;
             }
         }
 
         return amount;
     }
+
+    uint hid_collection::get_contact_identifier()
+    {
+        uint identifier { 0 };
+
+        for( auto & value : input_values )
+        {
+            if( value.UsagePage == 0x0d and value.NotRange.Usage == 0x51 )
+            {
+                identifier = value.get_value();
+                break;
+            }
+        }
+
+        return identifier;
+    }
+
+    uint hid_collection::get_x()
+    {
+        uint x { 0 };
+
+        for( auto & value : input_values )
+        {
+            if( value.UsagePage == 0x01 and value.NotRange.Usage == 0x30 )
+            {
+                x = value.get_value();
+                break;
+            }
+        }
+
+        return x;
+    }
+
+    uint hid_collection::get_y()
+    {
+        uint y { 0 };
+
+        for( auto & value : input_values )
+        {
+            if( value.UsagePage == 0x01 and value.NotRange.Usage == 0x31 )
+            {
+                y = value.get_value();
+                break;
+            }
+        }
+
+        return y;
+    }
+    */
 }

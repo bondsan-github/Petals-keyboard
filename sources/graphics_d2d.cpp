@@ -9,7 +9,7 @@ namespace hid
 {
     graphics_d2d::graphics_d2d()
     {
-        OutputDebugString( L"graphics_d2d::constructor\n" );
+        //OutputDebugString( L"graphics_d2d::constructor\n" );
     }
 
     void graphics_d2d::initialise()
@@ -35,7 +35,7 @@ namespace hid
 
     graphics_d2d::~graphics_d2d() 
     { 
-        OutputDebugString( L"graphics_d2d::de-constructor\n" );
+        //OutputDebugString( L"graphics_d2d::de-constructor\n" );
 
         if( page )            page->Release();
         if( factory )         factory->Release();

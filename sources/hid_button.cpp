@@ -119,21 +119,22 @@ namespace hid
         information.set_layout_size( { 200.0f, 200.0f } );
     };
 
-    void hid_button::update( RAWHID in_raw_data )
+    void hid_button::update( RAWINPUT in_raw_data )
+    //void hid_button::update( RAWHID in_raw_data )
     {
         USAGE usages;// { nullptr }; // active buttons in page
         ulong usages_amount { 1 };
         //usages_amount[0]=1;
 
         // if( not IsRange )
-        HidP_GetUsages( HidP_Input ,
+        HidP_GetUsages( HidP_Input , // requires complete input report and not only rawhid
                         UsagePage ,
                         LinkCollection ,
                         &usages ,
                         &usages_amount ,
                         reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() ) ,
-                        reinterpret_cast<char*>(in_raw_data.bRawData) , //BYTE uchar to char // M.S. your data types don't match up !! :(
-                        in_raw_data.dwSizeHid * in_raw_data.dwCount );
+                        reinterpret_cast< char * >( in_raw_data.data.hid.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
+                        in_raw_data.data.hid.dwSizeHid * in_raw_data.data.hid.dwCount );
 
         if( usages == NotRange.Usage ) 
         {

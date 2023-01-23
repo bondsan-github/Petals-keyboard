@@ -101,7 +101,13 @@ namespace hid
 
             vertex       information_spacing     { 15.0f, 15.0f }; // spacers
 
-            std::vector<circle> circles {};
+            hid_value * value_contact_identifier { nullptr };
+            ulong contact_identifier {0};
+            hid_value * x { nullptr };
+
+            std::vector< circle > circles {};
+
+            uint maximum_contact_amount { 0 };
 
         private:
             
@@ -114,22 +120,57 @@ namespace hid
             hid_device( HANDLE in_device );
             ~hid_device();
 
-            bool is_multi_touch();
-            std::wstring get_path();
+            bool            is_multi_touch();
+            std::wstring    get_path();
             device_identity get_identity() const { return identity; }
-            HANDLE get_raw_handle() const { return raw_handle; }
-            page_and_usage get_page_and_usage() { return { page , usage }; }
-            bool is_same_device( const device_identity in_identity ) const { return identity == in_identity; }
+            HANDLE          get_handle() const { return raw_handle; }
+            page_and_usage  get_page_and_usage() { return { page , usage }; }
+            bool            is_same_device( const device_identity in_identity ) const { return identity == in_identity; }
             unsigned char * get_data() { return data_preparsed.data(); }
+            uint            get_input_report_size() { return capabilities.InputReportByteLength; }
             
-            void update( RAWHID in_report );
+            //void add_contact( uint in_identifier );
+            
+            void  update( RAWINPUT in_report );
 
-            void collect_information();
-            void set_if_display_information( const bool in_bool );
-            float get_text_top() const { return information.get_top(); }
+            void  collect_information();
+            void  set_if_display_information( const bool in_bool );
+
+            float get_text_top()    const { return information.get_top(); }
             float get_text_bottom() const { return information.get_bottom(); }
             float get_text_right()  const { return information.get_right(); }
-            float get_text_left()  const { return information.get_left(); }
-            void draw();
+            float get_text_left()   const { return information.get_left(); }
+
+            long get_value( ushort in_page , ushort in_usage, RAWINPUT in_input )
+            {
+                long value {0};
+                //HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
+                HidP_GetScaledUsageValue( HidP_Input , // signed output
+                                    in_page ,
+                                    0 ,
+                                    in_usage ,
+                                    &value ,
+                                    reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) ,
+                                    reinterpret_cast< char * >( in_input.data.hid.bRawData ) , //BYTE uchar to char
+                                    in_input.data.hid.dwSizeHid * in_input.data.hid.dwCount );
+                return value;
+            }
+
+            void add_contact( uint in_id , ulong in_x , ulong in_y )
+            {
+
+            }
+
+            void set_contact_identifier( hid_value * const in_value )
+            {
+                value_contact_identifier = in_value;
+            }
+
+            void set_x( hid_value * const in_value )
+            {
+                x = in_value;
+            }
+
+            void  draw();
     };
 }

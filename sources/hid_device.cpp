@@ -41,11 +41,10 @@ namespace hid
         identity.vendor = info.hid.dwVendorId;
         identity.product = info.hid.dwProductId;
 
-        std::wstring message;
-        message = L" vendor: " + std::to_wstring(identity.vendor);
-        message += L"  product: " + std::to_wstring( identity.product);
-
-        OutputDebugStringW( message.c_str() );
+        //std::wstring message;
+        //message = L" vendor: " + std::to_wstring( identity.vendor );
+        //message += L"  product: " + std::to_wstring( identity.product );
+        //OutputDebugStringW( message.c_str() );
     }
 
     bool hid_device::is_multi_touch()
@@ -69,10 +68,11 @@ namespace hid
         // get device path // use wchar_t[] buffer instead of string if driver issue
         return_value = GetRawInputDeviceInfoW( raw_handle , request.path , path.data() , &path_char_amount );
 
+        /*
         std::wstring debug_string = L"\n";
         debug_string += path.data();
         debug_string += L"\n";
-        OutputDebugStringW( debug_string.data() );
+        OutputDebugStringW( debug_string.data() ); */
 
         return path;
     }
@@ -103,8 +103,8 @@ namespace hid
         HidD_GetPhysicalDescriptor( file_handle , physical_buffer     , string_size );
 
         manufacturer = manufacturer_buffer;
-        product = product_buffer;
-        physical = physical_buffer;
+        product      = product_buffer;
+        physical     = physical_buffer;
 
         set_text_device();
 
@@ -158,9 +158,11 @@ namespace hid
         
         collections.set_collections_positions( *this );
 
-        circles.resize( collections.contacts_maximum() );
-        //CloseHandle(device_pointer);
-        //device_pointer = INVALID_HANDLE_VALUE;
+        //buffer_amount = HidD_GetNumInputBuffers();
+        //if( HidD_GetInputReport( device_pointer , buffer , buffer_size ) ) {}
+        //else print_error(L"\n unable to get input report" );
+
+        //circles.resize( collections.contacts_maximum() );
     }
 
     void hid_device::set_text_device()
@@ -175,6 +177,11 @@ namespace hid
         content += locate::get_usages().page( page );
         content += L"\nusage\t\t: ";
         content += locate::get_usages().usage( page , usage );
+
+        ulong input_amount = HidP_MaxDataListLength(HidP_Input, 
+                                                     reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) );
+
+        content += L"\ninput amount\t: " + std::to_wstring( input_amount );
 
         information.set_content( content );
         information.set_position_top_left( text_position );
@@ -194,22 +201,27 @@ namespace hid
         draw_information = in_bool; 
     }
 
-    void hid_device::update( RAWHID input_report )
+    void hid_device::update( RAWINPUT input_report )
     {
-    /*
-        if( collections.contact_identifier() )
-        {
-            collections.get_x();
-            collections.get_y();
-
-            locate::graphics
-        }
-        */
         collections.update( input_report );
+        //contact_identifier = value_contact_identifier->get_value();
 
-        //HidD_GetNumInputBuffers
-        //if( HidD_GetInputReport( device_pointer , buffer , buffer_size ) ) {}
-        //else print_error(L"\n unable to get input report" );
+        long x = get_value( 0x01 , 0x30, input_report );
+        long y = get_value( 0x01 , 0x31, input_report );
+        long id = get_value( 0x0d , 0x51, input_report );
+        //ulong max = get_value( 0x0d , 0x55, input_report );
+        long contact_amount = get_value( 0x0d , 0x54, input_report );
+        
+        std::wstring message = L"\ncontact id: " + std::to_wstring( id );
+        message += L" x: " + std::to_wstring(x);
+        message += L" y: " + std::to_wstring(y);
+        message += L" contact_amount: " + std::to_wstring( contact_amount );
+
+        OutputDebugStringW( message.data() );
+        
+        //collections.get_x();
+        //collections.get_y();
+        add_contact( id , x , y );
     }
 
     void hid_device::draw()

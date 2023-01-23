@@ -20,7 +20,12 @@ namespace hid
         public:
 
             void initialise();
-            //void update();// char * in_input, uint input_size );
+            
+            hid_device * get_device( HANDLE in_handle );
+            //add_contact( device, identifier );
+            //update_contact_x( device, identifier, x);
+            //update_contact_x( device, identifier, y);
+
             void update_devices( RAWINPUT in_hid_report );
             void draw();
     };

@@ -34,12 +34,12 @@ namespace hid
         }
     }
 
-    void hid_collections::add_values( hid_device * in_device , item_type in_type , _HIDP_VALUE_CAPS * in_value , uint in_size )
+    void hid_collections::add_values( hid_device * const in_device , item_type in_type , _HIDP_VALUE_CAPS * in_values , uint in_size )
     {
         for( uint index{ 0 }; index < in_size; index++ )
         {
-            uint       collection_index = in_value[ index ].LinkCollection;
-            hid_value value( in_device , in_value[ index ] );
+            uint       collection_index = in_values[ index ].LinkCollection;
+            hid_value  value( in_device , in_values[ index ] );
 
             switch( in_type )
             {
@@ -100,21 +100,42 @@ namespace hid
             collection_itr->set_item_positions();
         }
     }
-
-    uint hid_collections::contacts_maximum()
+    /*
+    uint hid_collections::get_contact_amount()
     {
         uint amount { 0 };
 
-        for( auto collection : collections )
+        for( auto & collection : collections )
         {
-            if( collection.contacts_maximum() > 0 )
-            {
-                amount = collection.contacts_maximum();
-                break;
-            }
+            amount = collection.get_contact_amount();
+            break;
         }
 
         return amount;
     }
 
+    uint hid_collections::get_contact_identifier()
+    {
+        uint amount{ 0 };
+
+        for( auto & collection : collections )
+        {
+            amount = collection.get_contact_amount();
+        }
+
+        return amount;
+    }
+
+    uint hid_collections::get_x()
+    {
+        uint x { 0 };
+
+        for( auto & collection : collections )
+        {
+            x = collection.get_x();
+        }
+
+        return x;
+    }
+    */
 } // namespace hid

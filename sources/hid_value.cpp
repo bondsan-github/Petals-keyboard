@@ -2,15 +2,18 @@
 #include "..\headers\locate.h"
 #include <unordered_map>
 #include "..\headers\hid_device.h"
+#include "..\headers\utility.h"
 
 namespace hid
 {
 
-    hid_value::hid_value( hid_device * in_device , const _HIDP_VALUE_CAPS & construct_value )
+    hid_value::hid_value( hid_device * const in_device , const _HIDP_VALUE_CAPS & construct_value )
     {
-        if( this not_eq &construct_value )
-        {
+        //if( this not_eq &construct_value )
+        //{
             device = in_device;
+            value_signed = value_signed;
+
             UsagePage = construct_value.UsagePage;
             ReportID = construct_value.ReportID;
             IsAlias = construct_value.IsAlias;
@@ -45,7 +48,12 @@ namespace hid
             NotRange.StringIndex = construct_value.NotRange.StringIndex;
             NotRange.DesignatorIndex = construct_value.NotRange.DesignatorIndex;
             NotRange.DataIndex = construct_value.NotRange.DataIndex;
-        }
+
+            if( UsagePage == 0x0d and NotRange.Usage == 0x51 )//contact_identifier
+                locate::get_input_devices().get_device( device->get_handle() )->set_contact_identifier( this );
+            else if( UsagePage == 0x01 and NotRange.Usage == 0x30 )// X
+                locate::get_input_devices().get_device( device->get_handle() )->set_x( this );
+        //}
     }
    
     void hid_value::set_information_text()
@@ -227,20 +235,21 @@ namespace hid
         if( BitField & 0b100000000 ) content += L"\nbuffered bytes";// bit 8
         */
 
-        ulong usage_amount = HidP_MaxUsageListLength(
+        /*
+        ulong usage_amount = HidP_MaxUsageListLength( // amount of buttons in report
             HidP_Input ,
             UsagePage,
             reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() )
         );
-
         content += L"\nusage amount\t: " + std::to_wstring( usage_amount );
+        */
 
         content += IsRange ? L"\nis range" : L"\nnot range";
         content += L"\nbit size\t:" + std::to_wstring( BitSize );
         content += L"\nreport count\t:" + std::to_wstring( ReportCount );
         content += L"\ndata index\t: " + std::to_wstring( NotRange.DataIndex );
         content += L"\nreport id\t: " + std::to_wstring( ReportID );
-        content += L"\nvalue\t:" + std::to_wstring( value );
+        content += L"\nvalue\t:" + std::to_wstring( value_signed );
 
         information.set_content( content );
         information.set_font_size( 10.0f );
@@ -251,26 +260,52 @@ namespace hid
         //                                                      ( 10 Unit Exponent ) )
     }
 
-    void hid_value::update( RAWHID in_raw_data )
+    //void hid_value::update( RAWIHID in_raw_data )
+    void hid_value::update( RAWINPUT in_raw_data )
     {
-        USAGE usages; // active buttons in page
-
         // if( not IsRange )
-        HidP_GetUsageValue( HidP_Input ,
-                            UsagePage ,
-                            LinkCollection ,
-                            NotRange.Usage ,
-                            &value ,
-                            reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() ) ,
-                            reinterpret_cast< char * >( in_raw_data.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
-                            in_raw_data.dwSizeHid * in_raw_data.dwCount );
+        //NTSTATUS status = HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
+        HidP_GetScaledUsageValue( HidP_Input , // signed output
+                                              UsagePage ,
+                                              LinkCollection ,
+                                              NotRange.Usage ,
+                                              &value_signed ,
+                                              reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() ) ,
+                                              reinterpret_cast< char * >( in_raw_data.data.hid.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
+                                              in_raw_data.data.hid.dwSizeHid * in_raw_data.data.hid.dwCount );
+
+        //if( status != HIDP_STATUS_SUCCESS ) error_exit( L"hid_value:get_value");
+        
+        set_information_text();
+        /*
+        if( UsagePage == 0x01 and NotRange.Usage == 0x31 )// generic : Y
+        {
+            std::wstring message = L"\nY: " + std::to_wstring( value_unsigned );
+            OutputDebugStringW( message.data() );
+            
+        }
+        else if( UsagePage == 0x01 and NotRange.Usage == 0x30 )// X
+        {
+            std::wstring message = L"\nX: " + std::to_wstring( value_unsigned );
+            OutputDebugStringW( message.data() );
+        }
+        else if( UsagePage == 0x0d and NotRange.Usage == 0x51 )//contact_identifier
+        {
+            std::wstring message = L"\ncontact id: " + std::to_wstring( value_unsigned );
+            OutputDebugStringW( message.data() );
+            //locate::get_input_devices().get_device( in_raw_data.header.hDevice )->add_contact( value_unsigned );
+            set_information_text();
+        }
+        else if( UsagePage == 0x0d and NotRange.Usage == 0x47 )// touch valid
+        {
+
+        }
+        else if( UsagePage == 0x0d and NotRange.Usage == 0x54 )// contact amount
+        { 
+        } 
+        */
 
         /*
-        uint values_size = BitSize * ReportCount;
-        if( value % 2 != 0 ) values_size += 1; // round up to nearest byte
-        //char * values = new char[ BitSize * ReportCount ];
-        std::vector<char> values( in_raw_data.dwSizeHid * in_raw_data.dwCount );//values_size);
-
         HidP_GetUsageValueArray( HidP_Input ,
                                  UsagePage ,
                                  LinkCollection ,
@@ -281,6 +316,6 @@ namespace hid
                                  reinterpret_cast< char * >( in_raw_data.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
                                  in_raw_data.dwSizeHid * in_raw_data.dwCount );
         */
-        set_information_text();
+        
     }
 }

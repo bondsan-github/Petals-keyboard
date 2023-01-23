@@ -22,10 +22,14 @@ namespace hid
 
         locate::set_windows( this );
 
+        WNDCLASS wincl;
+
+        GetClassInfo( in_instance , class_name , &wincl );
+
         window_class.cbSize = sizeof( WNDCLASSEX );
 
         window_class.style         = class_style;
-        window_class.lpfnWndProc   = window_setup;
+        window_class.lpfnWndProc   = &message_handler;
         window_class.hInstance     = instance; //instance that contains the window procedure for the class.
         window_class.lpszClassName = class_name;
 
@@ -115,8 +119,8 @@ namespace hid
                                     230 , // alpha value
                                     LWA_ALPHA );
 
-        //ShowWindow( window_principle , SW_MAXIMIZE );
-        //UpdateWindow( window_principle );
+        ShowWindow( window_principle , SW_MAXIMIZE );
+        UpdateWindow( window_principle );
     }
 
     RECT gui_microsoft::get_client_rectangle()
@@ -135,8 +139,8 @@ namespace hid
 
     uint gui_microsoft::update()
     {
-        while( PeekMessageW( &window_message , nullptr , 0 , 0 , PM_REMOVE ) )
-        //while( GetMessageW( &window_message , 0 , 0 , 0 ) )
+        //while( PeekMessageW( &window_message , nullptr , 0 , 0 , PM_REMOVE ) )
+        while( GetMessageW( &window_message , 0 , 0 , 0 ) )
         {
             TranslateMessage( &window_message );
             DispatchMessage( &window_message );
@@ -188,44 +192,35 @@ namespace hid
 
             case WM_DESTROY:
             {
+                window_principle = nullptr;
                 PostQuitMessage( 0 );
                 return 0;
             } break;
 
             case WM_INPUT:
             {
-                RAWINPUT raw_input;// { nullptr };
-                uint raw_input_size { 0 };
-                
-                GetRawInputData( ( HRAWINPUT )lParam , RID_INPUT , 0 , &raw_input_size , sizeof( RAWINPUTHEADER ) );
-                GetRawInputData( ( HRAWINPUT )lParam , RID_INPUT , &raw_input , &raw_input_size , sizeof( RAWINPUTHEADER ) );
+                RAWINPUT raw_input {};
 
-                uint data_size = raw_input.data.hid.dwSizeHid * raw_input.data.hid.dwCount;
+                uint raw_input_size = sizeof(RAWINPUT);
+                uint reports_read { 0 };
+                uint header_size = sizeof( RAWINPUTHEADER );
+                uint bytes_copied { 0 };
                 
-                std::vector<char> data(data_size);
-
-                for( uint index{ 0 }; index < data_size; index++ )
-                {
-                    data[index] = raw_input.data.hid.bRawData[index];
-                }
+                GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , 0 , &raw_input_size , header_size );
+                bytes_copied = GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , &raw_input , &raw_input_size , header_size );
+                //reports_read = GetRawInputBuffer( &raw_input, &raw_input_size , header_size );
                 
                 locate::get_input_devices().update_devices( raw_input );
 
-                //printf("update\n");
-
-                //OutputDebugStringA( "\n" );
-                //OutputDebugStringA( data.data() );
-
-                //data[0] = report id 
+                //data[0] = &f00000000 report id 
                 //data[] = 
                 //data[] = 
                 //data[] = 
                 //data[] = 
                 //https://github.com/torvalds/linux/tree/master/drivers/hid
                 //https://eleccelerator.com/tutorial-about-usb-hid-report-descriptors/
-                data.clear();
+                //data.clear();
 
-                return 0;
             } break;
 
             /*
@@ -294,8 +289,8 @@ namespace hid
     {
         //OutputDebugString( L"gui_microsoft::de-constructor\n" );
 
-        //DestroyWindow( window_principle );
-        //UnregisterClassW( class_name , instance );
+        DestroyWindow( window_principle );
+        UnregisterClassW( class_name , instance );
     }
 
 } // namespace hid

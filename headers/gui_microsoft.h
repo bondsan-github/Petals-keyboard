@@ -59,7 +59,7 @@ namespace hid
 
             //LRESULT result {};
             static LRESULT CALLBACK  message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
-            static LRESULT CALLBACK  window_setup   ( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
+            //static LRESULT CALLBACK  window_setup   ( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
           
             //void calculate_layout();
 
