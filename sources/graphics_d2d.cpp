@@ -12,9 +12,11 @@ namespace hid
         //OutputDebugString( L"graphics_d2d::constructor\n" );
     }
 
-    void graphics_d2d::initialise()
+    void graphics_d2d::initialise( HWND in_window )
     {
         locate::set_graphics( this );
+
+        window = in_window;
 
         D2D1_FACTORY_OPTIONS factory_options {};
         factory_options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
@@ -51,14 +53,15 @@ namespace hid
     // help: your first direct2d program
     void graphics_d2d::reset_page()
     {
+        /*
         // if existing page
         if( page )
         {
             page->Release();
             page = nullptr;
-        }
+        }*/
 
-        HWND window = locate::get_windows().get_window();
+        //HWND window = locate::get_windows().get_window();
         
         // full screen size
         RECT client_size {};
@@ -77,22 +80,23 @@ namespace hid
    
     void graphics_d2d::reset_brush_line()
     {
+        /*
         if( brush_line )
         {
             brush_line->Release();
             brush_line = nullptr;
-        }
+        }*/
 
         page->CreateSolidColorBrush( line_colour , &brush_line );
     }
 
     void graphics_d2d::reset_brush_rectangle()
     {
-        if( brush_rectangle )
+        /*if( brush_rectangle )
         {
             brush_rectangle->Release();
             brush_rectangle = nullptr;
-        }
+        }*/
 
         page->CreateSolidColorBrush( line_colour , &brush_rectangle );
     }
@@ -219,7 +223,8 @@ namespace hid
 
         D2D1_SIZE_U size = D2D1::SizeU( rectangle.right , rectangle.bottom );
 
-        if( page ) page->Resize( size );
+        //if( page ) 
+        page->Resize( size );
 
         //calculate_layout();   
 

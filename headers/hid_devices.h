@@ -26,7 +26,7 @@ namespace hid
             //update_contact_x( device, identifier, x);
             //update_contact_x( device, identifier, y);
 
-            void update_devices( RAWINPUT in_hid_report );
+            void update_devices( RAWINPUT & in_hid_report );
             void draw();
     };
 }

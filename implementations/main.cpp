@@ -19,10 +19,9 @@ int WINAPI wWinMain( _In_ HINSTANCE instance , _In_opt_ HINSTANCE instance_previ
    // Initialize COM apartment threaded. This is the recommended way to initialize COM for the UI thread.
    HRESULT result  = CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED );
 
-   if(SUCCEEDED(result) )
+   if( SUCCEEDED(result) )
    {
        hid::hid_multiple_touch petals_input( instance , parameters , show_flags);
-       petals_input.start();
    }
 
    CoUninitialize();

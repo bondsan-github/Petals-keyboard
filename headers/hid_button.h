@@ -34,7 +34,7 @@ namespace hid
             float get_text_width() const { return information.get_formated_width();  }
             float get_text_height() const { return information.get_formated_height(); }
             
-            void update( RAWINPUT in_raw_data );
+            void update( RAWINPUT & in_raw_data );
             //void update( RAWHID in_raw_data );
             void draw() const { information.draw(); }
 

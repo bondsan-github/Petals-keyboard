@@ -16,6 +16,7 @@ namespace hid
         private:
 
             ID2D1Factory          * factory      { nullptr };
+            HWND window { nullptr };
             ID2D1HwndRenderTarget * page         { nullptr };
             
             PAINTSTRUCT           paint {};
@@ -46,10 +47,11 @@ namespace hid
 
         public:
 
-            graphics_d2d( void );
+            graphics_d2d();
             ~graphics_d2d( void );
             
-            void initialise();
+            //void set_window( HWND in_window ) { }
+            void initialise( HWND in_window );
             void draw_begin();
             void draw_end();
             //void draw();

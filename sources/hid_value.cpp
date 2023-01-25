@@ -261,7 +261,7 @@ namespace hid
     }
 
     //void hid_value::update( RAWIHID in_raw_data )
-    void hid_value::update( RAWINPUT in_raw_data )
+    void hid_value::update( RAWINPUT & in_raw_data )
     {
         // if( not IsRange )
         //NTSTATUS status = HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid

@@ -12,33 +12,38 @@ namespace hid
 
         // window takes several cycles to fully initialise 
         window.initialise( instance , parameters , show_flags );
+
+        graphics.initialise( window.get_window() );
+        write.initialise();
+        input.initialise(); // window.register_input_device
+        
+        window.message_loop();
     }
 
+    /*
     void hid_multiple_touch::start()
     {
         // calls to unitialised window fail
-        graphics.initialise();
-        write.initialise();
-        input.initialise();
+        //graphics.initialise();
+        //write.initialise();
+        //input.initialise();
 
         //if( window == ready
         //    graphics.get_state() == states::ready and
         //    write.get_state() == states::ready
 
         update();
-    }
+    }*/
 
-    void hid_multiple_touch::update()
+    /*
+    void hid_multiple_touch::start()
     {
-        while( state == states::running )
-        {
-            window.update();
-            graphics.draw_begin();
+         //window.message_loop();
+            //graphics.draw_begin();
             //input.update();
-            input.draw();
-            graphics.draw_end();
-        }
-    }
+            //input.draw();
+            //graphics.draw_end();
+    }*/
 
     /*hid_multiple_touch::~hid_multiple_touch()
     {

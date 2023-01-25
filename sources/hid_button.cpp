@@ -119,7 +119,7 @@ namespace hid
         information.set_layout_size( { 200.0f, 200.0f } );
     };
 
-    void hid_button::update( RAWINPUT in_raw_data )
+    void hid_button::update( RAWINPUT & in_raw_data )
     //void hid_button::update( RAWHID in_raw_data )
     {
         USAGE usages;// { nullptr }; // active buttons in page

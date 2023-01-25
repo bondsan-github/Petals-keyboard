@@ -33,7 +33,7 @@ namespace hid {
             //uint get_x();
             //uint get_y();
 
-            void update( RAWINPUT in_raw_data )
+            void update( RAWINPUT & in_raw_data )
             //void update( RAWHID in_raw_data )
             {
                 for( auto & collection : collections ) collection.update( in_raw_data );

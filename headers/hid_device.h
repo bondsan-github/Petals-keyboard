@@ -131,7 +131,7 @@ namespace hid
             
             //void add_contact( uint in_identifier );
             
-            void  update( RAWINPUT in_report );
+            void  update( RAWINPUT & in_report );
 
             void  collect_information();
             void  set_if_display_information( const bool in_bool );

@@ -201,11 +201,12 @@ namespace hid
         draw_information = in_bool; 
     }
 
-    void hid_device::update( RAWINPUT input_report )
+    void hid_device::update( RAWINPUT & input_report )
     {
         collections.update( input_report );
         //contact_identifier = value_contact_identifier->get_value();
 
+        /*
         long x = get_value( 0x01 , 0x30, input_report );
         long y = get_value( 0x01 , 0x31, input_report );
         long id = get_value( 0x0d , 0x51, input_report );
@@ -218,10 +219,11 @@ namespace hid
         message += L" contact_amount: " + std::to_wstring( contact_amount );
 
         OutputDebugStringW( message.data() );
-        
+        */
         //collections.get_x();
         //collections.get_y();
-        add_contact( id , x , y );
+        
+        //add_contact( id , x , y );
     }
 
     void hid_device::draw()

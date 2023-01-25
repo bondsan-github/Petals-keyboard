@@ -109,7 +109,7 @@ namespace hid
         return pointer_device;
     }
 
-    void hid_devices::update_devices( RAWINPUT in_hid_report )
+    void hid_devices::update_devices( RAWINPUT & in_hid_report )
     {
         for( auto & device : input_devices ) 
         {

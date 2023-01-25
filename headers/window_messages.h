@@ -64,9 +64,9 @@ namespace hid
                 std::unordered_map< uint, std::wstring >::const_iterator map_itr = messages.find( in_message_value );
 
                 if( map_itr != messages.end() )
-                    return map_itr->second + L"\n";
+                    return L"\n" + map_itr->second;
                 else
-                    return std::format( L"0x{:x} message not in map\n" , in_message_value );
+                    return std::format( L"\n0x{:x} message not in map" , in_message_value );
             }
 
     };

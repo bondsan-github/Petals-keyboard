@@ -29,7 +29,7 @@ namespace hid
         window_class.cbSize = sizeof( WNDCLASSEX );
 
         window_class.style         = class_style;
-        window_class.lpfnWndProc   = &message_handler;
+        window_class.lpfnWndProc   = &window_setup;
         window_class.hInstance     = instance; //instance that contains the window procedure for the class.
         window_class.lpszClassName = class_name;
 
@@ -119,8 +119,8 @@ namespace hid
                                     230 , // alpha value
                                     LWA_ALPHA );
 
-        ShowWindow( window_principle , SW_MAXIMIZE );
-        UpdateWindow( window_principle );
+        ShowWindow( window_principle , SW_MAXIMIZE ); // set show state
+        UpdateWindow( window_principle ); // send WM_PAINT message
     }
 
     RECT gui_microsoft::get_client_rectangle()
@@ -137,64 +137,83 @@ namespace hid
         return window_principle;
     }
 
-    uint gui_microsoft::update()
+    bool gui_microsoft::message_loop()
     {
-        //while( PeekMessageW( &window_message , nullptr , 0 , 0 , PM_REMOVE ) )
-        while( GetMessageW( &window_message , 0 , 0 , 0 ) )
+        // get message and not peek message as to stay idle until touch input
+        while( GetMessageW( &window_message , 0 , 0 , 0 ) != 0 ) // Microsoft BOOL = int
         {
             TranslateMessage( &window_message );
-            DispatchMessage( &window_message );
-
-            if( window_message.message == WM_QUIT ) 
-            {
-                locate::get_application().set_state( states::ending );
-                return 0;
-            }
+            DispatchMessageW( &window_message );
         }
-        return window_message.message;
+
+        return false;
     }
 
-    LRESULT CALLBACK gui_microsoft::window_setup( HWND in_window , UINT message , WPARAM w_param , LPARAM l_param )
+    long long __stdcall gui_microsoft::window_setup( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter )
     {
+        gui_microsoft * class_pointer {nullptr};
+        // use create parameter passed in from CreateWindow() to store window class pointer at WinAPI side
         if( message == WM_NCCREATE )
+        //if( message == WM_CREATE )
         {
-            //OutputDebugString( L"window_setup::WM_NCCREATE\n" );
+            CREATESTRUCT * create_struct = reinterpret_cast< CREATESTRUCTW * >( l_parameter );
+            //gui_microsoft * class_pointer = static_cast< gui_microsoft * >( create_struct->lpCreateParams );
+            class_pointer = static_cast< gui_microsoft * >( create_struct->lpCreateParams );
 
-            const CREATESTRUCT * const create_ptr = reinterpret_cast< CREATESTRUCT * >( l_param );
-            
-            gui_microsoft * const class_pointer = static_cast< gui_microsoft * >( create_ptr->lpCreateParams );
+            // set WinAPI-managed user data to store ptr to window class
+            SetWindowLongPtrW( in_window , GWLP_USERDATA , reinterpret_cast< LONG_PTR >( class_pointer ) );
 
-            SetWindowLongPtr( in_window , GWLP_USERDATA , reinterpret_cast< LONG_PTR >( class_pointer ) );
-            SetWindowLongPtr( in_window , GWLP_WNDPROC , reinterpret_cast< LONG_PTR >( &gui_microsoft::message_handler ) );
+            // set message proc to normal (non-setup) handler now that setup is finished
+            SetWindowLongPtrW( in_window , GWLP_WNDPROC , reinterpret_cast< LONG_PTR >( &gui_microsoft::message_handler ) );
+            //SetWindowLongPtrW( in_window , GWLP_WNDPROC , (LONG_PTR)&gui_microsoft::message_handler  );
 
-            return class_pointer->message_handler( in_window , message , w_param , l_param );
+            // forward message to window class message handler
+            return class_pointer->message_handler( in_window , message , w_parameter , l_parameter );
         }
+            
+        //static window_messages messages;
+        //std::wstring win_message = messages.message_text( message );
+        //OutputDebugStringW( win_message.c_str() );
+
+        // if there is a message before the WM_NCCREATE message, handle with default handler
+        return DefWindowProcW( in_window , message , w_parameter , l_parameter );
+    }
+
+    long long __stdcall gui_microsoft::message_handler( HWND in_window , UINT message , WPARAM wParam , LPARAM lParam )
+    {
+        //OutputDebugString( L"\nmessage_handler::" );
 
         //static window_messages messages;
-        //std::wstring win_message = messages.message_text(message);
-        //OutputDebugString( win_message.c_str() );
+        //std::wstring win_message = messages.message_text( message );
+        //OutputDebugStringW( win_message.c_str() );
 
-        return DefWindowProc( in_window , message , w_param , l_param );
-    }
+        //https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication/SimpleDirect2dApplication.cpp
 
-    LRESULT CALLBACK gui_microsoft::message_handler( HWND in_window , UINT message , WPARAM wParam , LPARAM lParam )
-    {
-        
-        /*
-        static window_messages messages;
-        std::wstring win_message = messages.message_text( message );
-        OutputDebugString( win_message.c_str() );
-        */
+        LRESULT result { 0 };
+        bool message_handled { false };
+
+        gui_microsoft * class_pointer = reinterpret_cast< gui_microsoft * >( static_cast< LONG_PTR >( GetWindowLongPtrW( in_window , GWLP_USERDATA ) ) );
+
+        //fprintf(stderr, "\nmessages");
 
         switch( message )
         {
             //case WM_CREATE: { } break;
 
+            case WM_CLOSE: 
+            { 
+                //"are you sure you want to exit application?" 
+                //if( MessageBox( in_window , L"Confirm exit" , L"Multiple touch" , MB_YESNOCANCEL ) == IDYES ) DestroyWindow( in_window );
+                //else return 0;
+            } break;
+
             case WM_DESTROY:
             {
-                window_principle = nullptr;
                 PostQuitMessage( 0 );
-                return 0;
+                class_pointer->window_principle = nullptr;
+                result = 1;
+                message_handled = true;
+
             } break;
 
             case WM_INPUT:
@@ -206,12 +225,16 @@ namespace hid
                 uint header_size = sizeof( RAWINPUTHEADER );
                 uint bytes_copied { 0 };
                 
-                GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , 0 , &raw_input_size , header_size );
-                bytes_copied = GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , &raw_input , &raw_input_size , header_size );
-                //reports_read = GetRawInputBuffer( &raw_input, &raw_input_size , header_size );
+                //GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , 0 , &raw_input_size , header_size );
+                //bytes_copied = GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , &raw_input , &raw_input_size , header_size );
+                reports_read = GetRawInputBuffer( &raw_input, &raw_input_size , header_size );
                 
                 locate::get_input_devices().update_devices( raw_input );
 
+                locate::get_graphics().draw_begin();
+                locate::get_input_devices().draw();
+                locate::get_graphics().draw_end();
+                
                 //data[0] = &f00000000 report id 
                 //data[] = 
                 //data[] = 
@@ -220,6 +243,9 @@ namespace hid
                 //https://github.com/torvalds/linux/tree/master/drivers/hid
                 //https://eleccelerator.com/tutorial-about-usb-hid-report-descriptors/
                 //data.clear();
+
+                result = 0;
+                message_handled = true;
 
             } break;
 
@@ -244,6 +270,7 @@ namespace hid
 
             //case WM_PAINT:
             //{
+                //BeginPaint( in_window , &class_pointer->paint );
                 // UpdateLayeredWindow
                 /*Hit testing of a layered window is based on the shape and transparency of the window.
                 This means that the areas of the window that are color-keyed or whose alpha value is zero
@@ -252,6 +279,10 @@ namespace hid
                 the shape of the layered window will be ignored
                 and the mouse events will be passed to other windows underneath the layered window.*/
                 //https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/december/windows-with-c-layered-windows-with-direct2d
+                //locate::get_graphics().draw_begin();
+                //locate::get_input_devices().draw();
+                //locate::get_graphics().draw_end();
+                //EndPaint( in_window , &class_pointer->paint );
 
             //} break;
 
@@ -277,11 +308,15 @@ namespace hid
                           //  device.display_information();
                     //} break;
                 }
-            } // WM_KEYDOWN
+            } break;// WM_KEYDOWN
+
+            //default: return DefWindowProc( in_window , message , wParam , lParam );
 
         } // switch( message )
+        
+        if( not message_handled ) return DefWindowProc( in_window , message , wParam , lParam );
 
-       return DefWindowProc( in_window , message , wParam , lParam );
+        return result;
 
     } // message_handler
 

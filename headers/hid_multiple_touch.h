@@ -24,15 +24,15 @@ namespace hid
             hid_usages    usages;
             hid_devices   input;
 
-            states state { states::running };
+            //states state { states::running };
 
         public:
 
             hid_multiple_touch( const HINSTANCE instance , const LPWSTR parameters , const int show_flags );
 
-            void start();
-            void update();
-            void set_state( states in_state ) { state = in_state; }
+            //void start();
+            //void update();
+            //void set_state( states in_state ) { state = in_state; }
     };
 
 }

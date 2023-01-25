@@ -27,7 +27,8 @@ namespace hid
             HMENU      menu        { nullptr };
             PCWSTR     title_text  { L"Precision multiple touch input" };
             UINT       class_style { CS_HREDRAW | CS_VREDRAW };
-            DWORD      style       { WS_VISIBLE | WS_MAXIMIZE }; //WS_OVERLAPPEDWINDOW
+            //DWORD      style       { WS_VISIBLE | WS_MAXIMIZE }; 
+            DWORD      style       { WS_VISIBLE | WS_MAXIMIZE | WS_OVERLAPPEDWINDOW };
             DWORD      style_extra { 0l };//{ WS_EX_LAYERED | WS_EX_COMPOSITED | WS_EX_TRANSPARENT };
     
          //WS_EX_LAYOUTRTL
@@ -35,7 +36,7 @@ namespace hid
               window horizontal origin = on the right edge. // horizontal++ advance to the left.*/
          /*WS_EX_NOACTIVATE*/
 
-            PAINTSTRUCT paint;
+            PAINTSTRUCT paint {};
             float       x                 { 0.0f }; // vertex
             float       y                 { 0.0f };
             float       client_width      { 800.0f };
@@ -58,9 +59,9 @@ namespace hid
             //static inline gui_microsoft * this_pointer {}; //unique_pointer
 
             //LRESULT result {};
-            static LRESULT CALLBACK  message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
-            //static LRESULT CALLBACK  window_setup   ( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
-          
+            static long long __stdcall message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
+            static long long __stdcall window_setup( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
+            //LRESULT WINAPI message_handler_thunk( HWND hWnd , UINT msg , WPARAM wParam , LPARAM lParam );
             //void calculate_layout();
 
         public:
@@ -89,7 +90,7 @@ namespace hid
             ~gui_microsoft();
 
             HWND get_window() const;
-            uint update();
+            bool message_loop();
             //uint dpi();
     };
 }
