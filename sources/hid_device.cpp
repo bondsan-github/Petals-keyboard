@@ -9,6 +9,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <fileapifromapp.h>
+
 namespace hid
 {
     hid_device::hid_device( HANDLE in_device )
@@ -87,12 +89,12 @@ namespace hid
         //https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/top-level-collections-opened-by-windows-for-system-use
         
         // open i_o device for query 
-        file_handle = CreateFileW( path.data() ,
-                                   0 ,//GENERIC_READ | GENERIC_WRITE ,  // access
+        file_handle = CreateFileW( path.c_str() ,
+                                   0,//GENERIC_READ ,//| GENERIC_WRITE ,   // access
                                    FILE_SHARE_READ | FILE_SHARE_WRITE , // share
-                                   0 ,                                  // security
+                                   ( LPSECURITY_ATTRIBUTES ) 0 ,        // security
                                    OPEN_EXISTING ,                      // creation
-                                   0 ,//FILE_ATTRIBUTE_NORMAL ,         // flags
+                                   FILE_FLAG_OVERLAPPED , //0 ,//FILE_ATTRIBUTE_NORMAL ,         // flags
                                    0 );                                 // template
         
         if( file_handle == INVALID_HANDLE_VALUE ) print_error( L"unable to open device" );
@@ -102,9 +104,23 @@ namespace hid
         HidD_GetProductString(      file_handle , product_buffer      , string_size );
         HidD_GetPhysicalDescriptor( file_handle , physical_buffer     , string_size );
 
+
+        //SeTcbPrivilege 
+        
+        //BY_HANDLE_FILE_INFORMATION file_information {};
+        //GetFileInformationByHandle( file_handle, &file_information);
+
+        //CloseHandle( file_handle );
+
         manufacturer = manufacturer_buffer;
         product      = product_buffer;
         physical     = physical_buffer;
+
+        /*ulong buffer_amount{0};
+        HidD_GetNumInputBuffers( file_handle, &buffer_amount);
+        std::wstring message;
+        message = L"\n buffer amount: " + std::to_wstring( buffer_amount ); // as default of 32
+        OutputDebugStringW( message.data() );*/
 
         set_text_device();
 
@@ -158,11 +174,18 @@ namespace hid
         
         collections.set_collections_positions( *this );
 
-        //buffer_amount = HidD_GetNumInputBuffers();
+        
         //if( HidD_GetInputReport( device_pointer , buffer , buffer_size ) ) {}
         //else print_error(L"\n unable to get input report" );
 
         //circles.resize( collections.contacts_maximum() );
+
+        //HidD_SetNumInputBuffers( file_handle , 256 );
+        
+        /*ulong buffer_amount{0};
+        HidD_GetNumInputBuffers( file_handle, &buffer_amount);
+        std::wstring message = L"\nbuffer_amount: " + std::to_wstring( buffer_amount );
+        OutputDebugStringW( message.data() );*/
     }
 
     void hid_device::set_text_device()
@@ -201,29 +224,61 @@ namespace hid
         draw_information = in_bool; 
     }
 
-    void hid_device::update( RAWINPUT & input_report )
+    void hid_device::update()
     {
-        collections.update( input_report );
-        //contact_identifier = value_contact_identifier->get_value();
-
         /*
-        long x = get_value( 0x01 , 0x30, input_report );
-        long y = get_value( 0x01 , 0x31, input_report );
-        long id = get_value( 0x0d , 0x51, input_report );
-        //ulong max = get_value( 0x0d , 0x55, input_report );
-        long contact_amount = get_value( 0x0d , 0x54, input_report );
-        
-        std::wstring message = L"\ncontact id: " + std::to_wstring( id );
-        message += L" x: " + std::to_wstring(x);
-        message += L" y: " + std::to_wstring(y);
-        message += L" contact_amount: " + std::to_wstring( contact_amount );
+        HANDLE read_file_handle =CreateFileFromAppW( path.c_str(), 
+                                                     GENERIC_READ ,//| GENERIC_WRITE ,   // access
+                                                     FILE_SHARE_READ , //| FILE_SHARE_WRITE // share
+                                                     0 ,// security
+                                                     OPEN_EXISTING , // creation
+                                                     0 , //FILE_FLAG_OVERLAPPED , //0 ,//FILE_ATTRIBUTE_NORMAL , // flags
+                                                     0 );// template
 
+        if( read_file_handle == INVALID_HANDLE_VALUE ) print_error( L"unable to open device" );
+
+        char * buffer = new char[ capabilities.InputReportByteLength + 1 ] {};
+
+        buffer[ 0 ]=30; // 0x1e
+        int buffer_size{ 0 };
+        buffer_size = sizeof buffer;
+        BOOL result = HidD_GetInputReport( read_file_handle , &buffer , buffer_size );
+        if( not result ) print_error( L"\nget input report error" );
+
+        long x = get_value( 0x01 , 0x30 , buffer );
+        long y = get_value( 0x01 , 0x31 , buffer );
+        long id = get_value( 0x0d , 0x51 , buffer );
+        //ulong max = get_value( 0x0d , 0x55, input_report );
+        long contact_amount = get_value( 0x0d , 0x54 , buffer );
+
+        std::wstring message = L"\ncontact id: " + std::to_wstring( id );
+        message += L" x: " + std::to_wstring( x );
+        message += L" y: " + std::to_wstring( y );
+        message += L" contact_amount: " + std::to_wstring( contact_amount );
+        message += L" buffer size: " + std::to_wstring( buffer_size );
         OutputDebugStringW( message.data() );
         */
+
+        //data[0] = &f00000000 report id 
+                //data[] = 
+                //data[] = 
+                //data[] = 
+                //data[] = 
+                //https://github.com/torvalds/linux/tree/master/drivers/hid
+                //https://eleccelerator.com/tutorial-about-usb-hid-report-descriptors/
+                //data.clear();
+    }
+
+    void hid_device::update( RAWINPUT & input_report )
+    {
+        //contact_identifier = value_contact_identifier->get_value();
+
+        collections.update( input_report );
+        
         //collections.get_x();
         //collections.get_y();
         
-        //add_contact( id , x , y );
+        //set_contact( id , x , y );
     }
 
     void hid_device::draw()

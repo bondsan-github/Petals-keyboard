@@ -43,8 +43,6 @@ namespace hid
    
     void hid_button::set_information_text()
     {
-        std::wstring content {};
-
         content = locate::get_usages().page( UsagePage );
 
         if( IsRange )
@@ -119,6 +117,12 @@ namespace hid
         information.set_layout_size( { 200.0f, 200.0f } );
     };
 
+    void hid_button::update_information_text()
+    {
+        content = on ? L"\non" : L"\noff";
+        information.set_content( content );
+    }
+
     void hid_button::update( RAWINPUT & in_raw_data )
     //void hid_button::update( RAWHID in_raw_data )
     {
@@ -142,6 +146,6 @@ namespace hid
         }
         else on = false;
 
-        set_information_text();
+        update_information_text();
     }
 }

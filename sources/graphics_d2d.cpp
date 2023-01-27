@@ -158,8 +158,8 @@ namespace hid
 
     void graphics_d2d::draw_begin()
     {
-        //if( page )
-        //{
+        if( page )
+        {
             page->BeginDraw();
 
             page->SetTransform( D2D1::Matrix3x2F::Identity() );
@@ -172,7 +172,7 @@ namespace hid
                 hr = S_OK;
                 DiscardDeviceResources();
             }*/
-        //}
+        }
     }
 
     void graphics_d2d::draw_end()

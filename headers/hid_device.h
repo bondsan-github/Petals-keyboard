@@ -105,6 +105,15 @@ namespace hid
             ulong contact_identifier {0};
             hid_value * x { nullptr };
 
+            //std::vector< contact > contacts {};
+            /*class contact
+            {
+                private:
+                uint identifier {};
+                uint x {};
+                uint y {};
+            };*/
+
             std::vector< circle > circles {};
 
             uint maximum_contact_amount { 0 };
@@ -132,6 +141,7 @@ namespace hid
             //void add_contact( uint in_identifier );
             
             void  update( RAWINPUT & in_report );
+            void  update();
 
             void  collect_information();
             void  set_if_display_information( const bool in_bool );
@@ -141,7 +151,7 @@ namespace hid
             float get_text_right()  const { return information.get_right(); }
             float get_text_left()   const { return information.get_left(); }
 
-            long get_value( ushort in_page , ushort in_usage, RAWINPUT in_input )
+            long get_value( ushort in_page , ushort in_usage, RAWINPUT & in_input )
             {
                 long value {0};
                 //HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
@@ -153,6 +163,21 @@ namespace hid
                                     reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) ,
                                     reinterpret_cast< char * >( in_input.data.hid.bRawData ) , //BYTE uchar to char
                                     in_input.data.hid.dwSizeHid * in_input.data.hid.dwCount );
+                return value;
+            }
+
+            long get_value( ushort in_page , ushort in_usage , char * in_report )
+            {
+                long value{ 0 };
+                //HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
+                HidP_GetScaledUsageValue( HidP_Input , // signed output
+                                          in_page ,
+                                          0 ,
+                                          in_usage ,
+                                          &value ,
+                                          reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) ,
+                                          reinterpret_cast< char * >( in_report ) , //BYTE uchar to char
+                                          capabilities.InputReportByteLength + 1 );
                 return value;
             }
 

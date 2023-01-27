@@ -6,6 +6,7 @@
 
 #include "..\headers\locate.h"
 #include "..\headers\window_messages.h"
+#include "..\headers\utility.h"
 
 namespace hid
 {
@@ -137,17 +138,34 @@ namespace hid
         return window_principle;
     }
 
-    bool gui_microsoft::message_loop()
+    void gui_microsoft::message_loop()
     {
         // get message and not peek message as to stay idle until touch input
-        while( GetMessageW( &window_message , 0 , 0 , 0 ) != 0 ) // Microsoft BOOL = int
+        while( GetMessageW( &window_message , 0 , 0 , 0 ) != 0 ) // or > 0 // Microsoft BOOL = int
         {
             TranslateMessage( &window_message );
             DispatchMessageW( &window_message );
-        }
 
-        return false;
+            //locate::get_devices().update();
+            locate::get_graphics().draw_begin();
+            locate::get_input_devices().draw();
+            locate::get_graphics().draw_end();
+        }
     }
+
+    /*/void gui_microsoft::message_loop()
+    {
+        MSG msg {};
+
+        while( msg.message != WM_QUIT )
+        {
+            if( PeekMessage( &msg , NULL , 0U , 0U , PM_REMOVE ) )
+            {
+                TranslateMessage( &msg );
+                DispatchMessage( &msg );
+            }
+        }
+    }*/
 
     long long __stdcall gui_microsoft::window_setup( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter )
     {
@@ -189,9 +207,6 @@ namespace hid
 
         //https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication/SimpleDirect2dApplication.cpp
 
-        LRESULT result { 0 };
-        bool message_handled { false };
-
         gui_microsoft * class_pointer = reinterpret_cast< gui_microsoft * >( static_cast< LONG_PTR >( GetWindowLongPtrW( in_window , GWLP_USERDATA ) ) );
 
         //fprintf(stderr, "\nmessages");
@@ -211,41 +226,65 @@ namespace hid
             {
                 PostQuitMessage( 0 );
                 class_pointer->window_principle = nullptr;
-                result = 1;
-                message_handled = true;
+                //result = 1;
+                class_pointer->message_handled = true;
 
             } break;
 
             case WM_INPUT:
+            //case WM_TOUCH:
             {
-                RAWINPUT raw_input {};
+                std::wstring message{};
+                RAWINPUT     raw_input {};
+                RAWINPUT *   raw_input_buffer { nullptr };
 
-                uint raw_input_size = sizeof(RAWINPUT);
-                uint reports_read { 0 };
-                uint header_size = sizeof( RAWINPUTHEADER );
-                uint bytes_copied { 0 };
-                
+                uint raw_input_size { 0 };
+                uint reports_read   { 0 };
+                uint header_size    = sizeof RAWINPUTHEADER;
+                uint bytes_copied   { 0 };
+
+                //uint hid_buffer_amount { 0 };
+                //HidD_GetNumInputBuffers( file_handle , &hid_buffer_amount );
+
+                //single report read 
                 //GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , 0 , &raw_input_size , header_size );
+                //GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , 0 , &class_pointer->raw_input_size , class_pointer->header_size );
                 //bytes_copied = GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , &raw_input , &raw_input_size , header_size );
-                reports_read = GetRawInputBuffer( &raw_input, &raw_input_size , header_size );
-                
-                locate::get_input_devices().update_devices( raw_input );
+                //bytes_copied = 
+                //GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , &class_pointer->raw_input , &class_pointer->raw_input_size , class_pointer->header_size );
+                //locate::get_input_devices().update_devices( raw_input );
 
-                locate::get_graphics().draw_begin();
-                locate::get_input_devices().draw();
-                locate::get_graphics().draw_end();
+                // errorcode = max unsigned int? 4294967295
                 
-                //data[0] = &f00000000 report id 
-                //data[] = 
-                //data[] = 
-                //data[] = 
-                //data[] = 
-                //https://github.com/torvalds/linux/tree/master/drivers/hid
-                //https://eleccelerator.com/tutorial-about-usb-hid-report-descriptors/
-                //data.clear();
+                //multiple report read
+                //https://learn.microsoft.com/en-gb/windows/win32/inputdev/using-raw-input
+                //Sleep( 1000 );
 
-                result = 0;
-                message_handled = true;
+                uint result = GetRawInputBuffer( 0 , &raw_input_size , header_size );
+
+                //if( result != (UINT)-1 && raw_input_size > 0 ) //uint-1=0xffff'fffff
+                //{
+                    raw_input_size *= 8;
+                    message += L"\nbuffer_size bytes:" + std::to_wstring( raw_input_size );
+
+                    reports_read = GetRawInputBuffer( raw_input_buffer , &raw_input_size , header_size );
+                    message += L"\nreports read:" + std::to_wstring( reports_read );
+                    //if( reports_read != (UINT)-1 && reports_read > 0 )
+                    //{
+                        raw_input_buffer = new RAWINPUT[ raw_input_size ];
+
+                        locate::get_input_devices().update_devices_buffered( raw_input_buffer , reports_read );
+
+                        delete[] raw_input_buffer;
+                    //}
+                    //else print_error( L"\nget input buffer error: " );
+                //}
+                //else print_error( L"\nget buffer size error: " ); 
+                
+                //result = 0;
+                class_pointer->message_handled = true;
+
+                OutputDebugStringW( message.c_str() );
 
             } break;
 
@@ -268,23 +307,28 @@ namespace hid
             } break;
             */
 
-            //case WM_PAINT:
-            //{
-                //BeginPaint( in_window , &class_pointer->paint );
+            /*
+            case WM_PAINT:
+            {
+                BeginPaint( in_window , &class_pointer->paint );
                 // UpdateLayeredWindow
-                /*Hit testing of a layered window is based on the shape and transparency of the window.
-                This means that the areas of the window that are color-keyed or whose alpha value is zero
-                will let the mouse messages through.
-                However, if the layered window has the WS_EX_TRANSPARENT extended window style,
-                the shape of the layered window will be ignored
-                and the mouse events will be passed to other windows underneath the layered window.*/
+                //Hit testing of a layered window is based on the shape and transparency of the window.
+                //This means that the areas of the window that are color-keyed or whose alpha value is zero
+                //will let the mouse messages through.
+                //However, if the layered window has the WS_EX_TRANSPARENT extended window style,
+                //the shape of the layered window will be ignored
+                //and the mouse events will be passed to other windows underneath the layered window.
                 //https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/december/windows-with-c-layered-windows-with-direct2d
-                //locate::get_graphics().draw_begin();
-                //locate::get_input_devices().draw();
-                //locate::get_graphics().draw_end();
-                //EndPaint( in_window , &class_pointer->paint );
+                if( class_pointer->graphics )
+                {
+                    class_pointer->graphics->draw_begin();
+                    locate::get_input_devices().draw();
+                    class_pointer->graphics->draw_end();
+                }
+                EndPaint( in_window , &class_pointer->paint );
 
-            //} break;
+            } break;
+            */
 
             //case WM_SIZE:
             //{
@@ -308,15 +352,16 @@ namespace hid
                           //  device.display_information();
                     //} break;
                 }
+
             } break;// WM_KEYDOWN
 
             //default: return DefWindowProc( in_window , message , wParam , lParam );
 
         } // switch( message )
         
-        if( not message_handled ) return DefWindowProc( in_window , message , wParam , lParam );
+        if( not class_pointer->message_handled ) return DefWindowProc( in_window , message , wParam , lParam );
 
-        return result;
+        return class_pointer->result;
 
     } // message_handler
 

@@ -66,9 +66,6 @@
     <ClCompile Include="sources\grid_d2d.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Touchpad\markt\touchpad\reference sources\hid.c">
-      <Filter>reference</Filter>
-    </ClCompile>
     <ClCompile Include="sources\hid_button.cpp">
       <Filter>sources</Filter>
     </ClCompile>
@@ -86,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="sources\circle_d2d.cpp">
       <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Touchpad\markt\touchpad\reference sources\hid.c">
+      <Filter>headers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

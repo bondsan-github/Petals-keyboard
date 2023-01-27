@@ -208,7 +208,8 @@ namespace hid
     void text::set_content( std::wstring &in_content )
     {
         content = in_content;
-        reset();
+        //reset();
+        reset_layout();
     }
 
     void text::add_content( std::wstring &in_string )

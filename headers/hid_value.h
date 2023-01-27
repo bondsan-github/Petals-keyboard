@@ -4,6 +4,7 @@
 #include "..\headers\text_d2d.h"
 
 #include <hidpi.h>
+#include <string>
 
 namespace hid
 {
@@ -13,8 +14,8 @@ namespace hid
     {
         private:
             
-            text information;
-
+            text information {};
+            std::wstring content {};
             //ulong value_unsigned { 0 };
             long value_signed { 0 };
 
@@ -32,6 +33,7 @@ namespace hid
             float get_text_top()   const { return information.get_top(); }
 
             void  update( RAWINPUT & in_raw_data );
+            void update_information_text();
 
             //hid_device * get_device() const { return device; }
             long         get_value() const { return value_signed; }

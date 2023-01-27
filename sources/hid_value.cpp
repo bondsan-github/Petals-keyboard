@@ -55,12 +55,10 @@ namespace hid
                 locate::get_input_devices().get_device( device->get_handle() )->set_x( this );
         //}
     }
-   
+
     void hid_value::set_information_text()
     {
-        std::wstring content{};
-
-        content += locate::get_usages().page( UsagePage );
+        content += locate::get_usages().page(UsagePage);
 
         if( IsRange )
         {
@@ -104,8 +102,8 @@ namespace hid
             Set globalState["unitFactorLuminousIntensityExponent"] to nibbles[6].
         */
 
-        Units;
-        UnitsExp;
+        //Units;
+        //UnitsExp;
         // 0x11   = 0b 0001'0001 = length , centimeter , 10^-2 ( ? = 0.1mm ) 
         // 
         // 0x1001 = 0b 0001'0000  0000'0001 =       , 10^-4
@@ -221,7 +219,7 @@ namespace hid
 
         content += L"\nlog min: " + std::to_wstring( LogicalMin ) + L" max: " + std::to_wstring( LogicalMax );
         content += L"\nphy min: " + std::to_wstring( PhysicalMin ) + L" max: " + std::to_wstring( PhysicalMax );
-
+        
         //content += IsAlias ? L"\nalias" : L"\nnot aliased";
 
         /*
@@ -260,6 +258,12 @@ namespace hid
         //                                                      ( 10 Unit Exponent ) )
     }
 
+    void hid_value::update_information_text() 
+    { 
+        content = L"\nvalue\t:" + std::to_wstring( value_signed );
+        information.set_content( content );
+    }
+
     //void hid_value::update( RAWIHID in_raw_data )
     void hid_value::update( RAWINPUT & in_raw_data )
     {
@@ -276,7 +280,7 @@ namespace hid
 
         //if( status != HIDP_STATUS_SUCCESS ) error_exit( L"hid_value:get_value");
         
-        set_information_text();
+        update_information_text();
         /*
         if( UsagePage == 0x01 and NotRange.Usage == 0x31 )// generic : Y
         {

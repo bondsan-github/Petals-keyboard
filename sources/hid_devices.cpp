@@ -116,7 +116,13 @@ namespace hid
             if( device.get_handle() == in_hid_report.header.hDevice )
                 //device.update( in_hid_report.data.hid );
                 device.update( in_hid_report );
+                //device.update();
         }
+    }
+
+    void hid_devices::update_devices_buffered( RAWINPUT * in_raw_input_buffer , uint in_buffer_size )
+    {
+
     }
 
     void hid_devices::draw()

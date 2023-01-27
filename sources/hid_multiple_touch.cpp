@@ -16,7 +16,7 @@ namespace hid
         graphics.initialise( window.get_window() );
         write.initialise();
         input.initialise(); // window.register_input_device
-        
+        //window.set_graphics( &graphics );
         window.message_loop();
     }
 

@@ -10,6 +10,8 @@
 //https://learn.microsoft.com/en-us/windows/win32/winmsg/window-features
 namespace hid
 {
+    class graphics_d2d;
+
     class gui_microsoft
     {
         private:
@@ -37,6 +39,8 @@ namespace hid
          /*WS_EX_NOACTIVATE*/
 
             PAINTSTRUCT paint {};
+            graphics_d2d * graphics { nullptr };
+
             float       x                 { 0.0f }; // vertex
             float       y                 { 0.0f };
             float       client_width      { 800.0f };
@@ -58,6 +62,11 @@ namespace hid
 
             //static inline gui_microsoft * this_pointer {}; //unique_pointer
 
+            
+
+            LRESULT result { 0 };
+            bool message_handled{ false };
+
             //LRESULT result {};
             static long long __stdcall message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
             static long long __stdcall window_setup( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
@@ -74,6 +83,7 @@ namespace hid
             gui_microsoft & operator = ( const gui_microsoft & assignment ) = delete;
             gui_microsoft & operator = ( gui_microsoft && assigned_move ) = delete;
             
+            void set_graphics( graphics_d2d * in_graphics ) { graphics = in_graphics; }
             RECT get_client_rectangle();
 
             void register_input_device( const page_and_usage & in_device )
@@ -90,7 +100,7 @@ namespace hid
             ~gui_microsoft();
 
             HWND get_window() const;
-            bool message_loop();
+            void message_loop();
             //uint dpi();
     };
 }

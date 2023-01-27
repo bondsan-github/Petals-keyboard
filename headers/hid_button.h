@@ -16,6 +16,7 @@ namespace hid
 
             bool on { false };
             text information;
+            std::wstring content{};
             hid_device * device { nullptr };
             //_HIDP_BUTTON_CAPS capabilities {};
 
@@ -35,7 +36,10 @@ namespace hid
             float get_text_height() const { return information.get_formated_height(); }
             
             void update( RAWINPUT & in_raw_data );
+            void update_information_text();
+
             //void update( RAWHID in_raw_data );
+
             void draw() const { information.draw(); }
 
             /*
