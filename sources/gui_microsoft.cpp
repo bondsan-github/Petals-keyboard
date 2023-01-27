@@ -8,6 +8,8 @@
 #include "..\headers\window_messages.h"
 #include "..\headers\utility.h"
 
+typedef unsigned __int64 QWORD;
+
 namespace hid
 {
     gui_microsoft::gui_microsoft( void )    
@@ -234,9 +236,11 @@ namespace hid
             case WM_INPUT:
             //case WM_TOUCH:
             {
+            //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-get_rawinput_code_wparam?redirectedfrom=MSDN
                 std::wstring message{};
                 RAWINPUT     raw_input {};
-                RAWINPUT *   raw_input_buffer { nullptr };
+                PRAWINPUT   raw_input_buffer { nullptr };
+                //std::vector<RAWINPUT> raw_input_buffer {};
 
                 uint raw_input_size { 0 };
                 uint reports_read   { 0 };
@@ -244,7 +248,7 @@ namespace hid
                 uint bytes_copied   { 0 };
 
                 //uint hid_buffer_amount { 0 };
-                //HidD_GetNumInputBuffers( file_handle , &hid_buffer_amount );
+                //HidD_GetNumInputBuffers( file_handle , &hid_buffer_amount ); // get_device
 
                 //single report read 
                 //GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , 0 , &raw_input_size , header_size );
@@ -254,37 +258,57 @@ namespace hid
                 //GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , &class_pointer->raw_input , &class_pointer->raw_input_size , class_pointer->header_size );
                 //locate::get_input_devices().update_devices( raw_input );
 
-                // errorcode = max unsigned int? 4294967295
+                uint error_code = 0xffff'ffff; //max unsigned int 4294967295
                 
                 //multiple report read
                 //https://learn.microsoft.com/en-gb/windows/win32/inputdev/using-raw-input
-                //Sleep( 1000 );
 
                 uint result = GetRawInputBuffer( 0 , &raw_input_size , header_size );
 
-                //if( result != (UINT)-1 && raw_input_size > 0 ) //uint-1=0xffff'fffff
-                //{
+                if( result != error_code and raw_input_size > 0 )
+                {
                     raw_input_size *= 8;
-                    message += L"\nbuffer_size bytes:" + std::to_wstring( raw_input_size );
+                    //message += L"\nbuffer_size bytes:" + std::to_wstring( raw_input_size );
 
-                    reports_read = GetRawInputBuffer( raw_input_buffer , &raw_input_size , header_size );
-                    message += L"\nreports read:" + std::to_wstring( reports_read );
-                    //if( reports_read != (UINT)-1 && reports_read > 0 )
-                    //{
-                        raw_input_buffer = new RAWINPUT[ raw_input_size ];
+                    //raw_input_buffer.resize(raw_input_size);
+                    //raw_input_buffer = new RAWINPUT[ raw_input_size ];
+                    raw_input_buffer = ( PRAWINPUT ) malloc( raw_input_size );
 
-                        locate::get_input_devices().update_devices_buffered( raw_input_buffer , reports_read );
+                    while(true)
+                    {
+                        //reports_read = GetRawInputBuffer( raw_input_buffer.data() , &raw_input_size , header_size);
+                        reports_read = GetRawInputBuffer( raw_input_buffer , &raw_input_size , header_size);
 
-                        delete[] raw_input_buffer;
-                    //}
-                    //else print_error( L"\nget input buffer error: " );
-                //}
-                //else print_error( L"\nget buffer size error: " ); 
-                
+                        if( reports_read != error_code and reports_read > 0 )
+                        {
+                            //message += L"\nreports read:" + std::to_wstring( reports_read );
+                            //OutputDebugStringW( message.c_str() );
+
+                            RAWINPUT ** raw_input_array = ( PRAWINPUT * ) malloc( sizeof( PRAWINPUT ) * reports_read );
+
+                            RAWINPUT * raw_report = raw_input_buffer;
+                            
+                            for( UINT i = 0; i < reports_read; ++i )
+                            {
+                                raw_input_array[ i ] = raw_report;
+                                raw_report = NEXTRAWINPUTBLOCK( raw_report );
+                                locate::get_input_devices().update_devices( *raw_report );
+                            };
+                            //locate::get_input_devices().update_devices_buffered( raw_input_buffer.data() , reports_read);
+                            //locate::get_input_devices().update_devices_buffered( raw_input_buffer , reports_read);
+                            
+                            free( raw_input_array );
+                        }
+                        else break;
+                    
+                        //delete[] raw_input_buffer;
+                        //raw_input_buffer.clear();
+                    }
+                    free( raw_input_buffer );
+                }
+
                 //result = 0;
                 class_pointer->message_handled = true;
-
-                OutputDebugStringW( message.c_str() );
 
             } break;
 

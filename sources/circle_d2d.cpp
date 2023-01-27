@@ -3,12 +3,12 @@
 
 namespace hid
 {
-    circle::circle()
+    circle_d2d::circle_d2d()
     {
         locate::get_graphics().get_page().CreateSolidColorBrush( colour_fill , &brush );
     }
 
-    void circle::draw()
+    void circle_d2d::draw()
     {
         ellipse.point = centre;
         ellipse.radiusX = radius;

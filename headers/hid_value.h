@@ -16,8 +16,8 @@ namespace hid
             
             text information {};
             std::wstring content {};
-            //ulong value_unsigned { 0 };
-            long value_signed { 0 };
+            ulong value_unsigned { -1ul }; // = 0xffff'ffff
+            long value_signed { -1 };
 
             hid_device * device { nullptr };
 

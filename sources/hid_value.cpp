@@ -247,7 +247,7 @@ namespace hid
         content += L"\nreport count\t:" + std::to_wstring( ReportCount );
         content += L"\ndata index\t: " + std::to_wstring( NotRange.DataIndex );
         content += L"\nreport id\t: " + std::to_wstring( ReportID );
-        content += L"\nvalue\t:" + std::to_wstring( value_signed );
+        content += L"\nvalue\t:" + std::to_wstring( value_unsigned );
 
         information.set_content( content );
         information.set_font_size( 10.0f );
@@ -260,7 +260,7 @@ namespace hid
 
     void hid_value::update_information_text() 
     { 
-        content = L"\nvalue\t:" + std::to_wstring( value_signed );
+        content = L"\nvalue\t:" + std::to_wstring( value_unsigned );
         information.set_content( content );
     }
 
@@ -268,20 +268,20 @@ namespace hid
     void hid_value::update( RAWINPUT & in_raw_data )
     {
         // if( not IsRange )
-        //NTSTATUS status = HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
-        HidP_GetScaledUsageValue( HidP_Input , // signed output
-                                              UsagePage ,
-                                              LinkCollection ,
-                                              NotRange.Usage ,
-                                              &value_signed ,
-                                              reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() ) ,
-                                              reinterpret_cast< char * >( in_raw_data.data.hid.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
-                                              in_raw_data.data.hid.dwSizeHid * in_raw_data.data.hid.dwCount );
+        NTSTATUS status = HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
+        //HidP_GetScaledUsageValue( HidP_Input , // signed output
+                                  UsagePage ,
+                                  LinkCollection ,
+                                  NotRange.Usage ,
+                                  &value_unsigned ,
+                                  reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() ) ,
+                                  reinterpret_cast< char * >( in_raw_data.data.hid.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
+                                  in_raw_data.data.hid.dwSizeHid * in_raw_data.data.hid.dwCount );
 
         //if( status != HIDP_STATUS_SUCCESS ) error_exit( L"hid_value:get_value");
         
         update_information_text();
-        /*
+        
         if( UsagePage == 0x01 and NotRange.Usage == 0x31 )// generic : Y
         {
             std::wstring message = L"\nY: " + std::to_wstring( value_unsigned );
@@ -295,19 +295,21 @@ namespace hid
         }
         else if( UsagePage == 0x0d and NotRange.Usage == 0x51 )//contact_identifier
         {
+            // 00 // 0
+            // 01 // 1
+            // 10 // 2
+            // 11 // 3
+
             std::wstring message = L"\ncontact id: " + std::to_wstring( value_unsigned );
             OutputDebugStringW( message.data() );
             //locate::get_input_devices().get_device( in_raw_data.header.hDevice )->add_contact( value_unsigned );
-            set_information_text();
-        }
-        else if( UsagePage == 0x0d and NotRange.Usage == 0x47 )// touch valid
-        {
-
         }
         else if( UsagePage == 0x0d and NotRange.Usage == 0x54 )// contact amount
         { 
+            std::wstring message = L"\ncontact amount: " + std::to_wstring( value_unsigned );
+            OutputDebugStringW( message.data() );
         } 
-        */
+        //else if( UsagePage == 0x0d and NotRange.Usage == 0x47 )// touch valid
 
         /*
         HidP_GetUsageValueArray( HidP_Input ,

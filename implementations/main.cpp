@@ -4,7 +4,7 @@
 // markt precision multiple touch input controls
 
 //#define _ITERATOR_DEBUG_LEVEL 0
-#define WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
 
 #pragma comment( lib , "hid.lib" )
 #pragma comment( lib , "d2d1" )

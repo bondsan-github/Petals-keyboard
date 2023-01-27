@@ -122,7 +122,28 @@ namespace hid
 
     void hid_devices::update_devices_buffered( RAWINPUT * in_raw_input_buffer , uint in_buffer_size )
     {
+        RAWINPUT * current_report = in_raw_input_buffer;
 
+        // for each input report
+        for( int index{ 0 }; index < in_buffer_size; index++ )
+        {
+            //in_raw_input_buffer[index] = current_report;
+
+            for( auto & device : input_devices )
+            {
+                
+                if( device.get_handle() == in_raw_input_buffer[ index ].header.hDevice )
+                {
+                    
+                    device.update( in_raw_input_buffer[ index ] );
+                }
+            }
+        }
+        //NEXTRAWINPUTBLOCK();
+        //long size = sizeof (unsigned long long); // =8 bytes // 4Ui64
+        //long sizelong = sizeof (long); // =4bytes
+        //#define RAWINPUT_ALIGN(x)   (((x) + sizeof(DWORD) - 1) & ~(sizeof(DWORD) - 1))
+        //NEXTRAWINPUTBLOCK(ptr) ((PRAWINPUT)RAWINPUT_ALIGN((ULONG_PTR)((char *)(ptr) + (ptr)->header.dwSize)))
     }
 
     void hid_devices::draw()

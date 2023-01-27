@@ -103,20 +103,26 @@ namespace hid
 
             hid_value * value_contact_identifier { nullptr };
             ulong contact_identifier {0};
-            hid_value * x { nullptr };
+            //hid_value * x { nullptr };
 
-            //std::vector< contact > contacts {};
-            /*class contact
+            class contact
             {
                 private:
-                uint identifier {};
-                uint x {};
-                uint y {};
-            };*/
 
-            std::vector< circle > circles {};
+                    //uint identifier {};
+                    ulong x {-1u};
+                    ulong y {-1u};
+                    circle_d2d circle;
 
-            uint maximum_contact_amount { 0 };
+                public:
+                    contact() {}
+                    contact( ulong in_x , ulong in_y ) { circle.set_centre( in_x , in_y ); }
+            };
+
+
+            std::vector< contact > contacts {};
+
+            //uint maximum_contact_amount { 0 };
 
         private:
             
@@ -181,7 +187,9 @@ namespace hid
                 return value;
             }
 
-            void add_contact( uint in_id , ulong in_x , ulong in_y )
+            void add_x( ) {}
+
+            void add_contact(  ulong in_x , ulong in_y ) //uint in_id ,
             {
 
             }
@@ -193,7 +201,7 @@ namespace hid
 
             void set_x( hid_value * const in_value )
             {
-                x = in_value;
+                //x = in_value;
             }
 
             void  draw();
