@@ -100,20 +100,20 @@ namespace hid
             collection_itr->set_item_positions();
         }
     }
-    /*
-    uint hid_collections::get_contact_amount()
+    
+    uint hid_collections::get_contact_amount_maximum()
     {
         uint amount { 0 };
 
         for( auto & collection : collections )
         {
-            amount = collection.get_contact_amount();
+            //amount = collection.get_contact_amount_maximum();
             break;
         }
 
         return amount;
     }
-
+    /*
     uint hid_collections::get_contact_identifier()
     {
         uint amount{ 0 };

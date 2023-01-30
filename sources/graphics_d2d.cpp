@@ -180,7 +180,7 @@ namespace hid
         page->EndDraw();
     }
 
-    D2D_SIZE_U graphics_d2d::get_size_pixels()
+    D2D_SIZE_U graphics_d2d::get_screen_size()
     {
         return { page->GetPixelSize().width , page->GetPixelSize().height };
     }

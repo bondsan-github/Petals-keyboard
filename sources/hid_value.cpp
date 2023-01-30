@@ -9,8 +9,8 @@ namespace hid
 
     hid_value::hid_value( hid_device * const in_device , const _HIDP_VALUE_CAPS & construct_value )
     {
-        //if( this not_eq &construct_value )
-        //{
+        if( this not_eq &construct_value )
+        {
             device = in_device;
             value_signed = value_signed;
 
@@ -49,11 +49,17 @@ namespace hid
             NotRange.DesignatorIndex = construct_value.NotRange.DesignatorIndex;
             NotRange.DataIndex = construct_value.NotRange.DataIndex;
 
+            /*
             if( UsagePage == 0x0d and NotRange.Usage == 0x51 )//contact_identifier
                 locate::get_input_devices().get_device( device->get_handle() )->set_contact_identifier( this );
             else if( UsagePage == 0x01 and NotRange.Usage == 0x30 )// X
-                locate::get_input_devices().get_device( device->get_handle() )->set_x( this );
-        //}
+                locate::get_input_devices().get_device( device->get_handle() )->set_x( this );*/
+
+            if( UsagePage == 0x0d and NotRange.Usage == 0x55 )//contact amount maximum
+            {
+                locate::get_input_devices().get_device( device->get_handle() )->set_contact_amount_maximum( LogicalMax );
+            }
+        }
     }
 
     void hid_value::set_information_text()
@@ -265,7 +271,7 @@ namespace hid
     }
 
     //void hid_value::update( RAWIHID in_raw_data )
-    void hid_value::update( RAWINPUT & in_raw_data )
+    void hid_value::update( RAWINPUT * in_raw_data )
     {
         // if( not IsRange )
         NTSTATUS status = HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
@@ -275,8 +281,8 @@ namespace hid
                                   NotRange.Usage ,
                                   &value_unsigned ,
                                   reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() ) ,
-                                  reinterpret_cast< char * >( in_raw_data.data.hid.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
-                                  in_raw_data.data.hid.dwSizeHid * in_raw_data.data.hid.dwCount );
+                                  reinterpret_cast< char * >( in_raw_data->data.hid.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
+                                  in_raw_data->data.hid.dwSizeHid * in_raw_data->data.hid.dwCount );
 
         //if( status != HIDP_STATUS_SUCCESS ) error_exit( L"hid_value:get_value");
         
@@ -284,14 +290,14 @@ namespace hid
         
         if( UsagePage == 0x01 and NotRange.Usage == 0x31 )// generic : Y
         {
-            std::wstring message = L"\nY: " + std::to_wstring( value_unsigned );
-            OutputDebugStringW( message.data() );
+            //std::wstring message = L"\nY: " + std::to_wstring( value_unsigned );
+            //OutputDebugStringW( message.data() );
             
         }
         else if( UsagePage == 0x01 and NotRange.Usage == 0x30 )// X
         {
-            std::wstring message = L"\nX: " + std::to_wstring( value_unsigned );
-            OutputDebugStringW( message.data() );
+            //std::wstring message = L"\nX: " + std::to_wstring( value_unsigned );
+            //OutputDebugStringW( message.data() );
         }
         else if( UsagePage == 0x0d and NotRange.Usage == 0x51 )//contact_identifier
         {
@@ -300,14 +306,14 @@ namespace hid
             // 10 // 2
             // 11 // 3
 
-            std::wstring message = L"\ncontact id: " + std::to_wstring( value_unsigned );
-            OutputDebugStringW( message.data() );
+            //std::wstring message = L"\ncontact id: " + std::to_wstring( value_unsigned );
+            //OutputDebugStringW( message.data() );
             //locate::get_input_devices().get_device( in_raw_data.header.hDevice )->add_contact( value_unsigned );
         }
         else if( UsagePage == 0x0d and NotRange.Usage == 0x54 )// contact amount
         { 
-            std::wstring message = L"\ncontact amount: " + std::to_wstring( value_unsigned );
-            OutputDebugStringW( message.data() );
+            //std::wstring message = L"\ncontact amount: " + std::to_wstring( value_unsigned );
+            //OutputDebugStringW( message.data() );
         } 
         //else if( UsagePage == 0x0d and NotRange.Usage == 0x47 )// touch valid
 

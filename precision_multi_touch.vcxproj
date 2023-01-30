@@ -152,6 +152,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="sources\circle_d2d.cpp" />
+    <ClCompile Include="sources\contact.cpp" />
     <ClCompile Include="sources\grid_d2d.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -191,6 +192,7 @@
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h" />
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h" />
     <ClInclude Include="headers\circle_d2d.h" />
+    <ClInclude Include="headers\contact.h" />
     <ClInclude Include="headers\hid_collections.h" />
     <ClInclude Include="headers\custom_types.h" />
     <ClInclude Include="headers\graphics_d2d.h" />

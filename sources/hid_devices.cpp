@@ -109,11 +109,11 @@ namespace hid
         return pointer_device;
     }
 
-    void hid_devices::update_devices( RAWINPUT & in_hid_report )
+    void hid_devices::update_devices( RAWINPUT * in_hid_report )
     {
         for( auto & device : input_devices ) 
         {
-            if( device.get_handle() == in_hid_report.header.hDevice )
+            if( device.get_handle() == in_hid_report->header.hDevice )
                 //device.update( in_hid_report.data.hid );
                 device.update( in_hid_report );
                 //device.update();
@@ -131,11 +131,9 @@ namespace hid
 
             for( auto & device : input_devices )
             {
-                
                 if( device.get_handle() == in_raw_input_buffer[ index ].header.hDevice )
                 {
-                    
-                    device.update( in_raw_input_buffer[ index ] );
+                    //device.update( in_raw_input_buffer[ index ] );
                 }
             }
         }

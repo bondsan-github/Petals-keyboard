@@ -321,10 +321,10 @@ namespace hid
         // --------------------------------------------------------------------
     }
 
-    void hid_collection::update( RAWINPUT & in_raw_data )
+    void hid_collection::update_input( RAWINPUT * in_raw_data )
     {
         for( auto & button : input_buttons ) button.update( in_raw_data );
-        for( auto & value : input_values ) value.update( in_raw_data );
+        for( auto & value  : input_values  ) value.update( in_raw_data );
     }
 
     void hid_collection::draw() const

@@ -30,7 +30,7 @@ namespace hid
             PCWSTR     title_text  { L"Precision multiple touch input" };
             UINT       class_style { CS_HREDRAW | CS_VREDRAW };
             //DWORD      style       { WS_VISIBLE | WS_MAXIMIZE }; 
-            DWORD      style       { WS_VISIBLE | WS_MAXIMIZE | WS_OVERLAPPEDWINDOW };
+            DWORD      style       { WS_VISIBLE | WS_MAXIMIZE | WS_DLGFRAME };//| WS_OVERLAPPEDWINDOW };
             DWORD      style_extra { 0l };//{ WS_EX_LAYERED | WS_EX_COMPOSITED | WS_EX_TRANSPARENT };
     
          //WS_EX_LAYOUTRTL
@@ -61,8 +61,6 @@ namespace hid
             static inline const wchar_t class_name [] { L"precision_input" };
 
             //static inline gui_microsoft * this_pointer {}; //unique_pointer
-
-            
 
             LRESULT result { 0 };
             bool message_handled{ false };

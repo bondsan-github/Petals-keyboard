@@ -58,7 +58,8 @@ namespace hid
             
             ID2D1HwndRenderTarget & get_page();
             D2D_SIZE_F              get_size_dips();
-            D2D_SIZE_U              get_size_pixels();
+            //D2D_SIZE_U              get_size_pixels();
+            D2D_SIZE_U              get_screen_size();
             D2D_SIZE_F              get_dpi();
            
             void set_line_width( float in_width ) { line_width = in_width; }

@@ -16,7 +16,7 @@ namespace hid
             
             text information {};
             std::wstring content {};
-            ulong value_unsigned { -1ul }; // = 0xffff'ffff
+            ulong value_unsigned { 0ul }; // = 0xffff'ffff
             long value_signed { -1 };
 
             hid_device * device { nullptr };
@@ -32,11 +32,11 @@ namespace hid
             float get_text_right() const { return information.get_right(); }
             float get_text_top()   const { return information.get_top(); }
 
-            void  update( RAWINPUT & in_raw_data );
-            void update_information_text();
+            void  update( RAWINPUT * in_raw_data );
+            void  update_information_text();
 
             //hid_device * get_device() const { return device; }
-            long         get_value() const { return value_signed; }
+            long  get_value() const { return value_signed; }
 
             void  draw() const { information.draw(); }
     };

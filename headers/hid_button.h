@@ -22,7 +22,7 @@ namespace hid
 
         public:
 
-            hid_button( hid_device * in_device , const _HIDP_BUTTON_CAPS & construct_button );
+            hid_button( hid_device * in_device, const _HIDP_BUTTON_CAPS & in_button_capabilities );
             
             void set_information_text();
             void append_information_text( std::wstring in_text ) { information.add_content(in_text); }
@@ -35,7 +35,7 @@ namespace hid
             float get_text_width() const { return information.get_formated_width();  }
             float get_text_height() const { return information.get_formated_height(); }
             
-            void update( RAWINPUT & in_raw_data );
+            void update( RAWINPUT * in_raw_data );
             void update_information_text();
 
             //void update( RAWHID in_raw_data );

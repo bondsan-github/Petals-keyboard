@@ -87,6 +87,9 @@
     <ClCompile Include="..\..\Touchpad\markt\touchpad\reference sources\hid.c">
       <Filter>headers</Filter>
     </ClCompile>
+    <ClCompile Include="sources\contact.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="resources\DeclareDPIAware.manifest">
@@ -185,6 +188,9 @@
       <Filter>reference</Filter>
     </ClInclude>
     <ClInclude Include="headers\circle_d2d.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\contact.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

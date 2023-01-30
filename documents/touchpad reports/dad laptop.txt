@@ -1,0 +1,522 @@
+All device list:
+Microsoft HIDI2C Device 9999 (VID 1739, PID 52545, version 3.1) @ \\?\hid#syna7db5&col01#5&22d87139&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}
+Microsoft HIDI2C Device 9999 (VID 1739, PID 52545, version 3.1) @ \\?\hid#syna7db5&col04#5&22d87139&0&0003#{4d1e55b2-f16f-11cf-88cb-001111000030}
+Microsoft HIDI2C Device 9999 (VID 1739, PID 52545, version 3.1) @ \\?\hid#syna7db5&col02#5&22d87139&0&0001#{4d1e55b2-f16f-11cf-88cb-001111000030}
+Microsoft HIDI2C Device 9999 (VID 1739, PID 52545, version 3.1) @ \\?\hid#syna7db5&col03#5&22d87139&0&0002#{4d1e55b2-f16f-11cf-88cb-001111000030}
+Acer Inc Acer Airplane Mode Controller (no serial number) (VID 57069, PID 65261, version 1.1) @ \\?\hid#10251229#3&9d5d338&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}
+BLE device list:
+
+Press any key
+
+Complete device list (took 1 ms to get 5 devices):
+\\?\hid#syna7db5&col01#5&22d87139&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}
+Microsoft HIDI2C Device 9999 (VID 1739, PID 52545, version 3.1)
+Max Lengths: Input 4, Output 0, Feature 0
+Serial Ports:
+Report Descriptor:
+  05 01 09 02 A1 01 85 02 09 01 A1 00 05 09 19 01 29 02 15 00 25 01 35 00 45 01 65 00 55 00 75 01 95 02 81 02 95 06 81 03 05 01 09 30 25 7F 45 00 75 08 95 01 81 06 09 31 81 06 C1 00 C1 00 (62 bytes)
+  UsagePage 1
+  Usage 2
+  Collection 1
+    ReportID 2
+    Usage 1
+    Collection 0
+      UsagePage 9
+      UsageMinimum 1
+      UsageMaximum 2
+      LogicalMinimum 0
+      LogicalMaximum 1
+      PhysicalMinimum 0
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      ReportCount 2
+      Input 2
+      ReportCount 6
+      Input 3
+      UsagePage 1
+      Usage 48
+      LogicalMaximum 127
+      PhysicalMaximum 0
+      ReportSize 8
+      ReportCount 1
+      Input 6
+      Usage 49
+      Input 6
+    EndCollection 0
+  EndCollection 0
+Usage: 10002 GenericDesktopMouse
+Input: ReportID=2, Length=4, Items=4
+  2 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: 90001 Button1, 90002 Button2
+  6 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+  1 Elements x 8 Bits, Units: None, Expected Usage Type: 0, Flags: Variable, Relative, Usages: 10030 GenericDesktopX
+  1 Elements x 8 Bits, Units: None, Expected Usage Type: 0, Flags: Variable, Relative, Usages: 10031 GenericDesktopY
+Opening device for 20 seconds...
+Failed to open device.
+
+
+\\?\hid#syna7db5&col04#5&22d87139&0&0003#{4d1e55b2-f16f-11cf-88cb-001111000030}
+Microsoft HIDI2C Device 9999 (VID 1739, PID 52545, version 3.1)
+Max Lengths: Input 62, Output 21, Feature 4
+Serial Ports:
+Report Descriptor:
+  06 00 FF 09 01 A1 01 85 0B 09 04 15 00 25 FF 35 00 46 FF FF 66 01 10 55 0C 75 08 95 3D 81 02 85 0C 09 05 81 02 85 09 09 02 95 14 91 02 85 0A 09 03 91 02 85 0F 09 06 95 03 B1 02 85 0E 09 07 95 01 B1 02 25 01 45 01 65 00 55 00 75 01 95 10 B1 03 C1 00 (83 bytes)
+  UsagePage 65280
+  Usage 1
+  Collection 1
+    ReportID 11
+    Usage 4
+    LogicalMinimum 0
+    LogicalMaximum 255
+    PhysicalMinimum 0
+    PhysicalMaximum 65535
+    Unit 4097
+    UnitExponent 12
+    ReportSize 8
+    ReportCount 61
+    Input 2
+    ReportID 12
+    Usage 5
+    Input 2
+    ReportID 9
+    Usage 2
+    ReportCount 20
+    Output 2
+    ReportID 10
+    Usage 3
+    Output 2
+    ReportID 15
+    Usage 6
+    ReportCount 3
+    Feature 2
+    ReportID 14
+    Usage 7
+    ReportCount 1
+    Feature 2
+    LogicalMaximum 1
+    PhysicalMaximum 1
+    Unit 0
+    UnitExponent 0
+    ReportSize 1
+    ReportCount 16
+    Feature 3
+  EndCollection 0
+Usage: FF000001 4278190081
+Input: ReportID=11, Length=62, Items=1
+  61 Elements x 8 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: FF000004 4278190084
+Input: ReportID=12, Length=62, Items=1
+  61 Elements x 8 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: FF000005 4278190085
+Output: ReportID=9, Length=21, Items=1
+  20 Elements x 8 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: FF000002 4278190082
+Output: ReportID=10, Length=21, Items=1
+  20 Elements x 8 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: FF000003 4278190083
+Feature: ReportID=15, Length=4, Items=1
+  3 Elements x 8 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: FF000006 4278190086
+Feature: ReportID=14, Length=4, Items=2
+  1 Elements x 8 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: FF000007 4278190087
+  16 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+Opening device for 20 seconds...
+Opened device.
+Closed device.
+
+
+\\?\hid#syna7db5&col02#5&22d87139&0&0001#{4d1e55b2-f16f-11cf-88cb-001111000030}
+Microsoft HIDI2C Device 9999 (VID 1739, PID 52545, version 3.1)
+Max Lengths: Input 30, Output 0, Feature 257
+Serial Ports:
+Report Descriptor:
+  05 0D 09 05 A1 01 85 03 09 22 A1 02 09 47 15 00 25 01 35 00 45 01 65 00 55 00 75 01 95 01 81 02 09 42 81 02 09 51 25 05 45 00 75 03 81 02 25 01 45 01 75 01 95 03 81 03 05 01 09 30 26 D4 04 46 05 04 65 11 55 0E 75 10 95 01 81 02 09 31 26 80 03 46 EA 02 81 02 C1 00 05 0D 09 22 A1 02 09 47 25 01 45 01 65 00 55 00 75 01 81 02 09 42 81 02 09 51 25 05 46 EA 02 65 11 55 0E 75 03 81 02 25 01 45 01 65 00 55 00 75 01 95 03 81 03 05 01 09 30 26 D4 04 46 05 04 65 11 55 0E 75 10 95 01 81 02 09 31 26 80 03 46 EA 02 81 02 C1 00 05 0D 09 22 A1 02 09 47 25 01 45 01 65 00 55 00 75 01 81 02 09 42 81 02 09 51 25 05 46 EA 02 65 11 55 0E 75 03 81 02 25 01 45 01 65 00 55 00 75 01 95 03 81 03 05 01 09 30 26 D4 04 46 05 04 65 11 55 0E 75 10 95 01 81 02 09 31 26 80 03 46 EA 02 81 02 C1 00 05 0D 09 22 A1 02 09 47 25 01 45 01 65 00 55 00 75 01 81 02 09 42 81 02 09 51 25 05 46 EA 02 65 11 55 0E 75 03 81 02 25 01 45 01 65 00 55 00 75 01 95 03 81 03 05 01 09 30 26 D4 04 46 05 04 65 11 55 0E 75 10 95 01 81 02 09 31 26 80 03 46 EA 02 81 02 C1 00 05 0D 09 22 A1 02 09 47 25 01 45 01 65 00 55 00 75 01 81 02 09 42 81 02 09 51 25 05 46 EA 02 65 11 55 0E 75 03 81 02 25 01 45 01 65 00 55 00 75 01 95 03 81 03 05 01 09 30 26 D4 04 46 05 04 65 11 55 0E 75 10 95 01 81 02 09 31 26 80 03 46 EA 02 81 02 C1 00 05 0D 09 56 26 FF FF 46 FF FF 66 01 10 55 0C 81 02 09 54 25 7F 75 08 81 02 05 09 09 01 25 01 45 01 65 00 55 00 75 01 81 02 95 07 81 03 85 0D 05 0D 09 60 95 01 B1 02 96 FF 07 B1 03 85 08 09 55 25 0F 46 FF FF 66 01 10 55 0C 75 04 95 01 B1 02 09 59 B1 02 25 01 45 01 65 00 55 00 75 01 96 F8 07 B1 03 85 07 06 00 FF 09 C5 25 FF 46 FF FF 66 01 10 55 0C 75 08 96 00 01 B1 02 C1 00 (553 bytes)
+  UsagePage 13
+  Usage 5
+  Collection 1
+    ReportID 3
+    Usage 34
+    Collection 2
+      Usage 71
+      LogicalMinimum 0
+      LogicalMaximum 1
+      PhysicalMinimum 0
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      ReportCount 1
+      Input 2
+      Usage 66
+      Input 2
+      Usage 81
+      LogicalMaximum 5
+      PhysicalMaximum 0
+      ReportSize 3
+      Input 2
+      LogicalMaximum 1
+      PhysicalMaximum 1
+      ReportSize 1
+      ReportCount 3
+      Input 3
+      UsagePage 1
+      Usage 48
+      LogicalMaximum 1236
+      PhysicalMaximum 1029
+      Unit 17
+      UnitExponent 14
+      ReportSize 16
+      ReportCount 1
+      Input 2
+      Usage 49
+      LogicalMaximum 896
+      PhysicalMaximum 746
+      Input 2
+    EndCollection 0
+    UsagePage 13
+    Usage 34
+    Collection 2
+      Usage 71
+      LogicalMaximum 1
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      Input 2
+      Usage 66
+      Input 2
+      Usage 81
+      LogicalMaximum 5
+      PhysicalMaximum 746
+      Unit 17
+      UnitExponent 14
+      ReportSize 3
+      Input 2
+      LogicalMaximum 1
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      ReportCount 3
+      Input 3
+      UsagePage 1
+      Usage 48
+      LogicalMaximum 1236
+      PhysicalMaximum 1029
+      Unit 17
+      UnitExponent 14
+      ReportSize 16
+      ReportCount 1
+      Input 2
+      Usage 49
+      LogicalMaximum 896
+      PhysicalMaximum 746
+      Input 2
+    EndCollection 0
+    UsagePage 13
+    Usage 34
+    Collection 2
+      Usage 71
+      LogicalMaximum 1
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      Input 2
+      Usage 66
+      Input 2
+      Usage 81
+      LogicalMaximum 5
+      PhysicalMaximum 746
+      Unit 17
+      UnitExponent 14
+      ReportSize 3
+      Input 2
+      LogicalMaximum 1
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      ReportCount 3
+      Input 3
+      UsagePage 1
+      Usage 48
+      LogicalMaximum 1236
+      PhysicalMaximum 1029
+      Unit 17
+      UnitExponent 14
+      ReportSize 16
+      ReportCount 1
+      Input 2
+      Usage 49
+      LogicalMaximum 896
+      PhysicalMaximum 746
+      Input 2
+    EndCollection 0
+    UsagePage 13
+    Usage 34
+    Collection 2
+      Usage 71
+      LogicalMaximum 1
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      Input 2
+      Usage 66
+      Input 2
+      Usage 81
+      LogicalMaximum 5
+      PhysicalMaximum 746
+      Unit 17
+      UnitExponent 14
+      ReportSize 3
+      Input 2
+      LogicalMaximum 1
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      ReportCount 3
+      Input 3
+      UsagePage 1
+      Usage 48
+      LogicalMaximum 1236
+      PhysicalMaximum 1029
+      Unit 17
+      UnitExponent 14
+      ReportSize 16
+      ReportCount 1
+      Input 2
+      Usage 49
+      LogicalMaximum 896
+      PhysicalMaximum 746
+      Input 2
+    EndCollection 0
+    UsagePage 13
+    Usage 34
+    Collection 2
+      Usage 71
+      LogicalMaximum 1
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      Input 2
+      Usage 66
+      Input 2
+      Usage 81
+      LogicalMaximum 5
+      PhysicalMaximum 746
+      Unit 17
+      UnitExponent 14
+      ReportSize 3
+      Input 2
+      LogicalMaximum 1
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      ReportCount 3
+      Input 3
+      UsagePage 1
+      Usage 48
+      LogicalMaximum 1236
+      PhysicalMaximum 1029
+      Unit 17
+      UnitExponent 14
+      ReportSize 16
+      ReportCount 1
+      Input 2
+      Usage 49
+      LogicalMaximum 896
+      PhysicalMaximum 746
+      Input 2
+    EndCollection 0
+    UsagePage 13
+    Usage 86
+    LogicalMaximum 65535
+    PhysicalMaximum 65535
+    Unit 4097
+    UnitExponent 12
+    Input 2
+    Usage 84
+    LogicalMaximum 127
+    ReportSize 8
+    Input 2
+    UsagePage 9
+    Usage 1
+    LogicalMaximum 1
+    PhysicalMaximum 1
+    Unit 0
+    UnitExponent 0
+    ReportSize 1
+    Input 2
+    ReportCount 7
+    Input 3
+    ReportID 13
+    UsagePage 13
+    Usage 96
+    ReportCount 1
+    Feature 2
+    ReportCount 2047
+    Feature 3
+    ReportID 8
+    Usage 85
+    LogicalMaximum 15
+    PhysicalMaximum 65535
+    Unit 4097
+    UnitExponent 12
+    ReportSize 4
+    ReportCount 1
+    Feature 2
+    Usage 89
+    Feature 2
+    LogicalMaximum 1
+    PhysicalMaximum 1
+    Unit 0
+    UnitExponent 0
+    ReportSize 1
+    ReportCount 2040
+    Feature 3
+    ReportID 7
+    UsagePage 65280
+    Usage 197
+    LogicalMaximum 255
+    PhysicalMaximum 65535
+    Unit 4097
+    UnitExponent 12
+    ReportSize 8
+    ReportCount 256
+    Feature 2
+  EndCollection 0
+Usage: D0005 851973
+Input: ReportID=3, Length=30, Items=34
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0047 852039
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0042 852034
+  1 Elements x 3 Bits, Units: None, Expected Usage Type: 0, Flags: Variable, Usages: D0051 852049
+  3 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10030 GenericDesktopX
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10031 GenericDesktopY
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0047 852039
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0042 852034
+  1 Elements x 3 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: D0051 852049
+  3 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10030 GenericDesktopX
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10031 GenericDesktopY
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0047 852039
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0042 852034
+  1 Elements x 3 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: D0051 852049
+  3 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10030 GenericDesktopX
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10031 GenericDesktopY
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0047 852039
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0042 852034
+  1 Elements x 3 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: D0051 852049
+  3 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10030 GenericDesktopX
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10031 GenericDesktopY
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0047 852039
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0042 852034
+  1 Elements x 3 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: D0051 852049
+  3 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10030 GenericDesktopX
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: 10031 GenericDesktopY
+  1 Elements x 16 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: D0056 852054
+  1 Elements x 8 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: D0054 852052
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: 90001 Button1
+  7 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+Feature: ReportID=13, Length=257, Items=2
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0060 852064
+  2047 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+Feature: ReportID=8, Length=257, Items=3
+  1 Elements x 4 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: D0055 852053
+  1 Elements x 4 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: D0059 852057
+  2040 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+Feature: ReportID=7, Length=257, Items=1
+  256 Elements x 8 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: FF0000C5 4278190277
+Opening device for 20 seconds...
+Failed to open device.
+
+
+\\?\hid#syna7db5&col03#5&22d87139&0&0002#{4d1e55b2-f16f-11cf-88cb-001111000030}
+Microsoft HIDI2C Device 9999 (VID 1739, PID 52545, version 3.1)
+Max Lengths: Input 0, Output 0, Feature 2
+Serial Ports:
+Report Descriptor:
+  05 0D 09 0E A1 01 85 06 09 22 A1 00 09 57 15 00 25 01 35 00 45 01 65 00 55 00 75 01 95 01 B1 02 09 58 B1 02 95 06 B1 03 85 04 C1 00 09 22 A1 02 09 52 25 0A 46 FF FF 66 01 10 55 0C 75 08 95 01 B1 02 C1 00 C1 00 (70 bytes)
+  UsagePage 13
+  Usage 14
+  Collection 1
+    ReportID 6
+    Usage 34
+    Collection 0
+      Usage 87
+      LogicalMinimum 0
+      LogicalMaximum 1
+      PhysicalMinimum 0
+      PhysicalMaximum 1
+      Unit 0
+      UnitExponent 0
+      ReportSize 1
+      ReportCount 1
+      Feature 2
+      Usage 88
+      Feature 2
+      ReportCount 6
+      Feature 3
+      ReportID 4
+    EndCollection 0
+    Usage 34
+    Collection 2
+      Usage 82
+      LogicalMaximum 10
+      PhysicalMaximum 65535
+      Unit 4097
+      UnitExponent 12
+      ReportSize 8
+      ReportCount 1
+      Feature 2
+    EndCollection 0
+  EndCollection 0
+Usage: D000E 851982
+Feature: ReportID=6, Length=2, Items=3
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0057 852055
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: PushButton, Flags: Variable, Usages: D0058 852056
+  6 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+Feature: ReportID=4, Length=2, Items=1
+  1 Elements x 8 Bits, Units: SILinear, Expected Usage Type: 0, Flags: Variable, Usages: D0052 852050
+Opening device for 20 seconds...
+Opened device.
+Closed device.
+
+
+\\?\hid#10251229#3&9d5d338&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}
+Acer Inc Acer Airplane Mode Controller (no serial number) (VID 57069, PID 65261, version 1.1)
+Max Lengths: Input 2, Output 0, Feature 0
+Serial Ports:
+Report Descriptor:
+  05 01 09 0C A1 01 85 01 09 C6 15 00 25 01 35 00 45 01 65 00 55 00 75 01 95 01 81 06 95 07 81 03 C1 00 (34 bytes)
+  UsagePage 1
+  Usage 12
+  Collection 1
+    ReportID 1
+    Usage 198
+    LogicalMinimum 0
+    LogicalMaximum 1
+    PhysicalMinimum 0
+    PhysicalMaximum 1
+    Unit 0
+    UnitExponent 0
+    ReportSize 1
+    ReportCount 1
+    Input 6
+    ReportCount 7
+    Input 3
+  EndCollection 0
+Usage: 1000C 65548
+Input: ReportID=1, Length=2, Items=2
+  1 Elements x 1 Bits, Units: None, Expected Usage Type: OneShot, Flags: Variable, Relative, Usages: 100C6 65734
+  7 Elements x 1 Bits, Units: None, Expected Usage Type: 0, Flags: Constant, Variable, Usages:
+Opening device for 20 seconds...
+Opened device.
+Closed device.
+
+
+Press a key to exit...

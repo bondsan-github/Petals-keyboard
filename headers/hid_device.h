@@ -8,7 +8,7 @@
 #include "..\headers\text_d2d.h"
 //#include "..\headers\line_d2d.h"
 #include "..\headers\circle_d2d.h"
-
+#include "..\headers\contact.h"
 #include "..\headers\hid_collections.h"
 #include "..\headers\hid_usages.h"
 #include "..\headers\hid_button.h"   
@@ -101,33 +101,17 @@ namespace hid
 
             vertex       information_spacing     { 15.0f, 15.0f }; // spacers
 
-            hid_value * value_contact_identifier { nullptr };
-            ulong contact_identifier {0};
+            //hid_value * value_contact_identifier { nullptr };
+            //ulong contact_identifier {0};
             //hid_value * x { nullptr };
 
-            class contact
-            {
-                private:
-
-                    //uint identifier {};
-                    ulong x {-1u};
-                    ulong y {-1u};
-                    circle_d2d circle;
-
-                public:
-                    contact() {}
-                    contact( ulong in_x , ulong in_y ) { circle.set_centre( in_x , in_y ); }
-            };
-
-
+            //uint contact_amount_maximum{ 0 };
             std::vector< contact > contacts {};
-
-            //uint maximum_contact_amount { 0 };
 
         private:
             
             void set_text_device();
-            void set_text_collections();
+            //void set_text_collections();
 
         public:
 
@@ -144,9 +128,7 @@ namespace hid
             unsigned char * get_data() { return data_preparsed.data(); }
             uint            get_input_report_size() { return capabilities.InputReportByteLength; }
             
-            //void add_contact( uint in_identifier );
-            
-            void  update( RAWINPUT & in_report );
+            void  update( RAWINPUT * in_report );
             void  update();
 
             void  collect_information();
@@ -157,52 +139,27 @@ namespace hid
             float get_text_right()  const { return information.get_right(); }
             float get_text_left()   const { return information.get_left(); }
 
-            long get_value( ushort in_page , ushort in_usage, RAWINPUT & in_input )
+            long get_value_scaled( ushort in_page , ushort in_usage, RAWINPUT in_input );
+            //ulong get_value_unscaled( ushort in_page , ushort in_usage , RAWINPUT * in_input );
+            ulong get_value_unscaled( ushort in_page , ushort in_usage , RAWHID * in_input );
+
+            void set_contact_amount_maximum( uint in_maximum ) 
             {
-                long value {0};
-                //HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
-                HidP_GetScaledUsageValue( HidP_Input , // signed output
-                                    in_page ,
-                                    0 ,
-                                    in_usage ,
-                                    &value ,
-                                    reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) ,
-                                    reinterpret_cast< char * >( in_input.data.hid.bRawData ) , //BYTE uchar to char
-                                    in_input.data.hid.dwSizeHid * in_input.data.hid.dwCount );
-                return value;
+                // if in_maximum > 0;
+                //contact_amount_maximum = in_maximum;
+                contacts.resize( in_maximum );
             }
 
-            long get_value( ushort in_page , ushort in_usage , char * in_report )
+            void set_contact_position( ulong in_identifier , ulong in_x , ulong in_y )
             {
-                long value{ 0 };
-                //HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
-                HidP_GetScaledUsageValue( HidP_Input , // signed output
-                                          in_page ,
-                                          0 ,
-                                          in_usage ,
-                                          &value ,
-                                          reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) ,
-                                          reinterpret_cast< char * >( in_report ) , //BYTE uchar to char
-                                          capabilities.InputReportByteLength + 1 );
-                return value;
+                contacts.at( in_identifier ).set_position( in_x , in_y );
             }
 
-            void add_x( ) {}
-
-            void add_contact(  ulong in_x , ulong in_y ) //uint in_id ,
-            {
-
-            }
-
-            void set_contact_identifier( hid_value * const in_value )
-            {
-                value_contact_identifier = in_value;
-            }
-
-            void set_x( hid_value * const in_value )
-            {
-                //x = in_value;
-            }
+            //void add_x( ) {}
+            //void add_contact( uint in_identifier );
+            //void add_contact(  ulong in_x , ulong in_y ) //uint in_id ,
+            //void set_contact_identifier( hid_value * const in_value ) { value_contact_identifier = in_value; }
+            //void set_x( hid_value * const in_value ) { //x = in_value; }
 
             void  draw();
     };

@@ -123,7 +123,7 @@ namespace hid
         information.set_content( content );
     }
 
-    void hid_button::update( RAWINPUT & in_raw_data )
+    void hid_button::update( RAWINPUT * in_raw_data )
     //void hid_button::update( RAWHID in_raw_data )
     {
         USAGE usages;// { nullptr }; // active buttons in page
@@ -137,8 +137,8 @@ namespace hid
                         &usages ,
                         &usages_amount ,
                         reinterpret_cast< PHIDP_PREPARSED_DATA >( device->get_data() ) ,
-                        reinterpret_cast< char * >( in_raw_data.data.hid.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
-                        in_raw_data.data.hid.dwSizeHid * in_raw_data.data.hid.dwCount );
+                        reinterpret_cast< char * >( in_raw_data->data.hid.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
+                        in_raw_data->data.hid.dwSizeHid * in_raw_data->data.hid.dwCount );
 
         if( usages == NotRange.Usage ) 
         {

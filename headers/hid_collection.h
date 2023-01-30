@@ -63,7 +63,7 @@ namespace hid
             //uint get_x();
             //uint get_y();
             
-            void update( RAWINPUT & in_raw_data );
+            void update_input( RAWINPUT * in_raw_data );
             //void update( RAWHID in_raw_data );
             void draw() const;
     };

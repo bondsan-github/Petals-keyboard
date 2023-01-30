@@ -47,6 +47,9 @@ namespace hid
         //message = L" vendor: " + std::to_wstring( identity.vendor );
         //message += L"  product: " + std::to_wstring( identity.product );
         //OutputDebugStringW( message.c_str() );
+
+        // find in collections 0x0d , 0x55 Contact Count Maximum
+        // contacts.resize( contacts_maximum );
     }
 
     bool hid_device::is_multi_touch()
@@ -245,9 +248,7 @@ namespace hid
         BOOL result = HidD_GetInputReport( read_file_handle , &buffer , buffer_size );
         if( not result ) print_error( L"\nget input report error" );
 
-        long x = get_value( 0x01 , 0x30 , buffer );
-        long y = get_value( 0x01 , 0x31 , buffer );
-        long id = get_value( 0x0d , 0x51 , buffer );
+        
         //ulong max = get_value( 0x0d , 0x55, input_report );
         long contact_amount = get_value( 0x0d , 0x54 , buffer );
 
@@ -269,28 +270,73 @@ namespace hid
                 //data.clear();
     }
 
-    void hid_device::update( RAWINPUT & input_report )
+    void hid_device::update( RAWINPUT * input_report )
     {
         //contact_identifier = value_contact_identifier->get_value();
 
-        collections.update( input_report );
+        //collections.update_input( input_report );
         
-        //collections.get_x();
-        //collections.get_y();
-        
-        //set_contact( id , x , y );
+        float x  = get_value_unscaled( 0x01 , 0x30 , &input_report->data.hid ); // x
+        float y  = get_value_unscaled( 0x01 , 0x31 , &input_report->data.hid ); // y
+        float id = get_value_unscaled( 0x0d , 0x51 , &input_report->data.hid ); // id
+
+        // pad 1496 x 968
+        // screen 3840 x 2003
+        float screen_width  = locate::get_graphics().get_screen_size().width;
+        float screen_height = locate::get_graphics().get_screen_size().height;
+
+        //if( x <= 0 ) x = 1;
+
+        //x *= 0.2; // 3840 / 1496 = 2 screen_width / pad_max_x;
+        //y = locate::get_graphics().get_screen_size().height;
+
+        set_contact_position( id , x , y );
+
+        //std::wstring message = L"\nx: " + std::to_wstring( x ) += L" y: " + std::to_wstring( y );
+        //OutputDebugStringW( message.data() );
+    }
+
+    ulong hid_device::get_value_unscaled( ushort in_page , ushort in_usage , RAWHID * in_input )
+    {
+        ulong value { 0ul };
+
+        HidP_GetUsageValue( HidP_Input , // unsigned output
+                            in_page ,
+                            0 ,
+                            in_usage ,
+                            &value ,
+                            reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) ,
+                            reinterpret_cast< char * >( in_input->bRawData ) , //BYTE uchar to char
+                            in_input->dwSizeHid * in_input->dwCount );
+        return value;
+    }
+
+    long hid_device::get_value_scaled( ushort in_page , ushort in_usage , RAWINPUT in_input )
+    {
+        long value { 0 };
+
+        HidP_GetScaledUsageValue( HidP_Input , // signed output
+                                  in_page ,
+                                  0 ,
+                                  in_usage ,
+                                  &value ,
+                                  reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) ,
+                                  reinterpret_cast< char * >( in_input.data.hid.bRawData ) , //BYTE uchar to char
+                                  in_input.data.hid.dwSizeHid * in_input.data.hid.dwCount );
+        return value;
     }
 
     void hid_device::draw()
     {
     // 1. transparent full screen draw contacts
+        
         if( draw_information )
         {
             information.draw();
             collections.draw();
-            
-            //lines.draw
         }
+
+        for( auto & contact : contacts ) contact.draw();
     }
     
 }

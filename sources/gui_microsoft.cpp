@@ -122,6 +122,8 @@ namespace hid
                                     230 , // alpha value
                                     LWA_ALPHA );
 
+        SetWindowLongW( window_principle , GWL_STYLE , 0 );
+
         ShowWindow( window_principle , SW_MAXIMIZE ); // set show state
         UpdateWindow( window_principle ); // send WM_PAINT message
     }
@@ -292,7 +294,7 @@ namespace hid
                             {
                                 raw_input_array[ i ] = raw_report;
                                 raw_report = NEXTRAWINPUTBLOCK( raw_report );
-                                locate::get_input_devices().update_devices( *raw_report );
+                                locate::get_input_devices().update_devices( raw_report );
                             };
                             //locate::get_input_devices().update_devices_buffered( raw_input_buffer.data() , reports_read);
                             //locate::get_input_devices().update_devices_buffered( raw_input_buffer , reports_read);
@@ -370,11 +372,12 @@ namespace hid
                         PostQuitMessage( 0 );
                     } break;
 
-                    //case VK_SPACE:
-                    //{
+                    case VK_SPACE:
+                    {
                         //for( auto & device : input )
                           //  device.display_information();
-                    //} break;
+                        //locate::get_input_devices().
+                    } break;
                 }
 
             } break;// WM_KEYDOWN

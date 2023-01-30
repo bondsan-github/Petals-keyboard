@@ -8,6 +8,12 @@ namespace hid
         locate::get_graphics().get_page().CreateSolidColorBrush( colour_fill , &brush );
     }
 
+    void circle_d2d::set_centre( float in_x , float in_y ) 
+    {
+        centre.x = in_x;
+        centre.y = in_y;
+    }
+
     void circle_d2d::draw()
     {
         ellipse.point = centre;
