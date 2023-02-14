@@ -1,4 +1,4 @@
 Multiple touch computer input using precision touchpads
-![screenshot](/path/to/img.jpg "screenshot")
+![screenshot](screenshot.jpg "screenshot")
 
 assistance required to finish.
