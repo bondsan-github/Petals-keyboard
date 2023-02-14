@@ -12,7 +12,7 @@ namespace hid
 
         // window takes several cycles to fully initialise 
         window.initialise( instance , parameters , show_flags );
-
+        //Sleep(1000);
         graphics.initialise( window.get_window() );
         write.initialise();
         input.initialise(); // window.register_input_device

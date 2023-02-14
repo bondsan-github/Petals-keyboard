@@ -20,7 +20,7 @@ namespace hid
 
             hid_device * device { nullptr };
 
-            text          information {};
+            text_d2d information {};
             //float font_size{ 15.0f };
             //D2D1::ColorF font_colour { D2D1::ColorF::Yellow };
             //D2D1_SIZE_F layout_size { 200.0f, 80.0f };
@@ -57,6 +57,10 @@ namespace hid
             float get_text_position_bottom() const { return information.get_bottom(); }
             float get_text_position_top()    const { return information.get_top(); }
 
+            range get_range( const ushort & in_page ,
+                               const ushort & in_usage ,
+                               const report_type & in_report_type ,
+                               const value_type & in_value_type );
             //std::vector<hid_button>::iterator get_input_buttons() { return input_buttons.begin(); }
             //uint get_contact_amount();
             //uint get_contact_identifier();

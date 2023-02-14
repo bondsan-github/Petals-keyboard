@@ -71,6 +71,9 @@ namespace hid
             //LRESULT WINAPI message_handler_thunk( HWND hWnd , UINT msg , WPARAM wParam , LPARAM lParam );
             //void calculate_layout();
 
+            uint error_code = 0xffff'ffff; //max unsigned int 4294967295
+            uint raw_input_size { 0 };
+
         public:
       
             gui_microsoft();

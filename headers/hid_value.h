@@ -14,7 +14,7 @@ namespace hid
     {
         private:
             
-            text information {};
+            text_d2d information {};
             std::wstring content {};
             ulong value_unsigned { 0ul }; // = 0xffff'ffff
             long value_signed { -1 };

@@ -8,7 +8,7 @@
 #include "..\headers\window_messages.h"
 #include "..\headers\utility.h"
 
-typedef unsigned __int64 QWORD;
+typedef unsigned __int64 QWORD; // 64-bit integer
 
 namespace hid
 {
@@ -107,10 +107,10 @@ namespace hid
                                             class_name ,
                                             title_text ,
                                             style ,
-                                            position_top_left.x ,
-                                            position_top_left.y ,
-                                            client_size.width ,
-                                            client_size.height ,
+                                            static_cast< int >( position_top_left.x ) ,
+                                            static_cast< int >( position_top_left.y ) ,
+                                            static_cast< int >( client_size.width ) ,
+                                            static_cast< int >( client_size.height ) ,
                                             parent_window ,
                                             menu ,
                                             instance ,
@@ -211,7 +211,7 @@ namespace hid
 
         //https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication/SimpleDirect2dApplication.cpp
 
-        gui_microsoft * class_pointer = reinterpret_cast< gui_microsoft * >( static_cast< LONG_PTR >( GetWindowLongPtrW( in_window , GWLP_USERDATA ) ) );
+        gui_microsoft * gui = reinterpret_cast< gui_microsoft * >( static_cast< LONG_PTR >( GetWindowLongPtrW( in_window , GWLP_USERDATA ) ) );
 
         //fprintf(stderr, "\nmessages");
 
@@ -229,9 +229,9 @@ namespace hid
             case WM_DESTROY:
             {
                 PostQuitMessage( 0 );
-                class_pointer->window_principle = nullptr;
-                //result = 1;
-                class_pointer->message_handled = true;
+                gui->window_principle = nullptr;
+                gui->result = 1;
+                gui->message_handled = true;
 
             } break;
 
@@ -243,49 +243,30 @@ namespace hid
                 RAWINPUT     raw_input {};
                 PRAWINPUT   raw_input_buffer { nullptr };
                 //std::vector<RAWINPUT> raw_input_buffer {};
-
-                uint raw_input_size { 0 };
+                
+                uint reports_to_allocate { 8 }; // = device->get_input_buffer_amount()
                 uint reports_read   { 0 };
                 uint header_size    = sizeof RAWINPUTHEADER;
                 uint bytes_copied   { 0 };
 
-                //uint hid_buffer_amount { 0 };
-                //HidD_GetNumInputBuffers( file_handle , &hid_buffer_amount ); // get_device
+                uint result = GetRawInputBuffer( 0 , &gui->raw_input_size , header_size );
 
-                //single report read 
-                //GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , 0 , &raw_input_size , header_size );
-                //GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , 0 , &class_pointer->raw_input_size , class_pointer->header_size );
-                //bytes_copied = GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , &raw_input , &raw_input_size , header_size );
-                //bytes_copied = 
-                //GetRawInputData( reinterpret_cast< HRAWINPUT >(lParam) , RID_INPUT , &class_pointer->raw_input , &class_pointer->raw_input_size , class_pointer->header_size );
-                //locate::get_input_devices().update_devices( raw_input );
-
-                uint error_code = 0xffff'ffff; //max unsigned int 4294967295
-                
-                //multiple report read
-                //https://learn.microsoft.com/en-gb/windows/win32/inputdev/using-raw-input
-
-                uint result = GetRawInputBuffer( 0 , &raw_input_size , header_size );
-
-                if( result != error_code and raw_input_size > 0 )
+                if( result != gui->error_code and gui->raw_input_size > 0 )
                 {
-                    raw_input_size *= 8;
+                    gui->raw_input_size *= reports_to_allocate;
                     //message += L"\nbuffer_size bytes:" + std::to_wstring( raw_input_size );
 
                     //raw_input_buffer.resize(raw_input_size);
                     //raw_input_buffer = new RAWINPUT[ raw_input_size ];
-                    raw_input_buffer = ( PRAWINPUT ) malloc( raw_input_size );
+                    raw_input_buffer = ( PRAWINPUT ) malloc( gui->raw_input_size );
 
                     while(true)
                     {
                         //reports_read = GetRawInputBuffer( raw_input_buffer.data() , &raw_input_size , header_size);
-                        reports_read = GetRawInputBuffer( raw_input_buffer , &raw_input_size , header_size);
+                        reports_read = GetRawInputBuffer( raw_input_buffer , &gui->raw_input_size , header_size);
 
-                        if( reports_read != error_code and reports_read > 0 )
+                        if( reports_read != gui->error_code and reports_read > 0 )
                         {
-                            //message += L"\nreports read:" + std::to_wstring( reports_read );
-                            //OutputDebugStringW( message.c_str() );
-
                             RAWINPUT ** raw_input_array = ( PRAWINPUT * ) malloc( sizeof( PRAWINPUT ) * reports_read );
 
                             RAWINPUT * raw_report = raw_input_buffer;
@@ -293,12 +274,22 @@ namespace hid
                             for( UINT i = 0; i < reports_read; ++i )
                             {
                                 raw_input_array[ i ] = raw_report;
+                                //raw_report += raw_report->header.dwSize + 63;
                                 raw_report = NEXTRAWINPUTBLOCK( raw_report );
-                                locate::get_input_devices().update_devices( raw_report );
+                                
+                                // ( ( x + 64 ) - 1i )
+                                //sizeof ( unsigned long long ); // 8Ui64
+                                //sizeof (char);
+                                //sizeof (QWORD) -1;
+                                
+                                //char data[8] {}; 
+                                //memcpy( data, *raw_report->data, 8);
+                                //message += L"\ndata:" + std::to_wstring( data );
+                                //OutputDebugStringW( message.data() );
                             };
-                            //locate::get_input_devices().update_devices_buffered( raw_input_buffer.data() , reports_read);
                             //locate::get_input_devices().update_devices_buffered( raw_input_buffer , reports_read);
-                            
+                            locate::get_input_devices().update_device_buffered( raw_input_array , reports_read );
+
                             free( raw_input_array );
                         }
                         else break;
@@ -309,8 +300,8 @@ namespace hid
                     free( raw_input_buffer );
                 }
 
-                //result = 0;
-                class_pointer->message_handled = true;
+                gui->result = 0;
+                gui->message_handled = true;
 
             } break;
 
@@ -386,9 +377,9 @@ namespace hid
 
         } // switch( message )
         
-        if( not class_pointer->message_handled ) return DefWindowProc( in_window , message , wParam , lParam );
+        if( not gui->message_handled ) return DefWindowProc( in_window , message , wParam , lParam );
 
-        return class_pointer->result;
+        return gui->result;
 
     } // message_handler
 

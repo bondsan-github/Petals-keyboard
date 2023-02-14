@@ -185,14 +185,15 @@ namespace hid
         return { page->GetPixelSize().width , page->GetPixelSize().height };
     }
 
-    D2D_SIZE_F graphics_d2d::get_size_dips()
+    D2D1_SIZE_F graphics_d2d::get_size_dips()
     {
+        //D2D1_SIZE_F size = 
         return { page->GetSize().width , page->GetSize().height };
     }
 
-    D2D1_SIZE_F graphics_d2d::get_dpi()
+    D2D_SIZE_F graphics_d2d::get_dpi()
     {
-        D2D1_SIZE_F page_dpi{ 0.0f , 0.0f };
+        D2D_SIZE_F page_dpi{ 0.0f , 0.0f };
 
         page->GetDpi( &page_dpi.width , &page_dpi.height );
 

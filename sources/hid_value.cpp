@@ -55,16 +55,18 @@ namespace hid
             else if( UsagePage == 0x01 and NotRange.Usage == 0x30 )// X
                 locate::get_input_devices().get_device( device->get_handle() )->set_x( this );*/
 
+            /*
             if( UsagePage == 0x0d and NotRange.Usage == 0x55 )//contact amount maximum
             {
                 locate::get_input_devices().get_device( device->get_handle() )->set_contact_amount_maximum( LogicalMax );
             }
+            */
         }
     }
 
     void hid_value::set_information_text()
     {
-        content += locate::get_usages().page(UsagePage);
+        content = locate::get_usages().page(UsagePage);
 
         if( IsRange )
         {
@@ -274,7 +276,7 @@ namespace hid
     void hid_value::update( RAWINPUT * in_raw_data )
     {
         // if( not IsRange )
-        NTSTATUS status = HidP_GetUsageValue( HidP_Input ,// unsigned output // // requires complete input report and not only rawhid
+        NTSTATUS status = HidP_GetUsageValue( HidP_Input ,// unsigned output //
         //HidP_GetScaledUsageValue( HidP_Input , // signed output
                                   UsagePage ,
                                   LinkCollection ,
@@ -286,8 +288,10 @@ namespace hid
 
         //if( status != HIDP_STATUS_SUCCESS ) error_exit( L"hid_value:get_value");
         
-        update_information_text();
+        //update_information_text();
+        set_information_text();
         
+        /*
         if( UsagePage == 0x01 and NotRange.Usage == 0x31 )// generic : Y
         {
             //std::wstring message = L"\nY: " + std::to_wstring( value_unsigned );
@@ -316,6 +320,7 @@ namespace hid
             //OutputDebugStringW( message.data() );
         } 
         //else if( UsagePage == 0x0d and NotRange.Usage == 0x47 )// touch valid
+        */
 
         /*
         HidP_GetUsageValueArray( HidP_Input ,

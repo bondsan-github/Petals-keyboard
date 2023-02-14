@@ -16,6 +16,7 @@ namespace hid {
     {
         private:
 
+            // collection of same device items 
             std::vector<hid_collection> collections;
 
             //float collection_text_spacer { 120.0f };
@@ -32,6 +33,7 @@ namespace hid {
             //uint get_contact_identifier();
             //uint get_x();
             //uint get_y();
+            range get_resolution();
 
             void update_input( RAWINPUT * in_raw_data )
             //void update( RAWHID in_raw_data )

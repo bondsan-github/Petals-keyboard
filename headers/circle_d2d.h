@@ -12,7 +12,7 @@ namespace hid
         private:
 
             D2D1_POINT_2F centre         {};
-            float         radius         { 5.0f };
+            float         radius         { 20.0f };
             float         line_width     { 2.0f };
             D2D1::ColorF  colour_outline { D2D1::ColorF::DarkCyan };
             D2D1::ColorF  colour_fill    { D2D1::ColorF::Cyan };
@@ -23,7 +23,7 @@ namespace hid
         
             circle_d2d();
 
-            void set_centre( float in_x, float in_y );
+            void set_centre( D2D_POINT_2F );
             void set_radius( float in_radius ) {}
             void draw();
     };

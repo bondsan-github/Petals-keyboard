@@ -90,6 +90,9 @@
     <ClCompile Include="sources\contact.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="sources\petal.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="resources\DeclareDPIAware.manifest">
@@ -191,6 +194,9 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\contact.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\petal.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

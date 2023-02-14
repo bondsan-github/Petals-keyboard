@@ -14,16 +14,16 @@
 
 namespace hid
 {
-    class text
+    class text_d2d
     {
         private:
        
-        Microsoft::WRL::ComPtr <IDWriteTextFormat> format{ nullptr };
-        Microsoft::WRL::ComPtr <ID2D1SolidColorBrush> brush_font { nullptr };
-        Microsoft::WRL::ComPtr <IDWriteTextLayout> layout     { nullptr };
-        //Microsoft::WRL::ComPtr <IDWriteFontCollection> collection { nullptr };
+            Microsoft::WRL::ComPtr <IDWriteTextFormat>    format{ nullptr };
+            Microsoft::WRL::ComPtr <ID2D1SolidColorBrush> brush_font { nullptr };
+            Microsoft::WRL::ComPtr <IDWriteTextLayout>    layout     { nullptr };
+            //Microsoft::WRL::ComPtr <IDWriteFontCollection> collection { nullptr };
 
-            std::wstring          content {};
+            std::wstring          content {L" "};
             
           //vertex                position_center   { 10.0f , 10.0f        }; // dips
             vertex                position_top_left { 0.0f , 0.0f          }; // in dips
@@ -49,11 +49,11 @@ namespace hid
 
             D2D1_SIZE_F         layout_size { 150.0 , 150.0 };
 
-            bool  bounding_rectangle_show { true };
-            float bounding_rectangle_line_width { 2.0f };
-            D2D1::ColorF bounding_rectangle_line_colour { D2D1::ColorF::Yellow };
-            float bounding_rectangle_corner_radius { 1.0f };
-            float bounding_rectangle_inner_margin { 5.0f };
+            bool         border_show          { true };
+            float        border_line_width    { 2.0f };
+            D2D1::ColorF border_line_colour   { D2D1::ColorF::Yellow };
+            float        border_corner_radius { 1.0f };
+            float        border_inner_margin  { 5.0f };
             
         private:
             
@@ -63,18 +63,18 @@ namespace hid
             void reset_brush();
             
             D2D1_SIZE_F get_formated_size() const;
-            
             float       get_formated_width_half() const ;
-            
             float       get_layout_height_half() const ;
             //planes      get_middle_planes();
 
             void draw_text() const;
-            void draw_bounding_rectangle() const;
+            void draw_border() const;
             
         public:
-            
-            ~text();
+
+             text_d2d();
+             text_d2d( std::wstring & in_content );
+             ~text_d2d();
 
             void set_content( std::wstring &in_content );
             void add_content( std::wstring &in_string ); // add to end // concatenate
@@ -91,6 +91,7 @@ namespace hid
             void set_position_top_left( const vertex &in_position );
             void set_layout_size( const D2D1_SIZE_F &in_layout_size );
 
+            void set_show_border( const bool in_show_border );
             //void set_rectangle_radius( float in_radius );
             //void set_rectangle_line_colour( D2D1::ColorF in_colour );
             //void set_rectangle_line_width( float in_width );

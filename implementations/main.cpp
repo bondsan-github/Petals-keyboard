@@ -3,9 +3,6 @@
 
 // markt precision multiple touch input controls
 
-//#define _ITERATOR_DEBUG_LEVEL 0
-//#define WIN32_LEAN_AND_MEAN
-
 #pragma comment( lib , "hid.lib" )
 #pragma comment( lib , "d2d1" )
 #pragma comment( lib , "dwrite.lib" )
@@ -15,12 +12,13 @@
 int WINAPI wWinMain( _In_ HINSTANCE instance , _In_opt_ HINSTANCE instance_previous , _In_ LPWSTR parameters , _In_ int show_flags )
 {
    HeapSetInformation( NULL , HeapEnableTerminationOnCorruption , NULL , 0 );
-
    // Initialize COM apartment threaded. This is the recommended way to initialize COM for the UI thread.
    HRESULT result  = CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED );
 
    if( SUCCEEDED(result) )
    {
+       using namespace hid;
+       
        hid::hid_multiple_touch petals_input( instance , parameters , show_flags);
    }
 

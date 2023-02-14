@@ -109,6 +109,7 @@ namespace hid
         return pointer_device;
     }
 
+    // multiple devices
     void hid_devices::update_devices( RAWINPUT * in_hid_report )
     {
         for( auto & device : input_devices ) 
@@ -120,8 +121,9 @@ namespace hid
         }
     }
 
-    void hid_devices::update_devices_buffered( RAWINPUT * in_raw_input_buffer , uint in_buffer_size )
+    void hid_devices::update_devices_buffered( RAWINPUT ** in_raw_input_buffer , uint in_buffer_size )
     {
+        /*
         RAWINPUT * current_report = in_raw_input_buffer;
 
         // for each input report
@@ -137,11 +139,17 @@ namespace hid
                 }
             }
         }
+        */
         //NEXTRAWINPUTBLOCK();
         //long size = sizeof (unsigned long long); // =8 bytes // 4Ui64
         //long sizelong = sizeof (long); // =4bytes
         //#define RAWINPUT_ALIGN(x)   (((x) + sizeof(DWORD) - 1) & ~(sizeof(DWORD) - 1))
         //NEXTRAWINPUTBLOCK(ptr) ((PRAWINPUT)RAWINPUT_ALIGN((ULONG_PTR)((char *)(ptr) + (ptr)->header.dwSize)))
+    }
+
+    void hid_devices::update_device_buffered( RAWINPUT ** in_raw_input_buffer , uint in_buffer_size )
+    {
+        input_devices.at(0).update_buffered( in_raw_input_buffer , in_buffer_size );
     }
 
     void hid_devices::draw()

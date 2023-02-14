@@ -65,47 +65,34 @@ namespace hid
         /*
         if( (BitField & 0b1) ) content += L"\nconstant"; // bit 0
         //else content += L" data ";
-
         if( BitField & 0b10 ) content += L"\nvariable"; // bit 1
         //else content += L" array ";
-
         if( BitField & 0b100 ) content += L"\nrelative";// bit 2
         //else content += L" absolute ";
-
         if( BitField & 0b1000 ) content += L"\nwrap";// bit 3
         //else content += L" no wrap ";
-
         if( BitField & 0b10000 ) content += L"\nnonlinear";// bit 4
         //else content += L" linear ";
-
         if( BitField & 0b100000 ) content += L"\nno preferred state";// bit 5
         //else content += L" preferred ";
-
         if( BitField & 0b1000000 ) content += L"\nvolatile";// bit 6
         //else content += L" non-volatile ";
-
         //if( BitField and 0b10000000 ) content += L" reserved ";// bit 7
         //else content += L" reserved ";
-
         if( BitField & 0b100000000 ) content += L"\nbuffered bytes";// bit 8
         //else content += L" bit field ";
         */
 
         //content += L"\nis range\t: ";
         //content += IsRange ? L"true" : L"false";
-
         //content += L"\nis alias\t: ";
         //content += IsAlias ? L"true" : L"false";
-
         //content += L"\nis string range\t: "; //HidD_GetIndexedString
         //content += IsStringRange ? L"true" : L"false";
-
         //content += L"\nis designator range \t: "; // physical descriptor
         //content += IsDesignatorRange ? L"true" : L"false";
-
         //content += L"\nis absolute: ";
         //content += IsAbsolute ? L"\nabsolute" : L"\nrelative";
-
         //if( ReportCount > 1 ) content += L"\n more than one report";
 
         content += L"\ndata index\t: " + std::to_wstring( NotRange.DataIndex );
@@ -146,6 +133,7 @@ namespace hid
         }
         else on = false;
 
-        update_information_text();
+        //update_information_text();
+        set_information_text();
     }
 }

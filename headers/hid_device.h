@@ -15,6 +15,7 @@
 #include "..\headers\hid_value.h"
 
 #include <string>
+#include <array>
 //#include <unordered_map>
 //#include <bitset>
 
@@ -82,12 +83,13 @@ namespace hid
             
             hid_collections collections;
 
-            text         information      {};
+            text_d2d     information      {};
             vertex       text_position    { 10.0f , 10.0f };
             D2D1_SIZE_F  text_layout_size { 300.0f , 80.0f }; // shrink to fit?
             float        text_font_size   { 10.0f };
             D2D1::ColorF text_font_colour { D2D1::ColorF::Yellow };
             
+            text_d2d debug_text;
             //grid_d2d grid {};
             //std::vector< line_d2d > lines {};
 
@@ -99,14 +101,19 @@ namespace hid
             
             D2D1_SIZE_F  layout_size { 200.0f , 200.0f }; // layout size
 
-            vertex       information_spacing     { 15.0f, 15.0f }; // spacers
+            vertex       information_spacing { 15.0f, 15.0f }; // spacers
 
             //hid_value * value_contact_identifier { nullptr };
             //ulong contact_identifier {0};
             //hid_value * x { nullptr };
 
-            //uint contact_amount_maximum{ 0 };
-            std::vector< contact > contacts {};
+            const static uint contact_amount { 5 };
+
+            std::array< contact , contact_amount > contacts;
+
+            range       touchpad_resolution {};
+            D2D1_SIZE_F screen_dpi {};
+            D2D1_SIZE_F pad_to_screen_ratio {};
 
         private:
             
@@ -129,6 +136,7 @@ namespace hid
             uint            get_input_report_size() { return capabilities.InputReportByteLength; }
             
             void  update( RAWINPUT * in_report );
+            void  update_buffered( RAWINPUT ** in_rawinput_array , uint in_report_amount );
             void  update();
 
             void  collect_information();
@@ -140,20 +148,11 @@ namespace hid
             float get_text_left()   const { return information.get_left(); }
 
             long get_value_scaled( ushort in_page , ushort in_usage, RAWINPUT in_input );
-            //ulong get_value_unscaled( ushort in_page , ushort in_usage , RAWINPUT * in_input );
             ulong get_value_unscaled( ushort in_page , ushort in_usage , RAWHID * in_input );
 
-            void set_contact_amount_maximum( uint in_maximum ) 
-            {
-                // if in_maximum > 0;
-                //contact_amount_maximum = in_maximum;
-                contacts.resize( in_maximum );
-            }
+            void update_contact( ulong in_identifier , float in_x , float in_y );
 
-            void set_contact_position( ulong in_identifier , ulong in_x , ulong in_y )
-            {
-                contacts.at( in_identifier ).set_position( in_x , in_y );
-            }
+            void draw();
 
             //void add_x( ) {}
             //void add_contact( uint in_identifier );
@@ -161,6 +160,15 @@ namespace hid
             //void set_contact_identifier( hid_value * const in_value ) { value_contact_identifier = in_value; }
             //void set_x( hid_value * const in_value ) { //x = in_value; }
 
-            void  draw();
+            /*
+            void set_contact_amount_maximum( uint in_maximum )
+            {
+                // if in_maximum > 0;
+                //contact_amount_maximum = in_maximum;
+                contacts.resize( in_maximum );
+            }
+            */
+
+            
     };
 }

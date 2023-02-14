@@ -160,6 +160,7 @@
     <ClCompile Include="sources\hid_button.cpp" />
     <ClCompile Include="sources\hid_collections.cpp" />
     <ClCompile Include="sources\hid_value.cpp" />
+    <ClCompile Include="sources\petal.cpp" />
     <ClCompile Include="sources\utility.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -185,7 +186,9 @@
     <ClCompile Include="sources\write_d2d.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="resources\DeclareDPIAware.manifest" />
+    <Manifest Include="resources\DeclareDPIAware.manifest">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </Manifest>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h" />
@@ -203,6 +206,7 @@
     <ClInclude Include="headers\hid_button.h" />
     <ClInclude Include="headers\hid_globals.h" />
     <ClInclude Include="headers\hid_value.h" />
+    <ClInclude Include="headers\petal.h" />
     <ClInclude Include="headers\vertex.h" />
     <ClInclude Include="headers\hid_collection.h" />
     <ClInclude Include="headers\line_d2d.h">

@@ -2,22 +2,55 @@
 
 namespace hid
 {
-    contact::contact() 
+    D2D_POINT_2F const operator + ( const D2D_POINT_2F & in_point_left , const D2D_POINT_2F & in_point_right )
+    {
+        return { in_point_left.x + in_point_right.x , in_point_left.y + in_point_right.y };
+    }
+
+    contact::contact()
     {
         identifier++;
     }
 
-    void contact::set_position( ulong in_x , ulong in_y )
+    void contact::set_inputs( std::array< std::wstring , 4 > in_inputs )
     {
-        // if within screen bounds
-        x = in_x;
-        y = in_y;
+        uint index { 0 };
 
-        circle.set_centre( x , y );
+        for( auto & input : in_inputs )
+        {
+            petals[ index ].set_input( input );
+            ++index;
+        }
+    }
+
+    void contact::update( float in_x , float in_y )
+    {
+
+        //switch( state )
+        //{
+            //case states::first_contact:
+            //{
+                first_contact = { in_x , in_y };
+
+                uint index { 0 };
+
+                for( auto & petal : petals )
+                {
+                    petal.set_position( in_x + offsets.at( index ).x ,
+                                        in_y + offsets.at( index ).y );
+                    ++index;
+                }
+
+                //state = states::chosing_petal;
+            //}
+        //}
+
+        // if within screen bounds
+        
     }
 
     void contact::draw()
     {
-        circle.draw();
+        for( auto & petal : petals ) petal.draw();
     }
 }

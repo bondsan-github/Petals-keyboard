@@ -7,7 +7,17 @@
 
 namespace hid
 {
-    text::~text()
+    text_d2d::text_d2d()
+    {
+        reset();
+    }
+
+    text_d2d::text_d2d( std::wstring & in_content )
+    {
+        //if( not in_content.empty )
+        set_content( in_content );
+    }
+    text_d2d::~text_d2d()
     {
         //brush_font.Reset();
         //format.Reset();
@@ -16,7 +26,7 @@ namespace hid
         //content.clear();
     }
 
-    void text::set_font_locale( const std::wstring &in_font_locale )
+    void text_d2d::set_font_locale( const std::wstring &in_font_locale )
     {
         if( in_font_locale.empty() )
             font_locale = L"en-us"; // en-GB
@@ -27,7 +37,7 @@ namespace hid
         reset();
     }
 
-    void text::set_font_face( const std::wstring &in_font_face )
+    void text_d2d::set_font_face( const std::wstring &in_font_face )
     {
         if( in_font_face.empty() ) // is_not_valid_font_face()
             font_face = L"Times New Roman";
@@ -37,7 +47,7 @@ namespace hid
         reset();
     }
 
-    void text::set_font_size( const float &in_font_size )
+    void text_d2d::set_font_size( const float &in_font_size )
     {
         if( in_font_size <= 0.0f )//|| in_font_size > )
             font_size = 0.1f;
@@ -47,7 +57,7 @@ namespace hid
         reset();
     }
 
-    void text::set_font_style( const DWRITE_FONT_STYLE &in_font_style )
+    void text_d2d::set_font_style( const DWRITE_FONT_STYLE &in_font_style )
     {
         /*
         if( in_font_style == DWRITE_FONT_STYLE_NORMAL  || 
@@ -62,7 +72,7 @@ namespace hid
     //void text::set_font_options( const font_options in_font_options ) { font_options = in_font_options; }
     //font_options text::get_font_options() const { return _font_options; }
 
-    void text::set_font_opacity( const float &in_font_opacity )
+    void text_d2d::set_font_opacity( const float &in_font_opacity )
     {
         if( in_font_opacity < 0.0f ) // || > 1.0f clamp(0.0,1.0);
             font_opacity = 0.0f;
@@ -72,27 +82,27 @@ namespace hid
         reset();
     }
 
-    void text::set_font_weight( const DWRITE_FONT_WEIGHT &in_font_weight )
+    void text_d2d::set_font_weight( const DWRITE_FONT_WEIGHT &in_font_weight )
     {
         // between 1 and 999
         font_weight = in_font_weight;
         reset();
     }
 
-    void text::set_font_stretch( const DWRITE_FONT_STRETCH &in_font_stretch )
+    void text_d2d::set_font_stretch( const DWRITE_FONT_STRETCH &in_font_stretch )
     {
         font_stretch = in_font_stretch;
         reset();
     }
 
-    void text::set_layout_size( const D2D1_SIZE_F &in_layout_size )
+    void text_d2d::set_layout_size( const D2D1_SIZE_F &in_layout_size )
     {
         // check sizes are within all screen bounds
         layout_size = in_layout_size;
         reset();
     }
 
-    D2D1_SIZE_F text::get_formated_size() const
+    D2D1_SIZE_F text_d2d::get_formated_size() const
     { 
         DWRITE_TEXT_METRICS metrics;
         layout->GetMetrics( &metrics );
@@ -111,14 +121,14 @@ namespace hid
     }
     */
     
-    void text::reset()
+    void text_d2d::reset()
     {
         reset_format();
         reset_layout();
         reset_brush();
     }
 
-    void text::reset_format()
+    void text_d2d::reset_format()
     {
         locate::get_write().get_write_factory().CreateTextFormat( font_face.c_str(),
                                                                   nullptr , // in_font_collection // (NULL sets it to use the system font collection).
@@ -130,7 +140,7 @@ namespace hid
                                                                   &format );// address of pointer to COM object  
     }
 
-    void text::reset_layout()
+    void text_d2d::reset_layout()
     {
         locate::get_write().get_write_factory().CreateTextLayout( content.c_str() ,
                                                                   static_cast< uint >( content.size() ),
@@ -141,12 +151,12 @@ namespace hid
         //reset_rectangle();
     }
 
-    void text::reset_brush()
+    void text_d2d::reset_brush()
     {
         locate::get_graphics().get_page().CreateSolidColorBrush( font_colour , &brush_font );
     }
 
-    float text::get_formated_width() const
+    float text_d2d::get_formated_width() const
     { 
         DWRITE_TEXT_METRICS layout_metrics{};
 
@@ -155,12 +165,12 @@ namespace hid
         return layout_metrics.width;
     }
     
-    float text::get_formated_width_half() const
+    float text_d2d::get_formated_width_half() const
     {
         return get_formated_width() / 2.0f;
     }
 
-    float text::get_formated_height() const
+    float text_d2d::get_formated_height() const
     { 
         DWRITE_TEXT_METRICS layout_metrics{};
 
@@ -169,7 +179,7 @@ namespace hid
         return layout_metrics.height;
     }
 
-    float text::get_layout_height_half() const
+    float text_d2d::get_layout_height_half() const
     {
         return get_formated_height() / 2.0f;
     }
@@ -187,17 +197,17 @@ namespace hid
     }
     */
 
-    void text::set_position_top_left( const vertex &in_position_top_left )
+    void text_d2d::set_position_top_left( const vertex &in_position_top_left )
     {
         position_top_left = in_position_top_left;
     }
 
-    vertex text::get_position_top_left() const
+    vertex text_d2d::get_position_top_left() const
     {
         return { position_top_left.x , position_top_left.y };
     }
 
-    void text::set_font_colour( const D2D1::ColorF &in_font_colour )
+    void text_d2d::set_font_colour( const D2D1::ColorF &in_font_colour )
     {
         font_colour = in_font_colour;
 
@@ -205,67 +215,73 @@ namespace hid
         //reset();
     }
 
-    void text::set_content( std::wstring &in_content )
+    void text_d2d::set_content( std::wstring &in_content )
     {
         content = in_content;
         //reset();
         reset_layout();
     }
 
-    void text::add_content( std::wstring &in_string )
+    void text_d2d::add_content( std::wstring &in_string )
     {
         content += in_string;
         reset();
     }
 
-    void text::draw() const
+    void text_d2d::draw() const
     {
         draw_text();
-        if( bounding_rectangle_show ) draw_bounding_rectangle();
+        if( border_show ) draw_border();
     }
 
-    void text::draw_text() const
+    void text_d2d::draw_text() const
     {
+        //if(locate::get_graphics() != nullptr /)
         locate::get_graphics().get_page().DrawTextLayout( position_top_left ,
                                                           layout.Get() ,
                                                           brush_font.Get() );
                                                           //font_options );
     }
 
-    void text::draw_bounding_rectangle() const
+    void text_d2d::set_show_border( const bool in_show_border )
+    {
+        border_show = in_show_border;
+    }
+
+    void text_d2d::draw_border() const
     {
         vertex position = position_top_left;
 
-        position.x -= bounding_rectangle_inner_margin;
-        position.y -= bounding_rectangle_inner_margin;
+        position.x -= border_inner_margin;
+        position.y -= border_inner_margin;
         
         D2D_SIZE_F size = get_formated_size();
-        size.width  += bounding_rectangle_inner_margin * 2.0f;
-        size.height += bounding_rectangle_inner_margin * 2.0f;
+        size.width  += border_inner_margin * 2.0f;
+        size.height += border_inner_margin * 2.0f;
 
         locate::get_graphics().draw_rounded_rectangle( size ,
                                                        position ,
-                                                       bounding_rectangle_corner_radius , 
+                                                       border_corner_radius ,
                                                        brush_font.Get() , // brush_bounding_rectangle
-                                                       bounding_rectangle_line_width );
+                                                       border_line_width );
     }
 
-    float text::get_top() const
+    float text_d2d::get_top() const
     {
         return position_top_left.y;// - bounding_rectangle_inner_margin;
     }
 
-    float text::get_bottom() const
+    float text_d2d::get_bottom() const
     {
         return position_top_left.y + get_formated_height();// + bounding_rectangle_inner_margin;
     }
 
-    float text::get_left() const
+    float text_d2d::get_left() const
     {
         return position_top_left.x;// - bounding_rectangle_inner_margin;
     }
 
-    float text::get_right() const
+    float text_d2d::get_right() const
     {
         return position_top_left.x + get_formated_width();// + bounding_rectangle_inner_margin;
     }

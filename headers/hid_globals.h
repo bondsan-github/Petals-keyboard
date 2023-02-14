@@ -60,6 +60,9 @@ namespace hid
         uint info = ( 1 << 29 ) | 0xB;
     };
 
+
+    // was for reseting to known state after moving 
+
     class hid_capabilities : public _HIDP_CAPS
     {
         public:

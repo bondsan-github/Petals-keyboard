@@ -341,6 +341,77 @@ namespace hid
         for( const auto & value  : feature_values  ) value.draw();
     }
 
+    range hid_collection::get_range( const ushort & in_page ,
+                                     const ushort & in_usage ,
+                                     const report_type & in_report_type ,
+                                     const value_type & in_value_type )
+    {
+        std::vector<hid_value>::const_iterator vector_iterator {};
+        std::vector<hid_value>::const_iterator vector_end {};
+
+        switch( in_report_type )
+        {
+            case report_type::input:
+            {
+                vector_iterator = input_values.cbegin();
+                vector_end = input_values.cend();
+            } break;
+
+            case report_type::output:
+            {
+                vector_iterator = output_values.cbegin();
+                vector_end = output_values.cend();
+            } break;
+
+            case report_type::feature:
+            {
+                vector_iterator = feature_values.cbegin();
+                vector_end = feature_values.cend();
+            } break;
+        }
+
+        //if( *vector_pointer->empty() ) return { 0l , 0l };
+
+        //range values(0,0);
+
+        for( ; vector_iterator != vector_end ; vector_iterator++ )
+        {
+            if( in_page == vector_iterator->UsagePage and in_usage == vector_iterator->Range.UsageMin )
+            {
+                switch( in_value_type )
+                {
+                    case value_type::logical:
+                        return { vector_iterator->LogicalMin , vector_iterator->LogicalMax };
+                    break;
+
+                    case value_type::physical:
+                        return { vector_iterator->PhysicalMin , vector_iterator->PhysicalMax };
+                    break;
+
+                    case value_type::usage:
+                        return { vector_iterator->Range.UsageMin , vector_iterator->Range.UsageMax };
+                    break;
+
+                    case value_type::string:
+                        return { vector_iterator->Range.StringMin, vector_iterator->Range.StringMax };
+                    break;
+
+                    case value_type::disignator:
+                        return { vector_iterator->Range.DesignatorMin , vector_iterator->Range.DesignatorMax };
+                    break;
+
+                    case value_type::data_index:
+                        return { vector_iterator->Range.DataIndexMin , vector_iterator->Range.DataIndexMax };
+                    break;
+                } // switch in_value_type
+
+            } // if page and usage the same
+
+        } // vector loop
+
+        return { 0 , 0 }; // vector empty
+    }
+
     /*
     uint hid_collection::get_contact_amount()
     {

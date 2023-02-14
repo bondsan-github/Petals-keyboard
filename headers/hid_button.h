@@ -15,7 +15,7 @@ namespace hid
         private:
 
             bool on { false };
-            text information;
+            text_d2d information;
             std::wstring content{};
             hid_device * device { nullptr };
             //_HIDP_BUTTON_CAPS capabilities {};

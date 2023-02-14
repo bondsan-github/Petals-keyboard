@@ -79,7 +79,7 @@ namespace hid
     {
         RECT client_size = locate::get_windows().get_client_rectangle();
         
-        ulong spacer_y = client_size.bottom - in_device.get_text_bottom();
+        float spacer_y = static_cast< float >( client_size.bottom ) - in_device.get_text_bottom();
         spacer_y -= collections.front().get_text_height() * collections.size();
         spacer_y /=  collections.size() + 1 ;
 
@@ -112,6 +112,22 @@ namespace hid
         }
 
         return amount;
+    }
+
+    range hid_collections::get_resolution()
+    {
+        range touchpad_resolution {};
+        range values;
+
+        for( auto & collection : collections )
+        {
+            touchpad_resolution.minimum = collection.get_range( 0x01 , 0x30 , report_type::input , value_type::logical ).maximum;
+            touchpad_resolution.maximum = collection.get_range( 0x01 , 0x31 , report_type::input , value_type::logical ).maximum;
+
+            if( touchpad_resolution.minimum > 0 and touchpad_resolution.maximum > 0 ) break;
+        }
+
+        return touchpad_resolution;
     }
     /*
     uint hid_collections::get_contact_identifier()

@@ -8,14 +8,16 @@ namespace hid
         locate::get_graphics().get_page().CreateSolidColorBrush( colour_fill , &brush );
     }
 
-    void circle_d2d::set_centre( float in_x , float in_y ) 
+    void circle_d2d::set_centre( D2D_POINT_2F in_centre ) 
     {
-        centre.x = in_x;
-        centre.y = in_y;
+        centre = in_centre;
     }
 
     void circle_d2d::draw()
     {
+        //To convert a physical pixel to a DIP , use this formula:
+        //dip = ( physical pixel × 96 ) / DPI
+
         ellipse.point = centre;
         ellipse.radiusX = radius;
         ellipse.radiusY = radius;
