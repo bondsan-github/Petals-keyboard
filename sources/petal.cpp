@@ -19,7 +19,22 @@ namespace hid
     void petal::set_position( float in_x , float in_y )
     {
         text.set_position_top_left( { in_x - 5.0f , in_y -8.0f } );
-        circle.set_centre( { in_x , in_y } );
+        circle.set_position( { in_x , in_y } );
+        circle.set_state( circle_d2d::states::on );
+    }
+
+    void petal::update( float in_x , float in_y )
+    {
+        if( circle.selected( in_x , in_y ) )
+        {
+            circle.set_state( circle_d2d::states::selected );
+        }
+        else
+        {
+            circle.set_state( circle_d2d::states::on );
+        }
+        // long time_now = locate::get_timer().now()
+        //
     }
 
     void petal::draw()

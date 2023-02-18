@@ -56,6 +56,7 @@ namespace hid
             void draw_end();
             //void draw();
             
+            ID2D1Factory & get_factory() { return *factory; }
             ID2D1HwndRenderTarget & get_page();
             D2D_SIZE_F              get_size_dips();
             //D2D_SIZE_U              get_size_pixels();

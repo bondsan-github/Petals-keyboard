@@ -28,14 +28,14 @@ namespace hid
 
             const enum class states 
             { 
-                first_contact ,
+                contact ,
                 chosing_petal ,
                 off ,
                 on
                 //, fading , moving
             };
 
-            states state { states::first_contact };
+            states state { states::off };
 
         public:
 

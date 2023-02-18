@@ -12,17 +12,17 @@ namespace hid
     {
         private:
 
-            D2D_POINT_2F center;
-            circle_d2d   circle;
+            D2D_POINT_2F center { -100.0f , -100.0f };
+            circle_d2d   circle; // geometry
             text_d2d     text;
-            uint         os_code;
+            uint         os_code { 0 };
 
         public:
 
             petal();
 
             void set_input( std::wstring in_input );
-            //void update( uint in_x , uint in_y );
+            void update( float in_x , float in_y ); 
             void set_position( float in_x , float in_y );
             void draw();
             void send_input();

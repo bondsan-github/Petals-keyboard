@@ -25,11 +25,10 @@ namespace hid
 
     void contact::update( float in_x , float in_y )
     {
-
-        //switch( state )
-        //{
-            //case states::first_contact:
-            //{
+        switch( state )
+        {
+            case states::contact:
+            {
                 first_contact = { in_x , in_y };
 
                 uint index { 0 };
@@ -41,9 +40,17 @@ namespace hid
                     ++index;
                 }
 
-                //state = states::chosing_petal;
-            //}
-        //}
+                state = states::chosing_petal;
+            } break;
+
+            case states::chosing_petal:
+            {
+                for( auto & petal : petals )
+                {
+                    petal.update( in_x , in_y );
+                }
+            } break;
+        }
 
         // if within screen bounds
         
