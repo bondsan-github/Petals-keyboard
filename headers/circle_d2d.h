@@ -24,7 +24,7 @@ namespace hid
             D2D1_ELLIPSE  ellipse        { .point   = centre ,
                                            .radiusX = radius ,
                                            .radiusY = radius };
-            Microsoft::WRL::ComPtr <ID2D1EllipseGeometry> ellipse_geometry {};
+            Microsoft::WRL::ComPtr<ID2D1EllipseGeometry> ellipse_geometry {};
             Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> brush_on { nullptr };
             Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> brush_selected { nullptr };
             
