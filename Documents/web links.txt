@@ -1,0 +1,2 @@
+//https://learn.microsoft.com/en-us/archive/msdn-magazine/2013/november/windows-with-c-exploring-fonts-with-directwrite-and-modern-c
+//https://learn.microsoft.com/en-us/windows/win32/directwrite/direct-write-portal

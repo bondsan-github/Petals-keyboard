@@ -1,3 +1,0 @@
-main.cpp
-	wWinMain
-		hid_multi_touch (multiple)

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "precision_multi_touch", "precision_multi_touch.vcxproj", "{1E9A325C-6254-47B7-989E-F9D4215C5C98}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Precision multiple touch", "precision_multi_touch.vcxproj", "{1E9A325C-6254-47B7-989E-F9D4215C5C98}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shared", "..\Shared\Shared.vcxitems", "{84380CA1-324E-4131-BC7B-E91BD0D509D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,5 +29,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A065236C-EF44-46F8-828B-834FD8BCB5E6}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Shared\Shared.vcxitems*{1e9a325c-6254-47b7-989e-f9d4215c5c98}*SharedItemsImports = 4
+		..\Shared\Shared.vcxitems*{84380ca1-324e-4131-bc7b-e91bd0d509d2}*SharedItemsImports = 9
 	EndGlobalSection
 EndGlobal

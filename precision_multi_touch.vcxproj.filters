@@ -8,206 +8,42 @@
     <Filter Include="reference">
       <UniqueIdentifier>{1b65d39c-03b3-4e15-8125-6f6ddbe18d49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sources">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="headers">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Documents">
       <UniqueIdentifier>{cf6f7aaf-b8cb-43ec-92e6-b08cab4b62fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Hpp">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Cpp">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="implementations\main.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\graphics_d2d.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\gui_microsoft.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\locate.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\text_d2d.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\write_d2d.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\hid_multiple_touch.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\utility.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\hid_device.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\hid_usages.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\line_d2d.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\hid_raw_device.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\hid_collection.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\hid_devices.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\grid_d2d.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\hid_button.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\hid_value.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\hid_collections.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="reference sources\hid_parse\hidparse.cpp">
-      <Filter>reference</Filter>
-    </ClCompile>
-    <ClCompile Include="reference sources\PS3SampleApp\usbps3\usbps3.cpp">
-      <Filter>reference</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\circle_d2d.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Touchpad\markt\touchpad\reference sources\hid.c">
-      <Filter>headers</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\contact.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\petal.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
+    <None Include="documents\hut1_3_0.pdf">
+      <Filter>Documents</Filter>
+    </None>
+    <None Include="Documents\hid1_11.pdf">
+      <Filter>Documents</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="resources\DeclareDPIAware.manifest">
+    <Manifest Include="Data\DeclareDPIAware.manifest">
       <Filter>Resource Files</Filter>
     </Manifest>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="headers\hid_device.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_devices.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hidp_status.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_item.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_multiple_touch.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_raw_device.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_usages.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\gui_microsoft.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\graphics_d2d.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\write_d2d.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\text_d2d.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\line_d2d.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_usage_text.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_collection.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\locate.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\custom_types.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\utility.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\grid_d2d.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\service.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\vertex.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\virtual_desktop.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\window_messages.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_globals.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidpi.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidsdi.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\hidusage.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_button.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_value.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\hid_collections.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="reference sources\PS3SampleApp\usbps3\usbps3.h">
-      <Filter>reference</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\circle_d2d.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\contact.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\petal.h">
-      <Filter>headers</Filter>
-    </ClInclude>
+    <ClCompile Include="Source code\Cpp\Main.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="headers\ClassDiagram.cd" />
-    <None Include="ClassDiagram.cd" />
-    <None Include="documents\hid1_11.pdf">
-      <Filter>Documents</Filter>
-    </None>
-    <None Include="documents\hut1_3_0.pdf">
-      <Filter>Documents</Filter>
-    </None>
+    <ClInclude Include="Source code\Hpp\Contact.hpp">
+      <Filter>Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Petal.hpp">
+      <Filter>Hpp</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
