@@ -37,12 +37,18 @@
     <ClCompile Include="Source code\Cpp\Main.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Source code\Cpp\Multiple touch.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source code\Hpp\Contact.hpp">
       <Filter>Hpp</Filter>
     </ClInclude>
     <ClInclude Include="Source code\Hpp\Petal.hpp">
+      <Filter>Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Multiple touch.hpp">
       <Filter>Hpp</Filter>
     </ClInclude>
   </ItemGroup>

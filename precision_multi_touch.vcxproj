@@ -76,11 +76,13 @@
     <OutDir>$(SolutionDir)Executables\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Executables\$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)Source code\Hpp;$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir)Source code\Cpp;$(SourcePath)</SourcePath>
+    <SourcePath>$(ProjectDir)Source code\Cpp;$(IncludePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Executables\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Executables\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir)Source code\Hpp;$(IncludePath)</IncludePath>
+    <SourcePath>$(ProjectDir)Source code\Cpp;$(IncludePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -120,6 +122,7 @@
       <EnableModules>false</EnableModules>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source code\Hpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -140,6 +143,7 @@
       <TranslateIncludes>false</TranslateIncludes>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source code\Hpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -158,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source code\Cpp\Main.cpp" />
+    <ClCompile Include="Source code\Cpp\Multiple touch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Update="C:\Software\Programming\Projects\Shared\Source code\Hpp\Input\HID\HID_Collection.hpp">
@@ -167,6 +172,7 @@
       <FileType>Document</FileType>
     </ClInclude>
     <ClInclude Include="Source code\Hpp\Contact.hpp" />
+    <ClInclude Include="Source code\Hpp\Multiple touch.hpp" />
     <ClInclude Include="Source code\Hpp\Petal.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

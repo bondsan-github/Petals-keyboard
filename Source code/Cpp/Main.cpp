@@ -1,6 +1,6 @@
 // bond-san Precision multiple touch input controls
 
-#include "Source code/Hpp/Input/HID/Multiple touch.hpp"
+#include "Source code\Hpp\Multiple touch.hpp"
 
 int WINAPI wWinMain( _In_ HINSTANCE instance , _In_opt_ HINSTANCE instance_previous , _In_ LPWSTR parameters , _In_ int show_flags )
 {
