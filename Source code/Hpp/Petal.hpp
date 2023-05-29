@@ -2,30 +2,31 @@
 
 #include "Source code/Hpp/Custom types.hpp"
 
-#include "..\headers\circle2D.hpp"
-#include "..\headers\text_d2d.h"
+#include "Source code/Hpp/Graphics/Direct2D/Circle2D.hpp"
+#include "Source code/Hpp/Graphics/DWrite/Text.hpp"
  
 #include <string>
 
-namespace hid
+namespace HID
 {
-    class petal
+    class Petal
     {
         private:
 
-            Point center { -100.0f , -100.0f };
-            Circle2D   circle; // geometry
-            Text     text;
-            uint         os_code { 0 };
+            Point    center  { -100 , -100 };
+            Circle2D circle  {};
+            Text     text    {};
+            uint     os_code {};
 
         public:
 
-            petal();
+            Petal();
 
             void set_input( std::wstring in_input );
-            void update( float in_x , float in_y ); 
-            void set_position( float in_x , float in_y );
+            void set_position( int in_x , int in_y );
+            void send();
+            void update( int in_x , int in_y );
             void draw();
-            void send_input();
+            
     };
 }

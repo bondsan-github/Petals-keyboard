@@ -1,6 +1,6 @@
-// bond-san Precision multiple touch input controls
+// Mark.T. Precision multiple touch input controls
 
-#include "Source code\Hpp\Multiple touch.hpp"
+#include "Multiple touch.hpp"
 
 int WINAPI wWinMain( _In_ HINSTANCE instance , _In_opt_ HINSTANCE instance_previous , _In_ LPWSTR parameters , _In_ int show_flags )
 {
@@ -12,7 +12,7 @@ int WINAPI wWinMain( _In_ HINSTANCE instance , _In_opt_ HINSTANCE instance_previ
 
    if( SUCCEEDED( result ) )
    {
-       using namespace hid;
+       using namespace HID;
        
        Multiple_touch petals_input( instance , parameters , show_flags );
        petals_input.run();

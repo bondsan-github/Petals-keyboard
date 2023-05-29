@@ -1,32 +1,31 @@
 #pragma once
 
-
 #include "Source code/Hpp/Custom types.hpp"
+#include "Source code/Hpp/Graphics/DWrite/Text.hpp"
 
-#include "Source code/Hpp/Petal.hpp"
-#include "..\headers\text_d2d.h"
+#include "Petal.hpp"
 
 #include <array>
 
-namespace hid
+namespace HID
 {
     // class petal 
     class Contact
     {
         private:
 
-            static inline int        identifier { -1 };
-            Point             first_contact { 0.0f , 0.0f };
-            std::array< Petal , 4 >  petals;
+            static inline int       identifier { -1 };
+            Point                   first_contact {};
+            std::array< Petal , 4 > petals;
             
-            const float offset = 20.0f;
+            const int offset = 20;
 
             std::array< Point , 4 > offsets =
-            {//    x    ,     y
-                0.0f    , -offset , // top 
-                +offset , 0.0f    , // right
-                0.0f    , +offset , // bottom
-                -offset , 0.0f    , // left
+            {
+                Point{ 0        , -offset } , // top 
+                Point{ +offset  , 0       } , // right
+                Point{ 0        , +offset } , // bottom
+                Point{ -offset  , 0       } , // left
             };
 
             const enum class states 
@@ -44,7 +43,7 @@ namespace hid
 
             Contact();
 
-            void inputs( std::array< std::wstring , 4 > in_inputs );
+            void set_inputs( std::array< std::wstring , 4 > in_inputs );
             void update( float in_x , float in_y );
             void draw();
             //bool hit_text_petal( float in_x , float in_y);

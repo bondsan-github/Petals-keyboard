@@ -122,7 +122,6 @@
       <EnableModules>false</EnableModules>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source code\Hpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,7 +142,6 @@
       <TranslateIncludes>false</TranslateIncludes>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableModules>false</EnableModules>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source code\Hpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,8 +159,10 @@
     <Manifest Include="Data\DeclareDPIAware.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source code\Cpp\Contact.cpp" />
     <ClCompile Include="Source code\Cpp\Main.cpp" />
     <ClCompile Include="Source code\Cpp\Multiple touch.cpp" />
+    <ClCompile Include="Source code\Cpp\Petal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Update="C:\Software\Programming\Projects\Shared\Source code\Hpp\Input\HID\HID_Collection.hpp">

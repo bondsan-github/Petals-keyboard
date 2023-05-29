@@ -1,18 +1,18 @@
-#include "..\headers\contact.h"
+#include "Contact.hpp"
 
-namespace hid
+namespace HID
 {
+    Contact::Contact()
+    {
+        identifier++;
+    }
+
     D2D_POINT_2F const operator + ( const D2D_POINT_2F & in_point_left , const D2D_POINT_2F & in_point_right )
     {
         return { in_point_left.x + in_point_right.x , in_point_left.y + in_point_right.y };
     }
 
-    contact::contact()
-    {
-        identifier++;
-    }
-
-    void contact::set_inputs( std::array< std::wstring , 4 > in_inputs )
+    void Contact::set_inputs( std::array< std::wstring , 4 > in_inputs )
     {
         uint index { 0 };
 
@@ -23,11 +23,12 @@ namespace hid
         }
     }
 
-    void contact::update( float in_x , float in_y )
+    void Contact::update( float in_x , float in_y )
     {
+    /*
         switch( state )
         {
-            case states::contact:
+            case states::Contact:
             {
                 first_contact = { in_x , in_y };
 
@@ -53,10 +54,11 @@ namespace hid
         }
 
         // if within screen bounds
+        */
         
     }
 
-    void contact::draw()
+    void Contact::draw()
     {
         for( auto & petal : petals ) petal.draw();
     }
