@@ -4,8 +4,6 @@ namespace HID
 {
     Contact::Contact()
     {
-        OutputDebugString( L"\n Contact::Contact()" );
-
         identifier++;
     }
 
@@ -14,13 +12,13 @@ namespace HID
         return { in_point_left.x + in_point_right.x , in_point_left.y + in_point_right.y };
     }
 
-    void Contact::inputs( std::array< std::wstring , 4 > in_inputs )
+    void Contact::set_inputs( std::array< std::wstring , 4 > in_inputs )
     {
         uint index { 0 };
 
         for( auto & input : in_inputs )
         {
-            petals[ index ].input( input );
+            petals[ index ].set_input( input );
             ++index;
         }
     }

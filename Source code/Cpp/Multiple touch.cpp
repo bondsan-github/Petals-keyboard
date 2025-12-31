@@ -1,17 +1,15 @@
 #include "Multiple touch.hpp"
  
-//namespace HID
-//{
-    Multiple_touch::Multiple_touch( HINSTANCE instance ,
-                                    LPWSTR parameters ,
-                                    int show_flags )
+namespace HID
+{
+    Multiple_touch::Multiple_touch( const HINSTANCE instance ,
+                                    const LPWSTR parameters ,
+                                    const int show_flags )
         : Devices( *this )
     {
         //initialise( instance , parameters , show_flags );
         //initialise( Client_size::fullscreen );
         //{
-        OutputDebugString(L"\n Multiple_touch");
-
             Application::initialise();
         //}
     }
@@ -25,7 +23,7 @@
     }
 
 
-//} // namespace hid
+} // namespace hid
 
 
 // touchpad HID - mouse + keyboard
