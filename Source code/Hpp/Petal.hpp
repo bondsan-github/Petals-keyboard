@@ -1,10 +1,8 @@
 #pragma once
 
 #include "Source code/Hpp/Custom types.hpp"
-
 #include "Source code/Hpp/Graphics/Direct2D/Circle2D.hpp"
 #include "Source code/Hpp/Graphics/DWrite/Text.hpp"
- 
 #include <string>
 
 namespace HID
@@ -22,8 +20,8 @@ namespace HID
 
             Petal();
 
-            void set_input( std::wstring in_input );
-            void set_position( int in_x , int in_y );
+            void input( std::wstring in_input );
+            void position( int in_x , int in_y );
             void send();
             void update( int in_x , int in_y );
             void draw();

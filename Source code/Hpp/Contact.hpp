@@ -28,7 +28,7 @@ namespace HID
                 Point{ -offset  , 0       } , // left
             };
 
-            const enum class states 
+            enum class states 
             { 
                 contact ,
                 chosing_petal ,
@@ -43,7 +43,7 @@ namespace HID
 
             Contact();
 
-            void set_inputs( std::array< std::wstring , 4 > in_inputs );
+            void inputs( std::array< std::wstring , 4 > in_inputs );
             void update( float in_x , float in_y );
             void draw();
             //bool hit_text_petal( float in_x , float in_y);

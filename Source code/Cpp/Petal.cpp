@@ -4,20 +4,21 @@ namespace HID
 {
     Petal::Petal()
     {
+        OutputDebugString( L"\n Petal::Petal()" );
        // text.set_font_size(10);
         text.show_border( false );
     }
 
-    void Petal::set_input( std::wstring input )
+    void Petal::input( std::wstring input )
     {
         os_code = inputs_english.at( input );
 
         text.set( input );
     }
 
-    void Petal::set_position( int in_x , int in_y )
+    void Petal::position( int in_x , int in_y )
     {
-        text.set_position( { in_x - 5.0f , in_y -8.0f } );
+        text.position( { in_x - 5 , in_y - 8 } );
 
         circle.set_position( { in_x , in_y } );
         //circle.set_state( circle_d2d::states::on );
