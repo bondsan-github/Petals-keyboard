@@ -1,4 +1,2 @@
-Multiple touch computer input using precision touchpads
-![screenshot](screenshot.jpg "screenshot")
-
-assistance required to finish.
+Multiple touch computer input using precision touchpads.
+![screenshot](/Data/screenshot.jpg "screenshot")
