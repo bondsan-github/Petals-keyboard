@@ -1,28 +1,19 @@
-#include "Multiple touch.hpp"
+#include "Multiple touch.h"
  
 namespace HID
 {
-    Multiple_touch::Multiple_touch( const HINSTANCE instance ,
-                                    const LPWSTR parameters ,
-                                    const int show_flags )
-        : Devices( *this )
+    Multiple_touch::Multiple_touch( HINSTANCE instance, LPWSTR parameters, int show_flags )
+    : Devices( *this )
     {
         //initialise( instance , parameters , show_flags );
         //initialise( Client_size::fullscreen );
-        //{
-            Application::initialise();
-        //}
+     
+        Application::initialise();
     }
 
-    void Multiple_touch::update()
-    {
-    }
+    void Multiple_touch::update() {}
     
-    void Multiple_touch::render()
-    {
-    }
-
-
+    void Multiple_touch::render() {}
 } // namespace hid
 
 

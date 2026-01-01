@@ -19,6 +19,51 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Hpp\Graphics">
+      <UniqueIdentifier>{ea085ae1-3c75-4fbb-a77e-3148cc2f4526}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hpp\Graphics\Direct2D">
+      <UniqueIdentifier>{07687220-8da8-47e2-a8aa-d48d5c0646da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hpp\Graphics\DWrite">
+      <UniqueIdentifier>{0831c8ca-15b3-4b54-80e6-63d0dcabcb0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hpp\Input">
+      <UniqueIdentifier>{013a149f-3e93-4ec6-84c1-1e9d39df6d64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hpp\Input\HID">
+      <UniqueIdentifier>{f46e2b8a-62bc-4a3e-9ed6-b40bcafe0bfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hpp\Operating system">
+      <UniqueIdentifier>{0ca74cb1-0d60-4425-84fe-9576e8b4ffdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hpp\Output">
+      <UniqueIdentifier>{1e59a927-d26f-40fb-a6fe-70a7dcf91f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hpp\Time">
+      <UniqueIdentifier>{94da3157-fba4-4054-b860-08c1d19c2f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Graphics">
+      <UniqueIdentifier>{0c532275-7d2d-4918-b5ec-7510747fe4f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Graphics\Direct2D">
+      <UniqueIdentifier>{5f467c57-c878-4afc-a19a-75b02b8c7739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Input">
+      <UniqueIdentifier>{5668662a-3c76-4d85-a339-93fa774bf50c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Input\HID">
+      <UniqueIdentifier>{5ef82001-cae1-4a73-8c3d-a5996bf9bad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Operating system">
+      <UniqueIdentifier>{ee362010-13cb-4c66-a790-9a9bc654958e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Output">
+      <UniqueIdentifier>{39a88dfc-f186-43b9-a8cd-70817a6b15d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Graphics\DWrite">
+      <UniqueIdentifier>{f137f6cf-14a7-42d5-b679-d6fbea796fc5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="documents\hut1_3_0.pdf">
@@ -46,16 +91,220 @@
     <ClCompile Include="Source code\Cpp\Petal.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Circle.cpp">
+      <Filter>Cpp\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\DirectX 11 math.cpp">
+      <Filter>Cpp\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Drawable.cpp">
+      <Filter>Cpp\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\graphics_d2d.cpp">
+      <Filter>Cpp\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Rectangle.cpp">
+      <Filter>Cpp\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Size.cpp">
+      <Filter>Cpp\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Circle.cpp">
+      <Filter>Cpp\Graphics\Direct2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Direct2D.cpp">
+      <Filter>Cpp\Graphics\Direct2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Grid.cpp">
+      <Filter>Cpp\Graphics\Direct2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Image.cpp">
+      <Filter>Cpp\Graphics\Direct2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Line.cpp">
+      <Filter>Cpp\Graphics\Direct2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Rectangle.cpp">
+      <Filter>Cpp\Graphics\Direct2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Sprite.cpp">
+      <Filter>Cpp\Graphics\Direct2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\DWrite\Text.cpp">
+      <Filter>Cpp\Graphics\DWrite</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\Input.cpp">
+      <Filter>Cpp\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\HID\Button.cpp">
+      <Filter>Cpp\Input\HID</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\HID\Collection.cpp">
+      <Filter>Cpp\Input\HID</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\HID\Collections.cpp">
+      <Filter>Cpp\Input\HID</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\HID\Device.cpp">
+      <Filter>Cpp\Input\HID</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\HID\Devices.cpp">
+      <Filter>Cpp\Input\HID</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\HID\Raw device.cpp">
+      <Filter>Cpp\Input\HID</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\HID\Usages.cpp">
+      <Filter>Cpp\Input\HID</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\HID\Value.cpp">
+      <Filter>Cpp\Input\HID</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Operating System\gui_microsoft.cpp">
+      <Filter>Cpp\Operating system</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Output\Logging.cpp">
+      <Filter>Cpp\Output</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Operating System\MSWindows.cpp">
+      <Filter>Cpp\Operating system</Filter>
+    </ClCompile>
+    <ClCompile Include="DWrite.h">
+      <Filter>Hpp\Graphics\DWrite</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug overlay.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source code\Hpp\Contact.hpp">
+    <ClInclude Include="Source code\Hpp\Contact.h">
       <Filter>Hpp</Filter>
     </ClInclude>
-    <ClInclude Include="Source code\Hpp\Petal.hpp">
+    <ClInclude Include="Source code\Hpp\Petal.h">
       <Filter>Hpp</Filter>
     </ClInclude>
-    <ClInclude Include="Source code\Hpp\Multiple touch.hpp">
+    <ClInclude Include="Source code\Hpp\Multiple touch.h">
       <Filter>Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Application.h">
+      <Filter>Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Custom types.h">
+      <Filter>Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Custom_types.h">
+      <Filter>Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Circle.h">
+      <Filter>Hpp\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Colour space.h">
+      <Filter>Hpp\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Colour.h">
+      <Filter>Hpp\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\DirectXMath extension.h">
+      <Filter>Hpp\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Display.h">
+      <Filter>Hpp\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Point.h">
+      <Filter>Hpp\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Rectangle.h">
+      <Filter>Hpp\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Size.h">
+      <Filter>Hpp\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Vertex.h">
+      <Filter>Hpp\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Circle.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Drawable.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\DXGI formats.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Factory.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Direct2D.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Image.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Line.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Rectangle ref.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Rectangle.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Sprite.h">
+      <Filter>Hpp\Graphics\Direct2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\DWrite\Text box.h">
+      <Filter>Hpp\Graphics\DWrite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\DWrite\Text.h">
+      <Filter>Hpp\Graphics\DWrite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\DWrite\Write factory.h">
+      <Filter>Hpp\Graphics\DWrite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Button.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Collection.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Collections.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Device.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Devices.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Globals.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Item.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Usage_text.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Usages.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Value.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Status.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Operating system\MSWindows messages.h">
+      <Filter>Hpp\Operating system</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Operating system\MSWindows.h">
+      <Filter>Hpp\Operating system</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Output\Logging.h">
+      <Filter>Hpp\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Time\Timer.h">
+      <Filter>Hpp\Time</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Source code/Hpp/Custom types.hpp"
-#include "Source code/Hpp/Graphics/DWrite/Text.hpp"
+#include "Custom types.h"
+#include "Graphics\DWrite\Text.h"
 
-#include "Petal.hpp"
+#include "Petal.h"
 
 #include <array>
 

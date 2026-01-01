@@ -23,42 +23,40 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{1e9a325c-6254-47b7-989e-f9d4215c5c98}</ProjectGuid>
     <RootNamespace>precisionmultitouch</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Precision multiple touch</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="Shared">
-    <Import Project="..\Shared\Shared.vcxitems" Label="Shared" />
-  </ImportGroup>
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -159,9 +157,55 @@
     <Manifest Include="Data\DeclareDPIAware.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Debug overlay.cpp" />
+    <ClCompile Include="DWrite.h" />
     <ClCompile Include="Source code\Cpp\Contact.cpp" />
+    <ClCompile Include="Source code\Cpp\Graphics\Circle.cpp" />
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Circle.cpp" />
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Direct2D.cpp" />
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Grid.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Image.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Line.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Rectangle.cpp" />
+    <ClCompile Include="Source code\Cpp\Graphics\Direct2D\Sprite.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\DirectX 11 math.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Drawable.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\DWrite\Text.cpp" />
+    <ClCompile Include="Source code\Cpp\Graphics\graphics_d2d.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Graphics\Rectangle.cpp" />
+    <ClCompile Include="Source code\Cpp\Graphics\Size.cpp" />
+    <ClCompile Include="Source code\Cpp\Input\HID\Button.cpp" />
+    <ClCompile Include="Source code\Cpp\Input\HID\Collection.cpp" />
+    <ClCompile Include="Source code\Cpp\Input\HID\Collections.cpp" />
+    <ClCompile Include="Source code\Cpp\Input\HID\Device.cpp" />
+    <ClCompile Include="Source code\Cpp\Input\HID\Devices.cpp" />
+    <ClCompile Include="Source code\Cpp\Input\HID\Raw device.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Input\HID\Usages.cpp" />
+    <ClCompile Include="Source code\Cpp\Input\HID\Value.cpp" />
+    <ClCompile Include="Source code\Cpp\Input\Input.cpp" />
     <ClCompile Include="Source code\Cpp\Main.cpp" />
     <ClCompile Include="Source code\Cpp\Multiple touch.cpp" />
+    <ClCompile Include="Source code\Cpp\Operating System\gui_microsoft.cpp" />
+    <ClCompile Include="Source code\Cpp\Operating System\MSWindows.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Source code\Cpp\Output\Logging.cpp" />
     <ClCompile Include="Source code\Cpp\Petal.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,9 +215,63 @@
     <ClInclude Update="C:\Software\Programming\Projects\Shared\Source code\Hpp\Input\HID\HID_Collection.h[[">
       <FileType>Document</FileType>
     </ClInclude>
-    <ClInclude Include="Source code\Hpp\Contact.hpp" />
-    <ClInclude Include="Source code\Hpp\Multiple touch.hpp" />
-    <ClInclude Include="Source code\Hpp\Petal.hpp" />
+    <ClInclude Include="Source code\Hpp\Application.h" />
+    <ClInclude Include="Source code\Hpp\Contact.h" />
+    <ClInclude Include="Source code\Hpp\Custom types.h" />
+    <ClInclude Include="Source code\Hpp\Custom_types.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Circle.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Colour space.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Colour.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Circle.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Drawable.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\DXGI formats.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Factory.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Direct2D.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Image.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Line.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Rectangle ref.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Rectangle.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Direct2D\Sprite.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\DirectXMath extension.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\Display.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Graphics\DWrite\Text box.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\DWrite\Text.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\DWrite\Write factory.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Point.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Rectangle.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Size.h" />
+    <ClInclude Include="Source code\Hpp\Graphics\Vertex.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Status.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Button.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Collection.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Collections.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Device.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Devices.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Globals.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Item.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Usages.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Usage_text.h" />
+    <ClInclude Include="Source code\Hpp\Input\HID\Value.h" />
+    <ClInclude Include="Source code\Hpp\Multiple touch.h" />
+    <ClInclude Include="Source code\Hpp\Operating system\MSWindows messages.h" />
+    <ClInclude Include="Source code\Hpp\Operating system\MSWindows.h" />
+    <ClInclude Include="Source code\Hpp\Output\Logging.h" />
+    <ClInclude Include="Source code\Hpp\Petal.h" />
+    <ClInclude Include="Source code\Hpp\Time\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

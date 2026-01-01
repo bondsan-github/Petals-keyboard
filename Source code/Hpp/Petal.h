@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Source code/Hpp/Custom types.hpp"
+#include "Custom types.h"
 
-#include "Source code/Hpp/Graphics/Direct2D/Circle2D.hpp"
-#include "Source code/Hpp/Graphics/DWrite/Text.hpp"
+#include "Graphics\Direct2D\Circle.h"
+#include "Graphics\DWrite\Text.h"
  
 #include <string>
 
