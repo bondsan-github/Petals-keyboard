@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "Custom types.h"
-
 #include <vector>
 #include <string>
 

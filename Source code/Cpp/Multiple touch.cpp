@@ -5,6 +5,7 @@ namespace HID
     Multiple_touch::Multiple_touch( HINSTANCE instance, LPWSTR parameters, int show_flags )
     : Devices( *this )
     {
+        OutputDebugString(L"\n Multiple_touch::Multiple_touch()");
         //initialise( instance , parameters , show_flags );
         //initialise( Client_size::fullscreen );
      

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Graphics\Direct2D\Drawable2D.h"
-#include "Custom types.h"
+#include "Aliases.h"
 
 #include <wrl\client.h>
 using Microsoft::WRL::ComPtr;
@@ -10,13 +9,14 @@ using Microsoft::WRL::ComPtr;
 #include <d2d1helper.h>
 
 #include "Graphics\Rectangle.h"
-#include "Graphics\Direct2D\Drawable2D.h"
-#include "Graphics\Direct2D\Factory2D.h"
+#include "Graphics\Direct2D\Drawable.h"
+#include "Graphics\Direct2D\Factory.h"
 
 class Rectangle2D : public Rectangle , public Drawable2D , public Factory2D
 {
     private:
 
+        //D2D_RECT_U position;
         float        line_width_ {};
         D2D1::ColorF line_colour_ { D2D1::ColorF( 1.0 , 1.0 , 1.0 , 1.0 ) };
 

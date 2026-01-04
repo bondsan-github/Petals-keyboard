@@ -1,10 +1,8 @@
 #include "Input\HID\Collection.h"
 
-#include "Input\HID\Globals.h"
-
 namespace HID
 {
-    void Collection::operator = ( const collection_node & node )
+    void Collection::operator = ( const _HIDP_LINK_COLLECTION_NODE & node )
     {
         LinkUsage        = node.LinkUsage;
         LinkUsagePage    = node.LinkUsagePage;
@@ -17,7 +15,7 @@ namespace HID
     }
 
     //
-    void Collection::operator = ( collection_node && node ) noexcept
+    void Collection::operator = ( _HIDP_LINK_COLLECTION_NODE && node ) noexcept
     {
         LinkUsage        = std::move( node.LinkUsage );
         LinkUsagePage    = std::move( node.LinkUsagePage );
@@ -29,306 +27,302 @@ namespace HID
         IsAlias          = std::move( static_cast< bool >( node.IsAlias ) ); // This link node is an alias of the next link node.
     }
 
-    void Collection::add_button( Report_type type, Button & button )
+    void Collection::add_button( report_type type, Button & button )
     {
-        button.collect_information();
-
         switch( type )
         {
-            case Report_type::input:
+            case report_type::input:
             {
                 input_buttons.push_back( button );
             } break;
 
-            case Report_type::output:
+            case report_type::output:
             {
                 output_buttons.push_back( button );
             } break;
 
-            case Report_type::feature:
+            case report_type::feature:
             {
                 feature_buttons.push_back( button );
             }
         }
     }
 
-    void Collection::add_value( Report_type type, Value & value )
+    void Collection::add_value( report_type type, Value & value )
     {
-        value.collect_information();
-
         switch( type )
         {
-            case Report_type::input:
+            case report_type::input:
             {
                 input_values.push_back( value );
             } break;
 
-            case Report_type::output:
+            case report_type::output:
             {
                 output_values.push_back( value );
             } break;
 
-            case Report_type::feature:
+            case report_type::feature:
             {
                 feature_values.push_back( value );
             } break;
         }
     }
 
-    void Collection::collect_information()
-    {
-        std::wstring text;
-        
-        text += L"page\t: ";
-        text += page( LinkUsagePage );
-        text += L"\nusage\t: ";
-        text += usage( LinkUsagePage , LinkUsage );
-        text += L"\ncollection\t: ";
-        text += type( CollectionType );
-        text += IsAlias ? L"\nis alias" : L"\nnot alias";
+    //void Collection::collect_information()
+    //{
+    //    std::wstring text;
+    //    
+    //    text += L"page\t: ";
+    //    text += page( LinkUsagePage );
+    //    text += L"\nusage\t: ";
+    //    text += usage( LinkUsagePage , LinkUsage );
+    //    text += L"\ncollection\t: ";
+    //    text += type( CollectionType );
+    //    text += IsAlias ? L"\nis alias" : L"\nnot alias";
 
-        information.set( text );
-        information.layout_size( { 200.0f, 100.0f } );
-        information.size( 10.0f );
-        information.colour( D2D1::ColorF::Yellow );
+    //    information.set( text );
+    //    information.layout_size( { 200.0f, 100.0f } );
+    //    information.size( 10.0f );
+    //    information.colour( D2D1::ColorF::Yellow );
+    //}
+
+    //void Collection::position( Point const & position )
+    //{
+    //    information.position( position );
+    //}
+
+    //void Collection::calculate_positions()
+    //{
+    //    //RECT client_size {};
+    //    //client_size = locate::get_windows().get_client_rectangle();
+    //    //ulong spacer_x = ( client_size.right - client_size.left ) / ( input_buttons.size() + 1 );
+    //    //ulong spacer_y = ( client_size.bottom - client_size.top ) / ( input_buttons.size() + 1);
+
+    //    Point position //spacer = screen_width / button_amount
+    //    {
+    //        information.right() + 20.0f, // x 
+    //        information.top()    // y
+    //    };
+
+    //    // place input buttons [collection]->[in buttons]
+    //    auto button_itr = input_buttons.begin();
+
+    //    for( ; button_itr < input_buttons.end() ; button_itr++ )
+    //    {
+    //        button_itr->append( L"\ninput button" );
+
+    //        // get previous item text right side
+    //        if( button_itr not_eq input_buttons.begin() )
+    //            position.x( ( button_itr - 1 )->right() + 20.0f );
+    //        
+    //        button_itr->set_position( position );
+    //    }
+    //    // --------------------------------------------------------------------
+
+    //    // place input values [collection]->[in buttons]->[in values]
+    //    if( input_buttons.empty() )
+    //    {
+    //        position = { information.right() + 20.0f, information.top() };
+    //    }
+    //    else
+    //    {   // place after input buttons
+    //        position.x( input_buttons.back().right() + 20.f );
+    //        position.y( input_buttons.back().top() );
+    //    }
+
+    //    auto value_itr = input_values.begin();
+
+    //    for( ; value_itr < input_values.end() ; value_itr++ )
+    //    {
+    //        value_itr->append_text( L"\ninput value" );
+
+    //         // get previous item text right side
+    //        if( value_itr not_eq input_values.begin() )
+    //            position.x( ( value_itr - 1 )->right() + 20.0f );
+
+    //        value_itr->set_position( position );
+    //    }
+    //    // --------------------------------------------------------------------
+
+    //    // place output buttons [collection]->[in buttons]->[in values]->[out buttons]
+    //    if( input_values.empty() )
+    //    {
+    //        if( input_buttons.empty() )
+    //            position = { information.right() + 20.0f, information.top() };
+    //        else
+    //        {   // place after input buttons
+    //            position.x( input_buttons.back().right() + 20.f );
+    //            position.y( input_buttons.back().top() );
+    //        }
+    //    }
+    //    else
+    //    {   // place after input values
+    //        position.x( input_values.back().right() + 20.f );
+    //        position.y( input_values.back().top() );
+    //    }
+
+    //    button_itr = output_buttons.begin();
+
+    //    for( ; button_itr < output_buttons.end() ; button_itr++ )
+    //    {
+    //        button_itr->append( L"\noutput button" );
+
+    //        if( button_itr not_eq output_buttons.begin() )
+    //            position.x( ( button_itr - 1 )->right() + 20.0f );
+
+    //        button_itr->set_position( position );
+    //    }
+    //    // --------------------------------------------------------------------
+
+    //    // place output values  
+    //    // [collection]->[in buttons]->[in values]->[out buttons]->[out values]
+    //    if( output_buttons.empty() )
+    //    {
+    //        if( input_values.empty() )
+    //        {
+    //            if( input_buttons.empty() )
+    //                position = { information.right() + 20.0f, information.top() };
+    //            else
+    //            {
+    //                position.x( input_buttons.back().right() + 20.f );
+    //                position.y( input_buttons.back().top() );
+    //            }
+    //        }
+    //        else 
+    //        {
+    //            position.x( input_values.back().right() + 20.f );
+    //            position.y( input_values.back().top() );
+    //        }
+
+    //    }
+    //    else
+    //    {   // place after outputbuttons
+    //        position.x( output_buttons.back().right() + 20.f );
+    //        position.y( output_buttons.back().top() );
+    //    }
+
+    //    value_itr = output_values.begin();
+
+    //    for( ; value_itr < output_values.end() ; value_itr++ )
+    //    {
+    //        button_itr->append_text( L"\noutput value" );
+
+    //        if( value_itr not_eq output_values.begin() )
+    //            position.x( ( value_itr - 1 )->right() + 20.0f );
+
+    //        value_itr->set_position( position );
+    //    }
+    //    // --------------------------------------------------------------------
+
+    //    // place feature buttons
+    //    // [collection]->[in buttons]->[in values]->[out buttons]->[out values]->[feat button]
+    //    if( output_values.empty() )
+    //    { 
+    //        if( output_buttons.empty() )
+    //        {
+    //            if( input_values.empty() )
+    //            {
+    //                if( input_buttons.empty() )
+    //                    position = { information.right() + 20.0f, information.top() };
+    //                else
+    //                {
+    //                    position.x( input_buttons.back().right() + 20.f );
+    //                    position.y( input_buttons.back().top() );
+    //                }
+    //            }
+    //            else
+    //            {
+    //                position.x( input_values.back().right() + 20.f );
+    //                position.y( input_values.back().top() );
+    //            }
+    //        }
+    //        else
+    //        {
+    //            position.x( output_buttons.back().right() + 20.f );
+    //            position.y( output_buttons.back().top() );
+    //        }
+    //    }
+    //    else
+    //    {   // place after output buttons
+    //        position.x( output_values.back().right() + 20.f );
+    //        position.y( output_values.back().top() );
+    //    }
+
+    //    button_itr = feature_buttons.begin();
+    //    for( ; button_itr < feature_buttons.end() ; button_itr++ )
+    //    {
+    //        button_itr->append_text( L"\nfeature button" );
+
+    //        if( button_itr not_eq feature_buttons.begin() )
+    //            position.x( ( button_itr - 1 )->right() + 20.0f );
+
+    //        button_itr->set_position( position );
+    //    }
+    //    // --------------------------------------------------------------------
+
+    //    // place feature values
+    //    // [collection]->[in buttons]->[in values]->[out buttons]->[out values]->[feat buttons]->[feat values]
+    //    if( feature_buttons.empty() )
+    //    {
+    //        if( output_values.empty() )
+    //        {
+    //            if( output_buttons.empty() )
+    //            {
+    //                if( input_values.empty() )
+    //                {
+    //                    if( input_buttons.empty() )
+    //                        position ={ information.right() + 20.0f, information.top() };
+    //                    else
+    //                    {
+    //                        position.x( input_buttons.back().right() + 20.f );
+    //                        position.y( input_buttons.back().top() );
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    position.x( input_values.back().right() + 20.f );
+    //                    position.y( input_values.back().top() );
+    //                }
+    //            }
+    //            else
+    //            {
+    //                position.x( output_buttons.back().right() + 20.f );
+    //                position.y( output_buttons.back().top() );
+    //            }
+    //        }
+    //        else
+    //        {   // place after outputbuttons
+    //            position.x( output_values.back().right() + 20.f );
+    //            position.y( output_values.back().top() );
+    //        }
+    //    }
+    //    else
+    //    {   // place output buttons after output_buttons
+    //        position.x( feature_buttons.back().right() + 20.f );
+    //        position.y( feature_buttons.back().top() );
+    //    }
+
+    //    value_itr = feature_values.begin();
+    //    for( ; value_itr < feature_values.end() ; value_itr++ )
+    //    {
+    //        value_itr->append_text( L"\nfeature value" );
+
+    //        if( value_itr not_eq feature_values.begin() )
+    //            position.x( ( value_itr - 1 )->right() + 20.0f );
+
+    //        value_itr->set_position( position );
+    //    }
+    //    // --------------------------------------------------------------------
+    //}
+
+    void Collection::update( RAWINPUT * data )
+    {
+        for( auto & button : input_buttons ) button.update( data );
+        for( auto & value  : input_values  ) value.update( data );
     }
 
-    void Collection::position( Point const & position )
-    {
-        information.position( position );
-    }
-
-    void Collection::calculate_positions()
-    {
-        //RECT client_size {};
-        //client_size = locate::get_windows().get_client_rectangle();
-        //ulong spacer_x = ( client_size.right - client_size.left ) / ( input_buttons.size() + 1 );
-        //ulong spacer_y = ( client_size.bottom - client_size.top ) / ( input_buttons.size() + 1);
-
-        Point position //spacer = screen_width / button_amount
-        {
-            information.right() + 20.0f, // x 
-            information.top()    // y
-        };
-
-        // place input buttons [collection]->[in buttons]
-        auto button_itr = input_buttons.begin();
-
-        for( ; button_itr < input_buttons.end() ; button_itr++ )
-        {
-            button_itr->append( L"\ninput button" );
-
-            // get previous item text right side
-            if( button_itr not_eq input_buttons.begin() )
-                position.x( ( button_itr - 1 )->right() + 20.0f );
-            
-            button_itr->set_position( position );
-        }
-        // --------------------------------------------------------------------
-
-        // place input values [collection]->[in buttons]->[in values]
-        if( input_buttons.empty() )
-        {
-            position = { information.right() + 20.0f, information.top() };
-        }
-        else
-        {   // place after input buttons
-            position.x( input_buttons.back().right() + 20.f );
-            position.y( input_buttons.back().top() );
-        }
-
-        auto value_itr = input_values.begin();
-
-        for( ; value_itr < input_values.end() ; value_itr++ )
-        {
-            value_itr->append_text( L"\ninput value" );
-
-             // get previous item text right side
-            if( value_itr not_eq input_values.begin() )
-                position.x( ( value_itr - 1 )->right() + 20.0f );
-
-            value_itr->set_position( position );
-        }
-        // --------------------------------------------------------------------
-
-        // place output buttons [collection]->[in buttons]->[in values]->[out buttons]
-        if( input_values.empty() )
-        {
-            if( input_buttons.empty() )
-                position = { information.right() + 20.0f, information.top() };
-            else
-            {   // place after input buttons
-                position.x( input_buttons.back().right() + 20.f );
-                position.y( input_buttons.back().top() );
-            }
-        }
-        else
-        {   // place after input values
-            position.x( input_values.back().right() + 20.f );
-            position.y( input_values.back().top() );
-        }
-
-        button_itr = output_buttons.begin();
-
-        for( ; button_itr < output_buttons.end() ; button_itr++ )
-        {
-            button_itr->append( L"\noutput button" );
-
-            if( button_itr not_eq output_buttons.begin() )
-                position.x( ( button_itr - 1 )->right() + 20.0f );
-
-            button_itr->set_position( position );
-        }
-        // --------------------------------------------------------------------
-
-        // place output values  
-        // [collection]->[in buttons]->[in values]->[out buttons]->[out values]
-        if( output_buttons.empty() )
-        {
-            if( input_values.empty() )
-            {
-                if( input_buttons.empty() )
-                    position = { information.right() + 20.0f, information.top() };
-                else
-                {
-                    position.x( input_buttons.back().right() + 20.f );
-                    position.y( input_buttons.back().top() );
-                }
-            }
-            else 
-            {
-                position.x( input_values.back().right() + 20.f );
-                position.y( input_values.back().top() );
-            }
-
-        }
-        else
-        {   // place after outputbuttons
-            position.x( output_buttons.back().right() + 20.f );
-            position.y( output_buttons.back().top() );
-        }
-
-        value_itr = output_values.begin();
-
-        for( ; value_itr < output_values.end() ; value_itr++ )
-        {
-            button_itr->append_text( L"\noutput value" );
-
-            if( value_itr not_eq output_values.begin() )
-                position.x( ( value_itr - 1 )->right() + 20.0f );
-
-            value_itr->set_position( position );
-        }
-        // --------------------------------------------------------------------
-
-        // place feature buttons
-        // [collection]->[in buttons]->[in values]->[out buttons]->[out values]->[feat button]
-        if( output_values.empty() )
-        { 
-            if( output_buttons.empty() )
-            {
-                if( input_values.empty() )
-                {
-                    if( input_buttons.empty() )
-                        position = { information.right() + 20.0f, information.top() };
-                    else
-                    {
-                        position.x( input_buttons.back().right() + 20.f );
-                        position.y( input_buttons.back().top() );
-                    }
-                }
-                else
-                {
-                    position.x( input_values.back().right() + 20.f );
-                    position.y( input_values.back().top() );
-                }
-            }
-            else
-            {
-                position.x( output_buttons.back().right() + 20.f );
-                position.y( output_buttons.back().top() );
-            }
-        }
-        else
-        {   // place after output buttons
-            position.x( output_values.back().right() + 20.f );
-            position.y( output_values.back().top() );
-        }
-
-        button_itr = feature_buttons.begin();
-        for( ; button_itr < feature_buttons.end() ; button_itr++ )
-        {
-            button_itr->append_text( L"\nfeature button" );
-
-            if( button_itr not_eq feature_buttons.begin() )
-                position.x( ( button_itr - 1 )->right() + 20.0f );
-
-            button_itr->set_position( position );
-        }
-        // --------------------------------------------------------------------
-
-        // place feature values
-        // [collection]->[in buttons]->[in values]->[out buttons]->[out values]->[feat buttons]->[feat values]
-        if( feature_buttons.empty() )
-        {
-            if( output_values.empty() )
-            {
-                if( output_buttons.empty() )
-                {
-                    if( input_values.empty() )
-                    {
-                        if( input_buttons.empty() )
-                            position ={ information.right() + 20.0f, information.top() };
-                        else
-                        {
-                            position.x( input_buttons.back().right() + 20.f );
-                            position.y( input_buttons.back().top() );
-                        }
-                    }
-                    else
-                    {
-                        position.x( input_values.back().right() + 20.f );
-                        position.y( input_values.back().top() );
-                    }
-                }
-                else
-                {
-                    position.x( output_buttons.back().right() + 20.f );
-                    position.y( output_buttons.back().top() );
-                }
-            }
-            else
-            {   // place after outputbuttons
-                position.x( output_values.back().right() + 20.f );
-                position.y( output_values.back().top() );
-            }
-        }
-        else
-        {   // place output buttons after output_buttons
-            position.x( feature_buttons.back().right() + 20.f );
-            position.y( feature_buttons.back().top() );
-        }
-
-        value_itr = feature_values.begin();
-        for( ; value_itr < feature_values.end() ; value_itr++ )
-        {
-            value_itr->append_text( L"\nfeature value" );
-
-            if( value_itr not_eq feature_values.begin() )
-                position.x( ( value_itr - 1 )->right() + 20.0f );
-
-            value_itr->set_position( position );
-        }
-        // --------------------------------------------------------------------
-    }
-
-    void Collection::update( RAWINPUT * in_raw_data )
-    {
-        for( auto & button : input_buttons ) button.update( in_raw_data );
-        for( auto & value  : input_values  ) value.update( in_raw_data );
-    }
-
-    void Collection::draw()
+   /* void Collection::draw()
     {
         information.draw();
 
@@ -340,12 +334,12 @@ namespace HID
 
         for( auto & button : feature_buttons ) button.draw();
         for( auto & value  : feature_values  ) value.draw();
-    }
+    }*/
 
-    Range Collection::get_range( ushort in_page ,
-                                 ushort in_usage ,
-                                 Report_type in_report_type ,
-                                 Item_type in_item_type )
+    Range Collection::range( ushort page ,
+                             ushort usage ,
+                             report_type report_type ,
+                             Item_type item_type )
     {
         /*
 

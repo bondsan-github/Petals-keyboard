@@ -1,23 +1,23 @@
-#include "Source code/Hpp/Application.hpp"
+#include "Application.h"
 
-Application::Application( )
-: MSWindows( this ) , Graphics( *this )
-{}
+Application::Application()
+: MSWindows( this )
+{ }
 
-void Application::initialise( Size in_client_size )
+void Application::initialise( Size client_size )
 {
-    HWND window = MSWindows::initialise( in_client_size );
+    HWND window = MSWindows::initialise( client_size );
 
     {
-        Graphics::initialise( window );
+        //Direct2D::initialise( window );
     }
 
-    Timer::initialise();
-    Timer::start();
-     //timer.tick();
+    //Timer::initialise();
+    //Timer::start();
+     
 }
 
 void Application::run()
 {
-    MSWindows::message_loop();
+    MSWindows::message_loop(); // <-//timer.tick();
 }

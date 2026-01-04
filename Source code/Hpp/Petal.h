@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Custom types.h"
+#include "Aliases.h"
 
 #include "Graphics\Direct2D\Circle.h"
-#include "Graphics\DWrite\Text.h"
+//#include "Graphics\DWrite\Text.h"
  
 #include <string>
 
@@ -15,17 +15,17 @@ namespace HID
 
             Point    center  { -100 , -100 };
             Circle2D circle  {};
-            Text     text    {};
+            //Text     text    {};
             uint     os_code {};
 
         public:
 
             Petal();
 
-            void set_input( std::wstring in_input );
-            void set_position( int in_x , int in_y );
+            void input( std::wstring input );
+            void position( int x, int y );
             void send();
-            void update( int in_x , int in_y );
+            void update( int x, int y );
             void draw();
             
     };

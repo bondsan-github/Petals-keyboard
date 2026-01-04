@@ -1,14 +1,15 @@
 #pragma once
 
+#include "targetver.h"
 #include "Application.h"
 
 #include "Input\HID\Devices.h"
-#include "Input\HID\Usages.h"
+//#include "Input\HID\Usages.h"
 
 namespace HID
 {
     // One or more mutliple touch inputs for example touchpad , touchscreen. 
-    class Multiple_touch : public Application, public Devices //, public Usages
+    class Multiple_touch : public Application, public HID::Devices //, public Usages
     {  
         public:
 

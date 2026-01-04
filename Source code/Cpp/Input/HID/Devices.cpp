@@ -1,38 +1,41 @@
 #include "Input\HID\Devices.h"
 
-#include "Custom types.h"
-#include "Output\Logging.h"
+#include "Aliases.h"
 
-#include "Multiple touch.h"
-
-#include <windows.h>
+#include <cstring>
 
 namespace HID
 {
-    Devices::Devices( Multiple_touch & application )
-    : application( application )
-    {        
+    Devices::Devices()
+    { 
+        OutputDebugString( L"\n Devices::Devices()" );
+        initialise();
+    }
+
+    Devices::~Devices()
+    {
+        OutputDebugString( L"\n Devices::~Devices()" );
     }
 
     void Devices::initialise()
     {
-        uint device_amount {};
+        uint amount {};
         
-        int result = GetRawInputDeviceList( 0 ,
-                                            & device_amount ,
+        int result = GetRawInputDeviceList( 0,
+                                            & amount,
                                             sizeof( RAWINPUTDEVICELIST ) );
 
-        if( result < 0 ) error_exit( L"Unable to get raw input device list." );
+        if( result < 0 ) error_exit( L"Unable to get raw input device list.", result );
 
-        raw_device_list.resize( device_amount );
+        raw_device_list.resize( amount );
 
         // get device list
         GetRawInputDeviceList( raw_device_list.data() ,
-                               & device_amount ,
+                               & amount ,
                                sizeof( RAWINPUTDEVICELIST ) );
 
-        //message = L"\ndevices amount: " + std::to_wstring( device_amount ) + L"\n";
-        //OutputDebugStringW( message.data() );
+        std::wstring message = L"\n  devices amount: " + std::to_wstring( amount ) + L"\n";
+        print_debug( message.data() );
 
         Identity identity {};
         uint     device_index {}; // 4 / 8 /11
@@ -41,15 +44,15 @@ namespace HID
         // find first precision touchpad
         for( ; device_index < raw_device_list.size() ; device_index++ )
         {
-            //message = L"\ndevice index: " + std::to_wstring( device_index );
-            //OutputDebugStringW( message.data() );
+            log = L"\ndevice index: " + std::to_wstring( device_index );
+            OutputDebugString( log.data() );
 
-            Device new_device( raw_device_list.at( device_index ).hDevice , application );
+            Device new_device( raw_device_list.at( device_index ).hDevice);//, mt );
 
             if( new_device.is_multi_touch() )
             {
-                //message = L"\nmulti touch device at index: " + std::to_wstring( device_index );
-                //OutputDebugStringW( message.data() );
+                log = L"\nmulti touch device at index: " + std::to_wstring( device_index );
+                OutputDebugString( log.data() );
 
                 device_multiple_touch_index = device_index;
 
@@ -58,8 +61,8 @@ namespace HID
                 input_devices.push_back( new_device );
                 
                 // Register Raw Input Devices
-                application.register_input_device( new_device.page() ,
-                                                   new_device.usage() );
+                //mt.register_input_device( new_device.page() ,
+                //                          new_device.usage() );
 
                 break; // leaves iterator at current position
             }
@@ -67,56 +70,58 @@ namespace HID
         
         raw_device_list.clear();
 
-        for( auto & device : input_devices )
+        /*for( auto & device : input_devices )
         {
             device.collect_information();
-        }
+        }*/
 
         //if( input.empty() )
         //    information.set_content( L"no precision multiple touch devices found" );
     }
 
-    Device * Devices::device( HANDLE in_handle )
+    Device * Devices::device( HANDLE handle )
     {
-        Device * pointer_device{ nullptr };
+        Device * pointer_device { nullptr };
 
         for( auto & device : input_devices )
-            if( device.handle() == in_handle )
+        {
+            if( device.handle() == handle )
             {
-                pointer_device = &device;
+                pointer_device = & device;
                 break;
             }
+        }
 
         return pointer_device;
     }
 
     // multiple devices
-    void Devices::update_devices( RAWINPUT * in_hid_report )
+    void Devices::update_devices( RAWINPUT * hid_report )
     {
         for( auto & device : input_devices ) 
         {
-            if( device.handle() == in_hid_report->header.hDevice )
-                //device.update( in_hid_report.data.hid );
-                device.update( in_hid_report );
+            if( device.handle() == hid_report->header.hDevice )
+                //device.update( hid_report.data.hid );
+                device.update( hid_report );
                 //device.update();
         }
     }
 
-    void Devices::update_devices_buffered( RAWINPUT ** in_raw_input_buffer , uint in_buffer_size )
+    void Devices::update_devices_buffered( RAWINPUT ** raw_input_buffer, uint buffer_size )
     {
         /*
-        RAWINPUT * current_report = in_raw_input_buffer;
+        RAWINPUT * current_report = raw_input_buffer;
 
         // for each input report
-        for( int index{ 0 }; index < in_buffer_size; index++ )
+        for( int index{ 0 }; index < buffer_size; index++ )
         {
-            //in_raw_input_buffer[index] = current_report;
+            //_raw_input_buffer[index] = current_report;
 
             for( auto & device : input_devices )
             {
-                if( device.get_handle() == in_raw_input_buffer[ index ].header.hDevice )
+                if( device.get_handle() == _raw_input_buffer[ index ].header.hDevice )
                 {
-                    //device.update( in_raw_input_buffer[ index ] );
+                    //device.update( raw_input_buffer[ index ] );
                 }
             }
         }
@@ -128,14 +133,8 @@ namespace HID
         //NEXTRAWINPUTBLOCK(ptr) ((PRAWINPUT)RAWINPUT_ALIGN((ULONG_PTR)((char *)(ptr) + (ptr)->header.dwSize)))
     }
 
-    void Devices::update_device_buffered( RAWINPUT ** in_raw_input_buffer , uint in_buffer_size )
+    void Devices::update_device_buffered( RAWINPUT ** raw_input_buffer, uint buffer_size )
     {
-        input_devices.at(0).update_buffered( in_raw_input_buffer , in_buffer_size );
-    }
-
-    void Devices::draw()
-    {
-        //information.draw();
-        for( auto & device : input_devices ) device.draw();
+        input_devices.at(0).update_buffered( raw_input_buffer, buffer_size );
     }
 }

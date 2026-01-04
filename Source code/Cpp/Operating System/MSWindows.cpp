@@ -10,8 +10,10 @@
 typedef unsigned __int64 QWORD; // 64-bit integer
 
 MSWindows::MSWindows( Application * application )
-: application { application }
-{}
+: application( application )
+{
+    OutputDebugString( L"\n MSWindows::MSWindows()" );
+}
 
 HWND MSWindows::initialise( Size in_client_size )
 {
@@ -44,7 +46,7 @@ HWND MSWindows::initialise( Size in_client_size )
     
     atom = RegisterClassExW( & window_class );
 
-    if( not atom ) error_exit( L"Unable to register class ex." );
+    if( ! atom ) error_exit( L"Unable to register class ex." );
     
     RECT desktop {};
 
@@ -95,7 +97,7 @@ HWND MSWindows::initialise( Size in_client_size )
                                         instance ,
                                         application ); // GWLP_USERDATA
 
-    if( not window_principle ) error_exit( L"Unable create principle window." );
+    if( ! window_principle ) error_exit( L"Unable create principle window." );
  
     ShowWindow( window_principle , SW_SHOWNORMAL ); // set show state
     
@@ -108,9 +110,9 @@ void MSWindows::window_size_changed( uint width , uint height )
 {
     Size new_size( width , height );
 
-    if( new_size not_eq client_size_ )
+    if( new_size != client_size_ )
     {
-        application->window_size_change( width , height );
+        //application->window_size_change( width , height );
     }
     else
     {
@@ -118,7 +120,7 @@ void MSWindows::window_size_changed( uint width , uint height )
     }
 }
 
-RECT MSWindows::get_client_position()
+RECT MSWindows::client_position()
 {
     RECT position {};
 
@@ -128,7 +130,7 @@ RECT MSWindows::get_client_position()
     return position;
 }
 
-Size MSWindows::get_client_size()
+Size MSWindows::client_size()
 {
     RECT area {};
     
@@ -137,7 +139,7 @@ Size MSWindows::get_client_size()
     return { area.right - area.left , area.bottom - area.top };
 }
 
-HWND MSWindows::get_window() const
+HWND MSWindows::window()
 {
     return window_principle;
 }
@@ -148,7 +150,7 @@ int MSWindows::message_loop()
 
     Application * class_pointer = reinterpret_cast< Application * >( GetWindowLongPtrW( window_principle , GWLP_USERDATA ) );
 
-    while( message.message not_eq WM_QUIT )
+    while( message.message != WM_QUIT )
     {
         if( PeekMessageW( & message , NULL , 0U , 0U , PM_REMOVE ) )
         {
@@ -165,13 +167,13 @@ int MSWindows::message_loop()
     return static_cast< char >( message.wParam );
 }
 
-//long long __stdcall MSWindows::message_handler( HWND window , UINT message , WPARAM wParam , LPARAM lParam )
-LRESULT CALLBACK MSWindows::message_handler( HWND window , UINT message , WPARAM wParam , LPARAM lParam )
+//long long __stdcall MSWindows::message_handler( HWND window, UINT message, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK MSWindows::message_handler( HWND window, UINT message, WPARAM wParam, LPARAM lParam )
 {
     /*
     static window_messages messages;
     std::wstring win_message = messages.message_text( message );
-    OutputDebugStringW( win_message.c_str() );
+    OutputDebugString( win_message.c_str() );
     */
 
     Application * class_pointer = reinterpret_cast< Application * >( GetWindowLongPtrW( window , GWLP_USERDATA ) );
@@ -279,10 +281,10 @@ void MSWindows::register_input_device( ushort page , ushort usage )
         .hwndTarget  = window_principle
     };
 
-    RegisterRawInputDevices( &raw_device , 1 , sizeof( RAWINPUTDEVICE ) );
+    RegisterRawInputDevices( & raw_device, 1, sizeof( RAWINPUTDEVICE ) );
 }
 
-void MSWindows::get_window_rectangles()
+/*void MSWindows::window_rectangles()
 {
     EnumWindows( MSWindows::enumerate_windows ,
                  reinterpret_cast< LPARAM >( this ) );
@@ -299,9 +301,9 @@ BOOL CALLBACK MSWindows::enumerate_windows( HWND window , LPARAM parameter )
     window_class->window_recangles.insert( rectangle );
 
     return true;
-}
+}*/
 
 MSWindows::~MSWindows()
 {
-    //OutputDebugString( L"MSWindows::de-constructor\n" );
+    OutputDebugString( L"\n MSWindows::~MSWindows()" );
 }

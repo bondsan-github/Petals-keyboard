@@ -15,7 +15,7 @@ void Direct2D::initialise( HWND in_window )
 
     D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED ,
                        factory_options ,
-                       factory_2d.ReleaseAndGetAddressOf() ) >> result_check;
+                       factory_2d.ReleaseAndGetAddressOf() ) >> hr_check;
 
     D3D11CreateDevice( nullptr , // Adapter
                        D3D_DRIVER_TYPE_HARDWARE ,
@@ -26,25 +26,25 @@ void Direct2D::initialise( HWND in_window )
                        D3D11_SDK_VERSION ,
                        & device_3d ,
                        nullptr , // Actual feature level
-                       nullptr ) >> result_check; // Device context
+                       nullptr ) >> hr_check; // Device context
 
     
-    device_3d.As( & device_gi ) >> result_check;
+    device_3d.As( & device_gi ) >> hr_check;
     
     CreateDXGIFactory2( DXGI_CREATE_FACTORY_DEBUG ,
                         __uuidof( factory_gi ) ,
-                        & factory_gi ) >> result_check;
+                        & factory_gi ) >> hr_check;
 
     create_swap_chain();
 
-    factory_2d->CreateDevice( device_gi.Get() , & device_2d ) >> result_check;
+    factory_2d->CreateDevice( device_gi.Get() , & device_2d ) >> hr_check;
 
     // Create the Direct2D device context that is the actual render target
     // and exposes drawing commands.
-    device_2d->CreateDeviceContext( D2D1_DEVICE_CONTEXT_OPTIONS_NONE , & context_2d ) >> result_check;
+    device_2d->CreateDeviceContext( D2D1_DEVICE_CONTEXT_OPTIONS_NONE , & context_2d ) >> hr_check;
 
     // Retrieve the swap chain's back buffer
-    swap_chain->GetBuffer( 0, __uuidof( surface ) , & surface ) >> result_check;
+    swap_chain->GetBuffer( 0, __uuidof( surface ) , & surface ) >> hr_check;
 
     //float dpi_x {} , dpi_y {};
 
@@ -60,7 +60,7 @@ void Direct2D::initialise( HWND in_window )
     properties.dpiX = dpi;
     properties.dpiY = dpi;
 
-    context_2d->CreateBitmapFromDxgiSurface( surface.Get() , properties , & bitmap ) >> result_check;
+    context_2d->CreateBitmapFromDxgiSurface( surface.Get() , properties , & bitmap ) >> hr_check;
 
     // Point the device context to the bitmap for rendering    
     context_2d->SetTarget( bitmap.Get() );
@@ -76,19 +76,19 @@ void Direct2D::initialise( HWND in_window )
        
     DCompositionCreateDevice( device_gi.Get() ,
                               __uuidof( device_composition ) ,
-                              & device_composition ) >> result_check;
+                              & device_composition ) >> hr_check;
 
     device_composition->CreateTargetForHwnd( window ,
                                              true , // Top most
-                                             & target_composition ) >> result_check;
+                                             & target_composition ) >> hr_check;
 
-    device_composition->CreateVisual( & visual_composition ) >> result_check;
+    device_composition->CreateVisual( & visual_composition ) >> hr_check;
     
-    visual_composition->SetContent( swap_chain.Get() ) >> result_check;
+    visual_composition->SetContent( swap_chain.Get() ) >> hr_check;
 
-    target_composition->SetRoot( visual_composition.Get() ) >> result_check;
+    target_composition->SetRoot( visual_composition.Get() ) >> hr_check;
 
-    device_composition->Commit() >> result_check;
+    device_composition->Commit() >> hr_check;
 
     reset();
 }
@@ -120,7 +120,7 @@ void Direct2D::create_swap_chain()
     factory_gi->CreateSwapChainForComposition( device_gi.Get() ,
                                                & description ,
                                                nullptr , // Don’t restrict
-                                               swap_chain.GetAddressOf() ) >> result_check;
+                                               swap_chain.GetAddressOf() ) >> hr_check;
 }
 
 void Direct2D::draw_begin()
@@ -149,9 +149,9 @@ void Direct2D::draw_begin()
 
 void Direct2D::draw_end()
 {
-    if( context_2d ) context_2d->EndDraw() >> result_check;
+    if( context_2d ) context_2d->EndDraw() >> hr_check;
 
-    if( swap_chain ) swap_chain->Present( 1, 0 ) >> result_check; 
+    if( swap_chain ) swap_chain->Present( 1, 0 ) >> hr_check; 
 }
 
 D2D_SIZE_U Direct2D::screen_size()

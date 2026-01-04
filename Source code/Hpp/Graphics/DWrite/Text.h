@@ -11,7 +11,7 @@ using std::wstring;
 #include <wrl/client.h>
 using Microsoft::WRL::ComPtr;
 
-#include "Custom types.h"
+#include "Aliases.h"
 #include "Graphics\DWrite\Write factory.h"
 #include "Graphics\Direct2D\Drawable.h"
 #include "Graphics\Direct2D\Rectangle.h"
@@ -20,24 +20,26 @@ class Text : public Write_factory , public Drawable2D
 {
     private:
        
-        ComPtr< IDWriteTextFormat >    format     {};
-        ComPtr< ID2D1SolidColorBrush > brush_font {};
-        ComPtr< IDWriteTextLayout >    layout     {};
+        ComPtr< IDWriteTextFormat >    format_ {};
+        ComPtr< ID2D1SolidColorBrush > brush_  {};
+        ComPtr< IDWriteTextLayout >    layout_ {};
         //ComPtr <IDWriteFontCollection> collection {};
+
+        D2D1_SIZE_F  layout_size_{ 150.0 , 150.0 };
 
         wstring               content_ {};
             
         //vertex                position_center   { 10.0f , 10.0f        }; // dips
-        Point                 position_         { 0.0f , 0.0f          }; // in dips
+        Point                 position_         { 0 , 0          }; // in dips
             
-        wstring               font_locale       { L"en-us" }; // en-GB
-        wstring               font_face         { L"Times New Roman"   }; // font family
-        float                 font_size         { 15.0f                }; // * dpi? // MS "size * 96.0f/72.0f"
-        D2D1::ColorF          font_colour       { D2D1::ColorF::Black       };
-        float                 font_opacity      { 1.0f                 };
-        DWRITE_FONT_STYLE     font_style        { DWRITE_FONT_STYLE_NORMAL };
-        DWRITE_FONT_WEIGHT    font_weight       { DWRITE_FONT_WEIGHT_NORMAL };
-        DWRITE_FONT_STRETCH   font_stretch      { DWRITE_FONT_STRETCH_NORMAL };
+        wstring               locale_       { L"en-us" }; // en-GB
+        wstring               face_         { L"Times New Roman"   }; // font family
+        float                 size_         { 15.0f                }; // * dpi? // MS "size * 96.0f/72.0f"
+        D2D1::ColorF          colour_       { D2D1::ColorF::Black       };
+        float                 opacity_      { 1.0f                 };
+        DWRITE_FONT_STYLE     style_        { DWRITE_FONT_STYLE_NORMAL };
+        DWRITE_FONT_WEIGHT    weight_       { DWRITE_FONT_WEIGHT_NORMAL };
+        DWRITE_FONT_STRETCH   stretch_      { DWRITE_FONT_STRETCH_NORMAL };
             
         // collection
         // family
@@ -48,8 +50,6 @@ class Text : public Write_factory , public Drawable2D
         // alignment_horizontal
         // direction_reading
         // direction_flow
-
-        D2D1_SIZE_F  layout_size_ { 150.0 , 150.0 };
 
         Rectangle2D  border {};
 
@@ -67,51 +67,51 @@ class Text : public Write_factory , public Drawable2D
         void reset_brush();
         void reset_border();
             
-        D2D1_SIZE_F layout_size() const;
-        float       width_half() const ;
-        float       height_half() const ;
+        D2D1_SIZE_F layout_size();
+        float       width_half();
+        float       height_half();
         //planes    middle_planes();
 
     public:
 
             Text();
-            Text( wstring const & in_content );
+            Text( wstring content );
             ~Text();
 
-        void set( wstring const & in_content );
-        void add( wstring const & in_string ); // add to end // concatenate
+        void set( wstring content );
+        void add( wstring string ); // add to end // concatenate
 
-        void locale( wstring const & in_locale );
-        void face( wstring const & in_font_face );
-        void size( float in_font_size );
-        void colour( D2D1::ColorF const & in_font_colour );
-        void opacity( float in_font_opacity );
-        void style( DWRITE_FONT_STYLE in_font_style );
-        void weight( DWRITE_FONT_WEIGHT in_font_weight );
-        void stretch( DWRITE_FONT_STRETCH in_font_stretch );
+        void locale( wstring locale );
+        void face( wstring face );
+        void size( float size );
+        void colour( D2D1::ColorF colour );
+        void opacity( float opacity );
+        void style( DWRITE_FONT_STYLE style );
+        void weight( DWRITE_FONT_WEIGHT weight );
+        void stretch( DWRITE_FONT_STRETCH stretch );
 
-        void position( Point const & in_position );
-        void layout_size( D2D1_SIZE_F const & in_layout_size );
+        void position( Point position );
+        void layout_size( D2D1_SIZE_F size );
 
-        void show_border( bool in_show_border );
-        //void set_rectangle_radius( float in_radius );
-        //void set_rectangle_line_colour( D2D1::ColorF in_colour );
-        //void set_rectangle_line_width( float in_width );
-        //void set_font_options( font_options in_font_options );
+        void show_border( bool show );
+        //void rectangle_radius( float radius );
+        //void rectangle_line_colour( D2D1::ColorF colour );
+        //void rectangle_line_width( float width );
+        //void font_options( font_options options );
 
-        wstring content() const { return content_; }
-        wstring locale() const { return font_locale; }
+        wstring content() { return content_; }
+        wstring locale()  { return locale_; }
         //font_options options();
             
-        Point   position() const;
+        Point position();
 
         //Rectangle get_layout_size();
-        float top() const;
-        float right() const;
-        float left() const;
-        float bottom() const;
-        float width() const ;
-        float height() const ;
+        float top();
+        float right();
+        float left();
+        float bottom();
+        float width();
+        float height();
 
         //rectangle_edge_middles get_middle_vertices();
         //rectangle            get_formated_rectangle();

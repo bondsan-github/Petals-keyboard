@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Custom types.h"
-#include "Graphics\DWrite\Text.h"
+#include "Aliases.h"
+//#include "Graphics\DWrite\Text.h"
 
-#include "Petal.h"
+//#include "Petal.h"
 
 #include <array>
 
@@ -43,8 +43,8 @@ namespace HID
 
             Contact();
 
-            void set_inputs( std::array< std::wstring , 4 > in_inputs );
-            void update( float in_x , float in_y );
+            void inputs( std::array< std::wstring , 4 > inputs );
+            void update( uint x, uint y );
             void draw();
             //bool hit_text_petal( float in_x , float in_y);
     };

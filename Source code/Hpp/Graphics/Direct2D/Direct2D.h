@@ -19,7 +19,7 @@ using Microsoft::WRL::ComPtr;
 //struct monitor {};
 //struct page {};
 
-#include "Custom types.h"
+#include "Aliases.h"
 #include "Graphics\Direct2D\Drawable.h"
 #include "Graphics\Direct2D\Factory.h"
 

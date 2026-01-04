@@ -1,4 +1,4 @@
-#include "Graphics\DWrite\Text.hpp"
+#include "Graphics\DWrite\Text.h"
 
 #include <string>
 
@@ -7,9 +7,9 @@ Text::Text()
     reset();
 }
 
-Text::Text( wstring const & in_content )
+Text::Text( wstring content )
 {
-    set( in_content );
+    set( content );
 }
 Text::~Text()
 {
@@ -20,45 +20,45 @@ Text::~Text()
     //content.clear();
 }
 
-void Text::set_locale( wstring const & in_font_locale )
+void Text::locale( wstring locale )
 {
-    if( in_font_locale.empty() )
-        font_locale = L"en-us"; // en-GB
+    if( locale_.empty() )
+        locale_ = L"en-us"; // en-GB
         // else not a vaild locale
     else
-        font_locale = in_font_locale;
+        locale_ = locale;
 
     reset();
 }
 
-void Text::set_face( wstring const & in_font_face )
+void Text::face( wstring face )
 {
-    if( in_font_face.empty() ) // is_valid_font_face()
-        font_face = L"Times New Roman";
+    if( face_.empty() ) // is_valid_font_face()
+        face_ = L"Times New Roman";
     else
-        font_face = in_font_face;
+        face_ = face;
 
     reset();
 }
 
-void Text::set_size( float const in_font_size )
+void Text::size( float size )
 {
-    if( in_font_size <= 0.0f )//|| in_font_size > )
-        font_size = 0.1f;
+    if( size_ <= 0.0f )//|| size > )
+        size_ = 0.1f;
     else
-        font_size = in_font_size;
+        size_ = size;
 
     reset();
 }
 
-void Text::set_style( DWRITE_FONT_STYLE const in_font_style )
+void Text::style( DWRITE_FONT_STYLE style )
 {
     /*
-    if( in_font_style == DWRITE_FONT_STYLE_NORMAL  || 
-        in_font_style -= DWRITE_FONT_STYLE_OBLIQUE ||
-        in_font_style == DWRITE_FONT_STYLE_ITALIC ) font_style = in_font_style;
+    if( style == DWRITE_FONT_STYLE_NORMAL  || 
+        style -= DWRITE_FONT_STYLE_OBLIQUE ||
+        style == DWRITE_FONT_STYLE_ITALIC ) font_style = in_font_style;
     else*/
-        font_style = in_font_style;
+        style_ = style;
 
         reset();
 }
@@ -66,43 +66,43 @@ void Text::set_style( DWRITE_FONT_STYLE const in_font_style )
 //void text::options( const font_options in_font_options ) { font_options = in_font_options; }
 //font_options text::options() const { return _font_options; }
 
-void Text::set_opacity( float const in_font_opacity )
+void Text::opacity( float opacity )
 {
-    if( in_font_opacity < 0.0f ) // || > 1.0f clamp(0.0,1.0);
-        font_opacity = 0.0f;
+    if( opacity_ < 0.0f ) // || > 1.0f clamp(0.0,1.0);
+        opacity_ = 0.0f;
     else
-        font_opacity = in_font_opacity;
+        opacity_ = opacity;
 
     reset();
 }
 
-void Text::set_weight( DWRITE_FONT_WEIGHT const in_font_weight )
+void Text::weight( DWRITE_FONT_WEIGHT weight )
 {
     // between 1 and 999
-    font_weight = in_font_weight;
+    weight_ = weight;
 
     reset();
 }
 
-void Text::set_stretch( DWRITE_FONT_STRETCH const in_font_stretch )
+void Text::stretch( DWRITE_FONT_STRETCH stretch )
 {
-    font_stretch = in_font_stretch;
+    stretch_ = stretch;
 
     reset();
 }
 
-void Text::set_layout_size( D2D1_SIZE_F const & in_layout_size )
+void Text::layout_size( D2D1_SIZE_F layout_size )
 {
-    layout_size_ = in_layout_size;
+    layout_size_ = layout_size;
 
     reset();
 }
 
-D2D1_SIZE_F Text::get_layout_size() const
+D2D1_SIZE_F Text::layout_size()
 { 
     DWRITE_TEXT_METRICS metrics {};
 
-    layout->GetMetrics( & metrics );
+    layout_->GetMetrics( & metrics );
         
     return { metrics.width , metrics.height };
 }
@@ -125,56 +125,56 @@ void Text::reset()
 
 void Text::reset_format()
 {
-    factory_write->CreateTextFormat( font_face.c_str(),
-                                        nullptr , // in_font_collection // (NULL sets it to use the system font collection).
-                                        font_weight ,
-                                        font_style ,
-                                        font_stretch ,
-                                        font_size ,
-                                        font_locale.c_str() ,
-                                        & format );// address of pointer to COM object  
+    factory_write->CreateTextFormat( face_.c_str(),
+                                     nullptr, // in_font_collection // (NULL sets it to use the system font collection).
+                                     weight_,
+                                     style_,
+                                     stretch_,
+                                     size_,
+                                     locale_.c_str() ,
+                                     & format_ );// address of pointer to COM object  
 }
 
 void Text::reset_layout()
 {
     factory_write->CreateTextLayout( content_.c_str() ,
-                                        static_cast< uint >( content_.size() ) ,
-                                        format.Get() ,
-                                        layout_size_.width ,
-                                        layout_size_.height ,
-                                        & layout );
+                                     static_cast< uint >( content_.size() ) ,
+                                     format_.Get() ,
+                                     layout_size_.width ,
+                                     layout_size_.height ,
+                                     & layout );
     //reset_rectangle();
 }
 
 void Text::reset_brush()
 {
-    context_2d->CreateSolidColorBrush( font_colour , & brush_font );
+    context_2d->CreateSolidColorBrush( colour_ , & brush_ );
 }
 
-float Text::width() const
+float Text::width()
 { 
     DWRITE_TEXT_METRICS layout_metrics{};
 
-    layout->GetMetrics( & layout_metrics );
+    layout_->GetMetrics( & layout_metrics );
 
     return layout_metrics.width;
 }
     
-float Text::get_width_half() const
+float Text::width_half()
 {
     return width() / 2.0f;
 }
 
-float Text::height() const
+float Text::height()
 { 
     DWRITE_TEXT_METRICS layout_metrics{};
 
-    layout->GetMetrics( &layout_metrics );
+    layout_->GetMetrics( &layout_metrics );
         
     return layout_metrics.height;
 }
 
-float Text::get_height_half() const
+float Text::height_half()
 {
     return height() / 2.0f;
 }
@@ -192,19 +192,19 @@ void text::position( vertex in_position )
 }
 */
 
-void Text::set_position( const Point & in_position_top_left )
+void Text::position( Point position_top_left )
 {
-    position_ = in_position_top_left;
+    position_ = position_top_left;
 }
 
-Point Text::get_position() const
+Point Text::position()
 {
     return position_;
 }
 
-void Text::set_colour( const D2D1::ColorF &in_font_colour )
+void Text::colour( D2D1::ColorF colour )
 {
-    font_colour = in_font_colour;
+    colour_ = colour;
 
     reset_brush();
     //reset();
@@ -217,9 +217,9 @@ void Text::set( wstring const & in_content )
     reset_layout();
 }
 
-void Text::add( wstring const & in_string )
+void Text::add( wstring string )
 {
-    content_ += in_string;
+    content_ += string;
 
     reset();
 }
@@ -227,22 +227,22 @@ void Text::add( wstring const & in_string )
 void Text::draw()
 {
     context_2d->DrawTextLayout( position_ ,
-                                layout.Get() ,
-                                brush_font.Get() );
+                                layout_.Get() ,
+                                brush_.Get() );
                                 //font_options );
 
     if( border_show ) border.draw();
 }
 
-void Text::show_border( bool in_show_border )
+void Text::show_border( bool show )
 {
-    border_show = in_show_border;
+    border_show = show;
 }
 
 void Text::reset_border()
 {
-    int x2 = get_layout_size().width;
-    int y2 = get_layout_size().height;
+    int x2 = layout_size().width;
+    int y2 = layout_size().height;
 
     border.position( position_ , { x2 , y2 } );
 
@@ -252,22 +252,22 @@ void Text::reset_border()
     border.line_colour( border_line_colour );
 }
 
-float Text::top() const
+float Text::top()
 {
     return position_.y();
 }
 
-float Text::bottom() const
+float Text::bottom()
 {
     return position_.y() + height();
 }
 
-float Text::left() const
+float Text::left()
 {
     return position_.x();
 }
 
-float Text::right() const
+float Text::right()
 {
     return position_.x() + width();
 }

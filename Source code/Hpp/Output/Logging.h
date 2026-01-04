@@ -1,50 +1,78 @@
 #pragma once
 
-#include <windows.h> // OutputDebugString
+#include <windows.h> 
+#include <debugapi.h>// OutputDebugString
 #include <string>
+//#include <source_location>
+//std::source_location = std::source_location::current()
 
-struct Token 
+//struct Check_token {};
+//extern Check_token hr_check;
+
+struct HRESULT_check 
 {
-    Token( std::wstring in_message = {} ) : message{ in_message } {}
 
-    std::wstring message {};
+    HRESULT_check( HRESULT result )
+    {
+        OutputDebugString(L"\nresult checked");
+    }
+
+    template<typename type>
+    friend void operator >> ( int a, type & func ) {}
 };
 
-extern Token result_check;
+// int f() { return 1; }
+// f() >> hr_check;
+// f().operator>>(
+// 
+// how does Check_token oject pass extracted value to HRESULT_check?
 
+extern HRESULT_check hr_check;
+
+//void operator >> ( long a , HRESULT_check );
+
+//struct Token 
+//{
+//    Token( std::wstring in_message = {} ) : message{ in_message } {}
+//
+//    std::wstring message {};
+//};
+//
+//extern Token result_check;
+//
 class Logging
 {
     public:
 
-        Logging( HRESULT in_result = { E_FAIL } , std::wstring in_message = {} );
-       
+        //Logging( HRESULT result, std::wstring message );
+        Logging() 
+        {
+            OutputDebugString(L"\n Logging::Logging()");
+        }
+
+        ~Logging()
+        {
+            OutputDebugString( L"\n Logging::~Logging()" );
+        }
+
         void error_exit( const wchar_t * message , HRESULT result = S_OK ); // print error message box and exit application
         
         void print_debug( const wchar_t * message , HRESULT result = S_OK );
-
-        void print_debug( const wchar_t * message );
+        void print_debug( wchar_t * message );
         void print_debug( const char * message );
 
-        friend void operator >> ( Logging , Token );
-
     private:
-    //protected:
-
-        HRESULT result { E_FAIL };
+    
+        HRESULT result_ { E_FAIL };
         
-        std::wstring message {};
-
-        std::wstring retreive_system_message( HRESULT result );
+        std::wstring message_ {};
+        std::wstring system_message( HRESULT result );
 };
-
-void operator >> ( Logging , Token );
+//
+//void operator >> ( Logging, Token );
 
 //static Logging result_check;
 //extern Logging result_check;
-
-
-
-
 
  // Helper for output debug tracing
  /*

@@ -1,11 +1,9 @@
 #pragma once
 
-#include "Custom types.h"
-#include "Input\HID\Usages.h"
-#include "Graphics\DWrite\Text.h"
+#include "Aliases.h"
 
-#include <hidpi.h>
-#include <string>
+#include "Input\HID\Types.h"
+#include "Input\HID\Usages.h"
 
 namespace HID
 {
@@ -17,35 +15,17 @@ namespace HID
 
             bool on { false };
 
-            Text         information;
-            std::wstring content{};
-            Device &     device;
+            Device & device;
 
             //button_caps capabilities {};
 
         public:
 
-            Button( Device & device, const button_caps & button_capabilities );
-            
-            void collect_information();
-
-            void append_text( std::wstring text ) { information.add( text ); }
-            void set_position( Point const & position ) { information.position( position ); }
-            void set_layout_size( D2D1_SIZE_F const & size ) { information.layout_size( size ); }
-
-            Point position() const { return information.position(); }
-
-            float top() const    { return information.top();    }
-            float right() const  { return information.right();  }
-            float width() const  { return information.width();  }
-            float height() const { return information.height(); }
+            Button( Device & device, const button_caps & button_capabilities )
+            : device( device ) { }
             
             void update( RAWINPUT * raw_data );
-            void update_information();
-
             //void update( RAWHID in_raw_data );
-
-            void draw() { information.draw(); }
 
             /*
             ushort      bit_field()               const { return BitField;       }

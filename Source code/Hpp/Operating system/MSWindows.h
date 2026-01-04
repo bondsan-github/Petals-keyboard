@@ -1,7 +1,7 @@
 #pragma once
 
 // Use the C++ standard templated min/max
-#define NOMINMAX
+//#define NOMINMAX
 
 // DirectX apps don't need GDI
 //#define NODRAWTEXT
@@ -9,16 +9,16 @@
 //#define NOBITMAP
 
 // Include <winsvc.h> if you need this
-#define NOSERVICE
+//#define NOSERVICE
 
 // WinHelp is deprecated
-#define NOHELP
+//#define NOHELP
 
-#define WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
 
-#include "Custom types.h"
+#include "Aliases.h"
 #include "Graphics\Size.h"
 #include "Graphics\Point.h"
 #include "Output\Logging.h"
@@ -89,9 +89,9 @@ class MSWindows : public Logging
 
         std::set<RECT> window_recangles {};
 
-        void get_window_rectangles();
+        //void window_rectangles();
 
-        static BOOL CALLBACK enumerate_windows( HWND window , LPARAM parameter );
+        //static BOOL CALLBACK enumerate_windows( HWND window , LPARAM parameter );
 
     protected:
         
@@ -117,10 +117,10 @@ class MSWindows : public Logging
             
         void window_size_changed( uint width , uint height );
          
-        RECT get_client_position(); // Point position() const;
-        Size get_client_size();    //  Size  size() const;
+        RECT client_position(); // Point position() const;
+        Size client_size();    //  Size  size() const;
 
-        HWND get_window() const;
+        HWND window();
         
         int message_loop();
 

@@ -8,19 +8,19 @@ namespace HID
    {
       public:
 
-         std::string message( long in_code ) const
+         std::string message( long code ) const
          {
-            if( ( in_code >> 28 ) == 0x08 ) //0x80004400001
+            if( ( code >> 28 ) == 0x08 ) //0x80004400001
                 return "null"; 
 
-            else if( ( in_code & 0xff ) == 0x20 ) 
+            else if( ( code & 0xff ) == 0x20 ) 
                 return "not implemented"; // 
 
-            else if( ( in_code & 0xff ) == 0x21 ) 
+            else if( ( code & 0xff ) == 0x21 ) 
                 return "not button array";
 
-            else if( ( in_code & 0xff ) >= 0x00 && ( in_code & 0xff ) <= 0x20 ) 
-                return messages[ in_code & 0xff ];
+            else if( ( code & 0xff ) >= 0x00 && ( code & 0xff ) <= 0x20 ) 
+                return messages[ code & 0xff ];
 
             else 
                 return "unknown code";

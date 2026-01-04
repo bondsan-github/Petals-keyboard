@@ -19,7 +19,7 @@ class Write_factory
             {
                 DWriteCreateFactory( DWRITE_FACTORY_TYPE_SHARED ,
                                         __uuidof( IDWriteFactory ) ,
-                                        &factory_write ) >> result_check;
+                                        &factory_write );// >> result_check;
             }
         }
 

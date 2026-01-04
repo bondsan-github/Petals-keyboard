@@ -4,36 +4,28 @@
 #include "Input\HID\Item.h"
 #include "Input\HID\Usages.h"
 
-#include "Application.h"
-
 namespace HID
 {
-    Collections::Collections( Application & application )
-    : application( application )
+    void Collections::add_buttons( Device & device, report_type type, button_caps * buttons, uint size )
     {
-    }
-
-    void Collections::add_buttons( Device & device , Report_type type , const button_caps & buttons , uint size )
-    //void add_buttons( Device * device, Report_type type, _HIDP_BUTTON_CAPS * buttons, uint size )
-    {
-        for( uint index{ 0 }; index < size; index++ )
+        for( uint index {0}; index < size; index++ )
         {
             uint   collection_index = buttons[ index ].LinkCollection;
             Button button( device, buttons[ index ] );
 
             switch( type )
             {
-                case Report_type::input:
+                case report_type::input:
                 {
                     collections.at( collection_index ).add_button( type, button );
                 } break;
 
-                case Report_type::output:
+                case report_type::output:
                 {
                     collections.at( collection_index ).add_button( type, button );
                 } break;
 
-                case Report_type::feature:
+                case report_type::feature:
                 {
                     collections.at( collection_index ).add_button( type, button );
                 } break;
@@ -42,8 +34,7 @@ namespace HID
         }
     }
 
-    // const Device & device
-    void Collections::add_values( const Device * const device, Report_type type, _HIDP_VALUE_CAPS * values , uint size )
+    void Collections::add_values( Device & device, report_type type, value_caps * values, uint size )
     {
         for( uint index{ 0 }; index < size; index++ )
         {
@@ -52,17 +43,17 @@ namespace HID
 
             switch( type )
             {
-                case Report_type::input:
+                case report_type::input:
                 {
                     collections.at( collection_index ).add_value( type, value );
                 } break;
 
-                case Report_type::output:
+                case report_type::output:
                 {
                     collections.at( collection_index ).add_value( type, value );
                 } break;
 
-                case Report_type::feature:
+                case report_type::feature:
                 {
                     collections.at( collection_index ).add_value( type, value );
                 }
@@ -74,17 +65,19 @@ namespace HID
     {
         collections.resize( size );
 
-        uint index{ 0 };
+        uint index {};
 
         for( auto & node : collections )
         {
             node = nodes[ index ];
-            node.collect_information();
+            
             index++;
+
+            //node.collect_information();
         }
     }
 
-    void Collections::calculate_positions( Device const & device )
+    /*void Collections::calculate_positions(Device const & device)
     {
         Size client_size = application.get_client_size();
         
@@ -109,7 +102,7 @@ namespace HID
 
             collection_itr->calculate_positions();
         }
-    }
+    }*/
     
     uint Collections::contact_amount()
     {
@@ -131,8 +124,8 @@ namespace HID
 
         for( auto & collection : collections )
         {
-            touchpad_resolution.minimum = collection.get_range( 0x01 , 0x30 , Report_type::input , Item_type::logical ).minimum;
-            touchpad_resolution.maximum = collection.get_range( 0x01 , 0x31 , Report_type::input , Item_type::logical ).maximum;
+            touchpad_resolution.minimum = collection.range( 0x01, 0x30, report_type::input, Item_type::logical ).minimum;
+            touchpad_resolution.maximum = collection.range( 0x01, 0x31, report_type::input, Item_type::logical ).maximum;
 
             if( touchpad_resolution.minimum > 0 and touchpad_resolution.maximum > 0 ) break;
         }

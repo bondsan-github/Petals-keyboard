@@ -1,17 +1,19 @@
 #pragma once
 
-#include "Custom types.h"
+#include "Aliases.h"
 
-//#include <hidpi.h>
+#include "Windows.h"
 #include <hidsdi.h>
-#include <WinUser.h>
+#include <hidpi.h>
+//#include <hidclass.h>
+//#include <WinUser.h>
 
 namespace HID
 {
     using collection_node = _HIDP_LINK_COLLECTION_NODE;
     using button_caps     = _HIDP_BUTTON_CAPS;
     using value_caps      = _HIDP_VALUE_CAPS;
-    using raw_device_list = RAWINPUTDEVICELIST;
+    using raw_device_list = tagRAWINPUTDEVICELIST;
 
     enum class report_type     { input, output, feature };
     enum class value_type      { logical, physical, usage, string, disignator, data_index };
@@ -23,7 +25,7 @@ namespace HID
         ulong vendor  {};
         ulong product {};
 
-        bool operator == ( const Identity & identity ) const
+        bool operator == ( const Identity & identity )
         {
             return vendor == identity.vendor && product == identity.product;
         }
@@ -50,7 +52,7 @@ namespace HID
         }
     };
 
-    const struct Requests
+    struct Requests
     {
         uint data = ( 1 << 29 ) | 0x5; // 0x20'000'005
         uint path = ( 1 << 29 ) | 0x7; // return value in character amount, not byte size

@@ -13,9 +13,9 @@ enum class states { starting, ready, running, paused, ending };
 //enum class factory_type            { force_dword = -1, single_thread, multiple_threads };
 
 /*
-D2D_POINT_2F operator + ( const D2D_POINT_2F & in_point_left , const D2D_POINT_2F & in_point_right )
+D2D_POINT_2F operator + ( const D2D_POINT_2F & a , const D2D_POINT_2F & b )
 {
-    return { in_point_left.x + in_point_right.x , in_point_left.y + in_point_right.y };
+    return { a.x + a.x , b.y + b.y };
 }*/
 
 //using      factory_d2d             = ID2D1Factory;
@@ -24,7 +24,7 @@ D2D_POINT_2F operator + ( const D2D_POINT_2F & in_point_left , const D2D_POINT_2
     
 //using size = D2D1_SIZE_F;
 
-//using      colours                 = D2D1::ColorF;
+//using      colour                 = D2D1::ColorF;
 /*
 class colours : public D2D1::ColorF //_D3DCOLORVALUE
 {

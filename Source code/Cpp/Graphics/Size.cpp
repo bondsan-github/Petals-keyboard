@@ -4,7 +4,6 @@ Size::Size()
 {
 };
 
-//template< typename type > // intrinsic values
 Size::Size( int width , int height ) 
     : width_( width ) , height_( height )
 {

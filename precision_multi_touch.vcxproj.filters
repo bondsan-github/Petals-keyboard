@@ -175,6 +175,9 @@
     <ClCompile Include="Debug overlay.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Source code\Cpp\Application.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source code\Hpp\Contact.h">
@@ -189,10 +192,7 @@
     <ClInclude Include="Source code\Hpp\Application.h">
       <Filter>Hpp</Filter>
     </ClInclude>
-    <ClInclude Include="Source code\Hpp\Custom types.h">
-      <Filter>Hpp</Filter>
-    </ClInclude>
-    <ClInclude Include="Source code\Hpp\Custom_types.h">
+    <ClInclude Include="Source code\Hpp\Aliases.h">
       <Filter>Hpp</Filter>
     </ClInclude>
     <ClInclude Include="Source code\Hpp\Graphics\Circle.h">
@@ -276,7 +276,7 @@
     <ClInclude Include="Source code\Hpp\Input\HID\Devices.h">
       <Filter>Hpp\Input\HID</Filter>
     </ClInclude>
-    <ClInclude Include="Source code\Hpp\Input\HID\Globals.h">
+    <ClInclude Include="Source code\Hpp\Input\HID\Types.h">
       <Filter>Hpp\Input\HID</Filter>
     </ClInclude>
     <ClInclude Include="Source code\Hpp\Input\HID\Item.h">
@@ -305,6 +305,15 @@
     </ClInclude>
     <ClInclude Include="Source code\Hpp\Time\Timer.h">
       <Filter>Hpp\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="input maps.h">
+      <Filter>Hpp\Input\HID</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\Input.hpp">
+      <Filter>Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\targetver.h">
+      <Filter>Hpp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

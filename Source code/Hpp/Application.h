@@ -1,24 +1,17 @@
 #pragma once
 
 #include "Operating system\MSWindows.h"
-#include "Graphics\Direct2D\Direct2D.h"
-#include "Time\Timer.h"
+//#include "Graphics\Direct2D\Direct2D.h"
+//#include "Time\Timer.h"
 #include "Graphics\Size.h"
 
-class Application : public MSWindows, public Direct2D, public Timer
+class Application : public MSWindows//, public Direct2D, public Timer
 {
-    protected:
-        
-        //Input     input { *this };
-        //Audio     audio;
-
-    private:
-
     public:
         
         Application();
 
-        void initialise( Size in_client_size = {} );
+        void initialise( Size client_size = {} );
         void run();
 
         virtual ~Application() = default;

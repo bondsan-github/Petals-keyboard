@@ -1,5 +1,4 @@
-#include "..\headers\circle_d2d.h"
-#include "..\headers\locate.h"
+#include "Graphics\Direct2D\Circle.h"
 
 namespace hid
 {
