@@ -1,6 +1,6 @@
 #include "Operating system\MSWindows.h"
 
-//#include "MSWindows messages.h"
+#include "Operating system\MSWindows messages.h"
 #include "Application.h"
 #include "Output\Logging.h"
 
@@ -12,12 +12,12 @@ typedef unsigned __int64 QWORD; // 64-bit integer
 MSWindows::MSWindows( Application * application )
 : application( application )
 {
-    OutputDebugString( L"\n MSWindows::MSWindows()" );
+    //OutputDebugString( L"\n MSWindows::MSWindows()" );
 }
 
-HWND MSWindows::initialise( Size in_client_size )
+HWND MSWindows::initialise( Size client_size )
 {
-    if( in_client_size ) client_size_ = in_client_size;
+    if( client_size ) client_size_ = client_size;
     else fullscreen = true;
 
     instance = GetModuleHandleW( 0 );
@@ -148,23 +148,25 @@ int MSWindows::message_loop()
 {
     MSG message {};
 
-    Application * class_pointer = reinterpret_cast< Application * >( GetWindowLongPtrW( window_principle , GWLP_USERDATA ) );
+    //Application * app = reinterpret_cast< Application * >( GetWindowLongPtrW( window_principle , GWLP_USERDATA ) );
 
-    while( message.message != WM_QUIT )
-    {
-        if( PeekMessageW( & message , NULL , 0U , 0U , PM_REMOVE ) )
+    //while( message.message != WM_QUIT )
+    //{
+        //https://learn.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
+        //if( PeekMessageW( &message , NULL , 0U , 0U , PM_REMOVE ) ) // high cpu usage
+        while( GetMessage( &message, window_principle , 0, 0) )
         {
-            TranslateMessage( & message );
-            DispatchMessage( & message );
-        }
+            TranslateMessage( &message );
+            DispatchMessage( &message );
 
         //if( elapsed_time += get_delta() > 16ms )
-        class_pointer->update();
-        class_pointer->render();
-    }
+        //class_pointer->update();
+        //class_pointer->render();
+        }
+    //}
 
-    // Return this part of the WM_QUIT message to Windows.
-    return static_cast< char >( message.wParam );
+    //return static_cast< char >( message.wParam );
+    return message.wParam;
 }
 
 //long long __stdcall MSWindows::message_handler( HWND window, UINT message, WPARAM wParam, LPARAM lParam )
@@ -176,7 +178,7 @@ LRESULT CALLBACK MSWindows::message_handler( HWND window, UINT message, WPARAM w
     OutputDebugString( win_message.c_str() );
     */
 
-    Application * class_pointer = reinterpret_cast< Application * >( GetWindowLongPtrW( window , GWLP_USERDATA ) );
+    Application * application = reinterpret_cast< Application * >( GetWindowLongPtrW( window , GWLP_USERDATA ) );
 
     if( message == WM_CREATE )
     {
@@ -189,7 +191,7 @@ LRESULT CALLBACK MSWindows::message_handler( HWND window, UINT message, WPARAM w
     }
     else
     {
-        if( class_pointer )
+        if( application )// window has completed creation
         {
             switch( message )
             {
@@ -208,7 +210,8 @@ LRESULT CALLBACK MSWindows::message_handler( HWND window, UINT message, WPARAM w
                 case WM_INPUT:
                 //case WM_TOUCH:
                 {
-
+                    application->update();
+                    //https://learn.microsoft.com/en-us/windows/win32/inputdev/using-raw-input
                 } break;
 
                 /*
@@ -242,8 +245,8 @@ LRESULT CALLBACK MSWindows::message_handler( HWND window, UINT message, WPARAM w
                 case WM_SIZE:
                 //case WM_EXITSIZEMOVE:
                 {
-                    class_pointer->window_size_changed( static_cast< __int64 >( lParam ) & 0xFFFF,
-                                                        ( static_cast< __int64 >( lParam ) >> 16 ) & 0xFFFF );
+                    application->window_size_changed( static_cast< __int64 >( lParam ) & 0xFFFF,
+                                                      ( static_cast< __int64 >( lParam ) >> 16 ) & 0xFFFF );
                 } break;
 
                 case WM_KEYUP:
@@ -271,7 +274,7 @@ LRESULT CALLBACK MSWindows::message_handler( HWND window, UINT message, WPARAM w
 
 } // message_handler
 
-void MSWindows::register_input_device( ushort page , ushort usage )
+void MSWindows::register_input_device( ushort page , ushort usage ) //, touchpad_amount
 {
     RAWINPUTDEVICE raw_device
     {
@@ -281,6 +284,7 @@ void MSWindows::register_input_device( ushort page , ushort usage )
         .hwndTarget  = window_principle
     };
 
+    // 
     RegisterRawInputDevices( & raw_device, 1, sizeof( RAWINPUTDEVICE ) );
 }
 
@@ -305,5 +309,5 @@ BOOL CALLBACK MSWindows::enumerate_windows( HWND window , LPARAM parameter )
 
 MSWindows::~MSWindows()
 {
-    OutputDebugString( L"\n MSWindows::~MSWindows()" );
+    //OutputDebugString( L"\n MSWindows::~MSWindows()" );
 }

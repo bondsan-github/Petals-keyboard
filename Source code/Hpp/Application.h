@@ -11,14 +11,11 @@ class Application : public MSWindows//, public Direct2D, public Timer
         
         Application();
 
-        void initialise( Size client_size = {} );
+        void initialise( Size client_size );
         void run();
 
         virtual ~Application() = default;
 
         virtual void update() = 0;
         virtual void render() = 0;
-
-        // cannot call virtual functions in a constructor or destructor 
-        // as any derived objects have not been constructed.
 };

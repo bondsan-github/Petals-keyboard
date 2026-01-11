@@ -7,6 +7,69 @@ using std::vector;
 
 namespace HID
 {
+    Value::Value( value_caps & capabilities )
+    {
+        UsagePage = capabilities.UsagePage;
+        ReportID = capabilities.ReportID ;
+        IsAlias = capabilities.IsAlias ;
+
+        BitField = capabilities.BitField ;
+        LinkCollection = capabilities.LinkCollection ;   // A unique internal index pointer
+
+        LinkUsage = capabilities.LinkUsage ;
+        LinkUsagePage = capabilities.LinkUsagePage ;
+
+        IsRange = capabilities.IsRange ;
+        IsStringRange = capabilities.IsStringRange ;
+        IsDesignatorRange = capabilities.IsDesignatorRange ;
+        IsAbsolute = capabilities.IsAbsolute ;
+
+        HasNull = capabilities.HasNull ;        // Does this channel have a null report   union
+        BitSize = capabilities.BitSize ;        // How many bits are devoted to this value?
+
+        ReportCount = capabilities.ReportCount ;    // See Note below.  Usually set to 1.
+        UsagePage = capabilities.UsagePage ;
+        ReportID = capabilities.ReportID ;
+        IsAlias = capabilities.IsAlias ;
+
+        BitField = capabilities.BitField ;
+        LinkCollection = capabilities.LinkCollection ;   // A unique internal index pointer
+
+        LinkUsage = capabilities.LinkUsage ;
+        LinkUsagePage = capabilities.LinkUsagePage ;
+
+        IsRange = capabilities.IsRange ;
+        IsStringRange = capabilities.IsStringRange ;
+        IsDesignatorRange = capabilities.IsDesignatorRange ;
+        IsAbsolute = capabilities.IsAbsolute ;
+
+        HasNull = capabilities.HasNull ;        // Does this channel have a null report   union
+        BitSize = capabilities.BitSize ;        // How many bits are devoted to this value?
+
+        ReportCount = capabilities.ReportCount ;    // See Note below.  Usually set to 1.
+
+        UnitsExp = capabilities.UnitsExp ;
+        Units = capabilities.Units ;
+
+        LogicalMin = capabilities.LogicalMin;
+        LogicalMax = capabilities.LogicalMax ;
+        PhysicalMin = capabilities.PhysicalMin;
+        PhysicalMax = capabilities.PhysicalMax ;
+
+        Range.UsageMin = capabilities.Range.UsageMin;
+        Range.UsageMax = capabilities.Range.UsageMax;
+        Range.StringMin = capabilities.Range.StringMin;
+        Range.StringMax = capabilities.Range.StringMax;
+        Range.DesignatorMin = capabilities.Range.DesignatorMin;
+        Range.DesignatorMax = capabilities.Range.DesignatorMax;
+        Range.DataIndexMin = capabilities.Range.DataIndexMin;
+        Range.DataIndexMax = capabilities.Range.DataIndexMax;
+
+        NotRange.Usage = capabilities.NotRange.Usage;
+        NotRange.StringIndex = capabilities.NotRange.StringIndex;
+        NotRange.DesignatorIndex = capabilities.NotRange.DesignatorIndex;
+        NotRange.DataIndex = capabilities.NotRange.DataIndex;
+    }
     //Value::Value( HIDP_VALUE_CAPS & value )
     //{
         /*
@@ -81,17 +144,13 @@ namespace HID
 
     //    uint high_nible = ( low_byte & 0xF0 ) >> 4;//; = system
     //    uint low_nible  = low_byte & 0xF;
+    // 
+    
+    // 000, 001, 010, 100, 011, 110, 111 = 7 contact id's ? bit field
+    // 
+    // double word = unsigned long = 4 bytes = 0xFFFF'FFFF = 8 nibbles
+
     //    
-    //    std::unordered_map< uint8_t , wstring > unit_system // high_nible
-    //    {
-    //        { 0x0  , L"system"             } , // 0b0       , 0x0  , 0 
-    //        { 0x1  , L"length"             } , // 0b1       , 0x1  , 1
-    //        { 0x2  , L"mass"               } , // 0b10      , 0x2  , 2
-    //        { 0x4  , L"time"               } , // 0b100     , 0x4  , 4
-    //        { 0x8  , L"temperature"        } , // 0b1'000   , 0x8  , 8
-    //        { 0x10 , L"current"            } , // 0b10'000  , 0x10 , 16
-    //        { 0x20 , L"luminous intensity" } , // 0b100'000 , 0x20 , 32 
-    //    };
 
     //    //https://github.com/microsoft/hidtools/blob/main/Waratah/HidSpecification/HidConstants.cs
     //    /*public enum UnitItemSystemKind
@@ -185,9 +244,6 @@ namespace HID
     //    if( UnitsExp && UnitsExp <= 0xf )
     //        content += L'\n' + to_wstring( unit_exponent.find( UnitsExp )->second );
 
-    //    content += L"\nlog min: " + to_wstring( LogicalMin ) + L" max: " + to_wstring( LogicalMax );
-    //    content += L"\nphy min: " + to_wstring( PhysicalMin ) + L" max: " + to_wstring( PhysicalMax );
-    //    
     //    //content += IsAlias ? L"\nalias" : L"\nnot aliased";
 
     //    /*
@@ -200,6 +256,29 @@ namespace HID
     //    if( BitField & 0b1000000 ) content += L"\nvolatile";// bit 6
     //    if( BitField & 0b100000000 ) content += L"\nbuffered bytes";// bit 8
     //    */
+
+    // Array field : The bit field created by an Input, 
+// Output, or Feature main item which is declared as an Array.
+// An array field contains the index of a Usage, not the Usage value.
+// bit field  :  // Usage determines the field’s purpose.
+
+                // This one tries to generate SI units
+                /*static const TCHAR * DecodeUnit( ULONG unit , int & exp ) {
+                    static TCHAR buf[ 64 ];
+                    switch( unit ) {
+                    case 0x11: exp-=2; return T( "m" );     // meter
+                    case 0x101: exp-=3; return T( "kg" );   // kilo gram
+                    case 0x1001: return T( "s" );           // second
+                    case 0xF011: exp-=2; return T( "m/s" ); // meters per second
+                    case 0xF111: exp-=5; return T( "mN" );  // Newton meter ?
+                    case 0xE011: exp-=2; return T( "m/s²" ); // accelertaion ?
+                    case 0xE111: exp-=5; return T( "N" );    // Newtons ?
+                    case 0xE121: exp-=7; return T( "J" );  // Joules
+                    case 0xE012: return T( "rad/s²" );      // circular speed ?
+                    case 0xF0D121: exp-=7; return T( "V" ); // volt
+                    case 0x100001: return T( "A" );         // amp
+                    case 0xE1F1: exp-=1; return T( "Pa" );
+                    }*/
 
     //    /*
     //    ulong usage_amount = HidP_MaxUsageListLength( // amount of buttons in report
@@ -217,25 +296,14 @@ namespace HID
     //    content += L"\nreport id\t: " + to_wstring( ReportID );
     //    content += L"\nvalue\t:" + to_wstring( value_unsigned );
 
-    //    information.set( content );
-    //    information.size( 10.0f );
-    //    information.colour( D2D1::ColorF::Yellow );
-    //    information.layout_size( { 200.0f, 200.0f } );
-
     //    //Resolution = ( Logical Maximum – Logical Minimum ) / ( ( Physical Maximum – Physical Minimum ) *
     //    //                                                      ( 10 Unit Exponent ) )
-    //}
-
-    //void Value::update_information() 
-    //{ 
-    //    content = L"\nvalue\t:" + to_wstring( value_unsigned );
-    //    
-    //    information.set( content );
     //}
 
     //void Value::update( RAWIHID in_raw_data )
     void Value::update( RAWINPUT * input )
     {
+        /*
         // if( not IsRange )
         NTSTATUS status = HidP_GetUsageValue( HidP_Input ,// unsigned output //
         //HidP_GetScaledUsageValue( HidP_Input , // signed output
@@ -246,7 +314,7 @@ namespace HID
                                   reinterpret_cast< PHIDP_PREPARSED_DATA >( device.data() ) ,
                                   reinterpret_cast< char * >( input->data.hid.bRawData ) , //BYTE uchar to char // M.S. your data types don't match up !! :(
                                   input->data.hid.dwSizeHid * input->data.hid.dwCount );
-
+        */
         //if( status != HIDP_STATUS_SUCCESS ) error_exit( L"Value:get_value");
         
         /*

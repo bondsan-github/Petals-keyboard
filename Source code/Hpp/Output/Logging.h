@@ -47,26 +47,26 @@ class Logging
         //Logging( HRESULT result, std::wstring message );
         Logging() 
         {
-            OutputDebugString(L"\n Logging::Logging()");
+            //OutputDebugString(L"\n Logging::Logging()");
         }
 
         ~Logging()
         {
-            OutputDebugString( L"\n Logging::~Logging()" );
+            //OutputDebugString( L"\n Logging::~Logging()" );
         }
 
-        void error_exit( const wchar_t * message , HRESULT result = S_OK ); // print error message box and exit application
+        void error_exit( const wchar_t * message, HRESULT result = 0); // print error message box and exit application
         
-        void print_debug( const wchar_t * message , HRESULT result = S_OK );
+        void print_debug( const wchar_t * message, HRESULT result = 0);
         void print_debug( wchar_t * message );
         void print_debug( const char * message );
 
-    private:
+    protected:
     
         HRESULT result_ { E_FAIL };
         
         std::wstring message_ {};
-        std::wstring system_message( HRESULT result );
+        std::wstring system_message( long result = 0 );
 };
 //
 //void operator >> ( Logging, Token );

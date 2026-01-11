@@ -9,23 +9,23 @@
 
 namespace HID
 {
-    class Device;
-    
     class Collections
     {
-        private:
+        protected:
 
-            // collection of same device items 
-            std::vector< Collection > collections;
+            std::vector< Collection > collections_; // collection of same device items 
 
         public:
 
+            friend class Multiple_touch;
+
             Collections() {};
 
-            void add_collection( _HIDP_LINK_COLLECTION_NODE * nodes, uint size );
+            void add_collection( collection_node * nodes, uint size );
            
-            void add_buttons( Device & device, report_type type, button_caps * buttons, uint size );
-            void add_values(  Device & device, report_type type, value_caps * values, uint size );
+           //remove device
+            void add_buttons( report_type type, button_caps * buttons, uint size );
+            void add_values(  report_type type, value_caps * values,   uint size );
 
             uint contact_amount();
             //uint get_contact_identifier();
@@ -33,11 +33,12 @@ namespace HID
             //uint get_y();
             Range resolution();
 
-            void update( RAWINPUT * raw_data )
-            //void update( RAWHID in_raw_data )
+            void update( vector< uchar > & data )
             {
-                for( auto & collection : collections ) collection.update( raw_data );
+                for( auto & collection : collections_ ) collection.update( data );
             }
+            //void update( RAWINPUT * raw_data )
+            //void update( RAWHID in_raw_data )
 
            /* void draw()
             {

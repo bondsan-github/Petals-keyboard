@@ -10,10 +10,10 @@
 
 namespace HID
 {
-    using collection_node = _HIDP_LINK_COLLECTION_NODE;
-    using button_caps     = _HIDP_BUTTON_CAPS;
-    using value_caps      = _HIDP_VALUE_CAPS;
-    using raw_device_list = tagRAWINPUTDEVICELIST;
+    using collection_node = HIDP_LINK_COLLECTION_NODE;
+    using button_caps     = HIDP_BUTTON_CAPS;
+    using value_caps      = HIDP_VALUE_CAPS;
+    using raw_device_list = RAWINPUTDEVICELIST;
 
     enum class report_type     { input, output, feature };
     enum class value_type      { logical, physical, usage, string, disignator, data_index };

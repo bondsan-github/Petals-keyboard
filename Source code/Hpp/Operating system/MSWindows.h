@@ -71,7 +71,7 @@ class MSWindows : public Logging
         Point position_center    {};
         Point desktop_center     {};
             
-        static const inline wchar_t class_name [] { L"App" };
+        static const inline wchar_t class_name [] { L"Application" };
 
         LRESULT result { 0 };
 
@@ -100,14 +100,12 @@ class MSWindows : public Logging
 
     public:
       
-        MSWindows( Application * application );
+        MSWindows( Application * application ); //&
         //MSWindows() = default;
 
         ~MSWindows();
 
         HWND initialise( Size client_size );
-        //void initialise( Application * application );
-        //void initialise( Application * application );
         // ( HINSTANCE instance , LPWSTR parameters , int show_flags );
         
         MSWindows( const MSWindows & copy )                     = delete;
@@ -118,7 +116,7 @@ class MSWindows : public Logging
         void window_size_changed( uint width , uint height );
          
         RECT client_position(); // Point position() const;
-        Size client_size();    //  Size  size() const;
+        Size client_size();    // const;
 
         HWND window();
         

@@ -2,7 +2,7 @@
 
 namespace HID
 {
-    void Collection::operator = ( const _HIDP_LINK_COLLECTION_NODE & node )
+    void Collection::operator = ( const collection_node & node )
     {
         LinkUsage        = node.LinkUsage;
         LinkUsagePage    = node.LinkUsagePage;
@@ -15,7 +15,7 @@ namespace HID
     }
 
     //
-    void Collection::operator = ( _HIDP_LINK_COLLECTION_NODE && node ) noexcept
+    void Collection::operator = ( collection_node && node ) noexcept
     {
         LinkUsage        = std::move( node.LinkUsage );
         LinkUsagePage    = std::move( node.LinkUsagePage );
@@ -33,17 +33,17 @@ namespace HID
         {
             case report_type::input:
             {
-                input_buttons.push_back( button );
+                input_buttons_.push_back( button );
             } break;
 
             case report_type::output:
             {
-                output_buttons.push_back( button );
+                output_buttons_.push_back( button );
             } break;
 
             case report_type::feature:
             {
-                feature_buttons.push_back( button );
+                feature_buttons_.push_back( button );
             }
         }
     }
@@ -54,17 +54,17 @@ namespace HID
         {
             case report_type::input:
             {
-                input_values.push_back( value );
+                input_values_.push_back( value );
             } break;
 
             case report_type::output:
             {
-                output_values.push_back( value );
+                output_values_.push_back( value );
             } break;
 
             case report_type::feature:
             {
-                feature_values.push_back( value );
+                feature_values_.push_back( value );
             } break;
         }
     }
@@ -80,16 +80,6 @@ namespace HID
     //    text += L"\ncollection\t: ";
     //    text += type( CollectionType );
     //    text += IsAlias ? L"\nis alias" : L"\nnot alias";
-
-    //    information.set( text );
-    //    information.layout_size( { 200.0f, 100.0f } );
-    //    information.size( 10.0f );
-    //    information.colour( D2D1::ColorF::Yellow );
-    //}
-
-    //void Collection::position( Point const & position )
-    //{
-    //    information.position( position );
     //}
 
     //void Collection::calculate_positions()
@@ -316,10 +306,10 @@ namespace HID
     //    // --------------------------------------------------------------------
     //}
 
-    void Collection::update( RAWINPUT * data )
+    void Collection::update( vector< uchar > & data )
     {
-        for( auto & button : input_buttons ) button.update( data );
-        for( auto & value  : input_values  ) value.update( data );
+        //for( auto & button : input_buttons_ ) button.update( data );
+        //for( auto & value  : input_values_  ) value.update( data );
     }
 
    /* void Collection::draw()

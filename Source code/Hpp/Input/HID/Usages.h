@@ -86,7 +86,7 @@ namespace HID
             };
 
             // hid 3.4.1
-            const enum class modifiers
+            enum class modifiers
             {
                 undefined ,
                 reserved ,

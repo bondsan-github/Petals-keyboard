@@ -5,26 +5,30 @@
 #include "Input\HID\Types.h"
 #include "Input\HID\Usages.h"
 
+#include <string>
+#include <vector>
+
 namespace HID
 {
-    class Device;
-    
     class Button : public button_caps, public Usages
     {
         private:
 
             bool on { false };
 
-            Device & device;
+            std::wstring info {};
 
-            //button_caps capabilities {};
+            void collect_info();
 
         public:
 
-            Button( Device & device, const button_caps & button_capabilities )
-            : device( device ) { }
+            Button( const button_caps & capabilities );
             
-            void update( RAWINPUT * raw_data );
+            
+            //void operator = ( const button_caps & capabilities );
+
+            void update( std::vector< uchar > & data );
+            //void update( RAWINPUT * raw_data );
             //void update( RAWHID in_raw_data );
 
             /*

@@ -54,14 +54,14 @@ class window_messages
 
         //window_messages();
 
-        std::wstring message_text( const uint in_message_value )
+        std::wstring message_text( const uint message_value )
         {
             //try..catch 
-            std::unordered_map< uint, std::wstring >::const_iterator map_itr = messages.find( in_message_value );
+            std::unordered_map< uint, std::wstring >::const_iterator map_itr = messages.find( message_value );
 
             if( map_itr != messages.end() )
                 return L"\n" + map_itr->second;
             else
-                return std::format( L"\n0x{:x} message not in map" , in_message_value );
+                return std::format( L"\n0x{:x} message not in map" , message_value );
         }
 };

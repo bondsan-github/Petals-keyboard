@@ -2,8 +2,9 @@
 
 #include "Input\HID\Usage_text.h"
 
-#include <stdexcept>
+//#include <stdexcept>
 #include <format>
+#include <algorithm>
 
 namespace HID
 {
@@ -17,40 +18,40 @@ namespace HID
         //OutputDebugString( L"Usages::de-constructor\n" );
     };
 
-    std::wstring Usages::page( uint in_page )
+    std::wstring Usages::page( uint page )
     {
-        try
+        if( page < pages.size() )
         {
-            return pages.at( in_page );
+            return pages.at( page );
         }
-        catch( std::out_of_range const & exception )
+        else
         {
-            return std::format( L"{:x} page" , in_page ); // hex string
+            return std::format( L"no string for 0x{:x}" , page ); // hex string
         }
     };
 
-    std::wstring Usages::usage( uint in_page , uint in_usage )
+    std::wstring Usages::usage( uint page, uint usage )
     {
-        try
+        if( page < usages.size() && usage < usages.at(page).size() && ! usages.at(page).empty() )
         {
-            return usages.at( in_page ).at( in_usage );
+            return usages.at( page ).at( usage );
         }
-        catch( std::out_of_range & exception )
+        else
         {
-            return std::format( L"{:x} usage" , in_usage ); // hex string
+            return std::format( L"no string for 0x{:x}" , usage );
         }
     }
 
-    std::wstring Usages::type( uint in_type )
+    std::wstring Usages::type( uint type )
     {
         //TODO: remove try catch
         try
         {
-            return type_texts.at( in_type );
+            return type_texts.at( type );
         }
         catch( std::out_of_range & exception )
         {
-            return std::format( L"{:x} type" , in_type ); // hex string
+            return std::format( L"no sting for {:x}", type );
         }
     }
 

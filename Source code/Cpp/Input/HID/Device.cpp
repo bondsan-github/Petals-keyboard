@@ -5,12 +5,14 @@
 
 #include <fstream>
 #include <iostream>
+#include <format>
+using std::format;
 
 namespace HID
 {
     Device::Device( HANDLE device )
     {
-        //OutputDebugString( L"Device::parametertised constructor\n" );
+        //OutputDebugString( L"\n Device::Device( HANDLE )" );
         //https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/
 
         raw_handle = device;
@@ -18,37 +20,70 @@ namespace HID
         NTSTATUS result    { HIDP_STATUS_INVALID_PREPARSED_DATA };
         uint     data_size {};
 
-        // Retrieve size of preparsed data.
-        GetRawInputDeviceInfo( raw_handle, request.data, nullptr, & data_size );
+        // Retrieve preparsed data size
+        result = GetRawInputDeviceInfo( raw_handle, request.data, nullptr, & data_size );
 
+        if( result < 0 )
+        {
+            std::wstring message = std::format( L"\nGet preparsed data size error: {}", system_message() );
+            OutputDebugString( message.data() );
+        }
+
+        // Resize preparsed data vector
         data_preparsed.resize( data_size );
 
-        // Retrieve preparsed data.
-        GetRawInputDeviceInfo( raw_handle, request.data, data_preparsed.data(), & data_size );
+        if( data_size > 0 )
+        {
+            // Retrieve preparsed data.
+            result = GetRawInputDeviceInfoW( raw_handle,
+                                            request.data,
+                                            data_preparsed.data(),
+                                            & data_size );
 
-        result = HidP_GetCaps( reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) 
-                               , & capabilities );
+            if( result < 0 )
+            {
+                std::wstring message = std::format( L"\nGet preparsed data error: {}", system_message() );
+                OutputDebugString( message.data() );
+            }
 
-        page_  = capabilities.UsagePage;
-        usage_ = capabilities.Usage;
+            // Parse the preparsed data and fill in a HIDP_CAPS structure
+            result = HidP_GetCaps( reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ), 
+                                   & capabilities );
 
-        unsigned int structure_size = sizeof( RID_DEVICE_INFO );
+            if( result != HIDP_STATUS_SUCCESS )
+            {
+                std::wstring message = std::format( L"\nGet device capabilities error: {}", system_message() );
+                OutputDebugString( message.data() );
+            }
+            
+            // data used to find a touchpad
+            page_  = capabilities.UsagePage;
+            usage_ = capabilities.Usage;
 
-        GetRawInputDeviceInfo( raw_handle , 
-                               request.info ,
-                               & rid_information , 
-                               & structure_size );
+            uint structure_size = sizeof( RID_DEVICE_INFO );
 
-        identity_.vendor  = rid_information.hid.dwVendorId;
-        identity_.product = rid_information.hid.dwProductId;
+            result = GetRawInputDeviceInfo( raw_handle, 
+                                            request.info,
+                                            & rid_information,
+                                            & structure_size );
 
-        //std::wstring message;
-        //message = L" vendor: " + std::to_wstring( identity.vendor );
-        //message += L"  product: " + std::to_wstring( identity.product );
-        //OutputDebugStringW( message.c_str() );
+            if( result < 0 )
+            {
+                std::wstring message = std::format( L"\nGet device info error: {}" , system_message() );
+                OutputDebugString( message.data() );
+            }
+
+            identity_.vendor  = rid_information.hid.dwVendorId;
+            identity_.product = rid_information.hid.dwProductId;
+        }
 
         // find in collections 0x0d , 0x55 Contact Count Maximum
         // contacts.resize( contacts_maximum );
+    }
+
+    bool Device::manufacturer( long manufacturer )
+    {
+        return identity_.vendor == manufacturer;
     }
 
     bool Device::is_multi_touch()
@@ -59,55 +94,72 @@ namespace HID
 
     Device::~Device()
     {
-        OutputDebugString( L"\n Device::~Device()" );
-        //if( device_pointer ) CloseHandle( device_pointer );
+        //OutputDebugString( L"\n Device::~Device()" );
+        //if( file_handle ) CloseHandle( file_handle );
     }
 
     std::wstring Device::path()
     {
-        // get device path character amount
-        uint return_value = GetRawInputDeviceInfo( raw_handle, request.path, 0, & path_char_amount );
+        // Get device path character amount
+        uint result = GetRawInputDeviceInfo( raw_handle, request.path, 0, & path_char_amount );
+
+        if( result < 0 )
+        {
+            std::wstring message = std::format( L"\nGet device path size error: {}" , system_message() );
+            OutputDebugString( message.data() );
+        }
 
         path_.resize( path_char_amount );
 
-        return_value = 0;
-        // get device path // use wchar_t[] buffer instead of string if driver issue
-        return_value = GetRawInputDeviceInfo( raw_handle, request.path, path_.data() , & path_char_amount );
+        // Get device path // use wchar_t[] buffer instead of string if driver issue
+        result = GetRawInputDeviceInfo( raw_handle, request.path, path_.data() , & path_char_amount );
+        
+        if( result < 0 )
+        {
+            std::wstring message = std::format( L"\nGet device path error: {}" , system_message() );
+            OutputDebugString( message.data() );
+        }
 
-        /*
-        std::wstring debug_string = L"\n";
-        debug_string += path.data();
-        debug_string += L"\n";
-        OutputDebugStringW( debug_string.data() ); */
+        //std::wstring string = format( L"\ndevice path: {}", path_.data() );
+        //OutputDebugString( string.data() ); 
 
         return path_;
     }
 
     void Device::update()
     {
-        /*
-        HANDLE read_file_handle =CreateFileFromAppW( path.c_str(),
-                                                     GENERIC_READ ,//| GENERIC_WRITE ,   // access
-                                                     FILE_SHARE_READ , //| FILE_SHARE_WRITE // share
-                                                     0 ,// security
-                                                     OPEN_EXISTING , // creation
-                                                     0 , //FILE_FLAG_OVERLAPPED , //0 ,//FILE_ATTRIBUTE_NORMAL , // flags
-                                                     0 );// template
+        //async_read();
+        
+        unsigned short report_size = capabilities.InputReportByteLength + 1;
+        char * buffer = new char[ report_size ] {0};
+        buffer[ 0 ] = 30; // 0x1e // any report with x & y usages
+        
+        //vector<char> buffer; buffer.resize(9);
+        //buffer.at(0) = 30;
 
-        if( read_file_handle == INVALID_HANDLE_VALUE ) print_error( L"unable to open device" );
+        bool result = HidD_GetInputReport( file_handle , & buffer , report_size );
+        //bool result = HidD_GetInputReport( file_handle , buffer.data() , report_size);
 
-        char * buffer = new char[ capabilities.InputReportByteLength + 1 ] {};
+        if( ! result ) print_debug( L"\nGet input report error: " );
+        
+        //std::wstring message = std::format( L"\nreport: {:x}" , buffer.data());
+        //OutputDebugString( message.data() );
 
-        buffer[ 0 ]=30; // 0x1e
-        int buffer_size{ 0 };
-        buffer_size = sizeof buffer;
-        BOOL result = HidD_GetInputReport( read_file_handle , &buffer , buffer_size );
-        if( not result ) print_error( L"\nget input report error" );
+        wchar_t text[ 100 ] {0};
+        int chars_outputed {0};
+
+        for( int i = 0; i < report_size; i++ ) 
+        {
+            chars_outputed = wsprintf( text, L"%02X " , ( BYTE ) buffer[ i ] );
+        }
+        
+        OutputDebugString( text );
 
         //ulong max = get_value( 0x0d , 0x55, input_report );
-        long contact_amount = get_value( 0x0d , 0x54 , buffer );
+        //long contact_amount = get_value( 0x0d , 0x54 , buffer );
 
-        std::wstring message = L"\ncontact id: " + std::to_wstring( id );
+        /*
+        std::wstring message = std::format( L"\ncontact id: {}", id );
         message += L" x: " + std::to_wstring( x );
         message += L" y: " + std::to_wstring( y );
         message += L" contact_amount: " + std::to_wstring( contact_amount );
@@ -124,21 +176,53 @@ namespace HID
                 //https://eleccelerator.com/tutorial-about-usb-hid-report-descriptors/
                 //data.clear();
     }
-
-    void Device::update/*_unbufferd*/( RAWINPUT * input_report )
+    
+    void Device::async_read() //ReadFile
     {
+        HANDLE event = CreateEventW( nullptr , false , false , L"read hid buffer" );
+
+        OVERLAPPED overlapped{ .hEvent = event };
+
+        ulong bytes_returned {};
+
+        bool result = ReadFile( file_handle,
+                                data_preparsed.data() ,				// IN report buffer to fill 
+                                capabilities.InputReportByteLength,	// input buffer size
+                                nullptr,//& bytes_returned,			// returned buffer size
+                                & overlapped );	// long pointer to an OVERLAPPED structure
+
+        if( !result )
+        {
+            std::wstring message = format( L"\nRead file error: {}", system_message() );
+            OutputDebugString( message.data() );
+        }
+
+        unsigned long bytes_read {};
+
+        result = GetOverlappedResult( file_handle, & overlapped, & bytes_read, true );
+
+        if( !result )
+        {
+            std::wstring message = format( L"\noverlapped result: {}" , system_message() );
+            OutputDebugString( message.data() );
+        }
+
+        std::wstring message = format( L"\nread file bytes: {}", bytes_read );
+        OutputDebugString( message.data() );
+
         //contact_identifier = value_contact_identifier->get_value();
         //collections.update_input( input_report );
 
-        float x  = static_cast< float >( value_unscaled( 0x01 , 0x30 , &input_report->data.hid ) ); // x
-        float y  = static_cast< float >( value_unscaled( 0x01 , 0x31 , &input_report->data.hid ) ); // y
-        float id = static_cast< float >( value_unscaled( 0x0d , 0x51 , &input_report->data.hid ) ); // id
+        //float x  = static_cast< float >( value_unscaled( 0x01 , 0x30 , &input_report->data.hid ) ); // x
+        //float y  = static_cast< float >( value_unscaled( 0x01 , 0x31 , &input_report->data.hid ) ); // y
+        //float id = static_cast< float >( value_unscaled( 0x0d , 0x51 , &input_report->data.hid ) ); // id
 
         //update_contact( id , x , y );
 
-        std::wstring message = L"\nx: " + std::to_wstring( x ) += L" y: " + std::to_wstring( y );
-        OutputDebugString( message.data() );
+        //std::wstring message = L"\nx: " + std::to_wstring( x ) += L" y: " + std::to_wstring( y );
+        //OutputDebugString( message.data() );
     }
+    
 
     /*void Device::update_contact( ulong in_identifier , float in_x , float in_y )
     {
@@ -157,7 +241,7 @@ namespace HID
 
         for( uint index{ 0 }; index < report_amount; index++ )
         {
-            Collections::update( rawinput_array[ index ] );
+            //Collections::update( rawinput_array[ index ] );
 
             x  = static_cast< float >( value_unscaled( 0x01 , 0x30 , & rawinput_array[ index ]->data.hid ) ); // x
             y  = static_cast< float >( value_unscaled( 0x01 , 0x31 , & rawinput_array[ index ]->data.hid ) ); // y
@@ -214,57 +298,66 @@ namespace HID
         return value;
     }
 
-    void Device::collect_information()
+    void Device::connect()
     {
-        NTSTATUS result{ HIDP_STATUS_INVALID_PREPARSED_DATA };
-
-        path();
-
         // cannot have exclusive file access
         //https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/top-level-collections-opened-by-windows-for-system-use
 
         // open i_o device for query 
         std::wstring        filename             = path_.c_str();
-        ulong               desired_access       = 0; //GENERIC_READ ,//| GENERIC_WRITE
+        ulong               desired_access       = 0;//GENERIC_WRITE | GENERIC_READ; // must be 0
         ulong               share_mode           = FILE_SHARE_READ | FILE_SHARE_WRITE;
-        SECURITY_ATTRIBUTES security_attributes{};
+        SECURITY_ATTRIBUTES security_attributes  {};
         ulong               creation_disposition = OPEN_EXISTING;
         ulong               flags_and_attributes = FILE_FLAG_OVERLAPPED; //FILE_ATTRIBUTE_NORMAL;
         HANDLE              template_file{};
 
-        file_handle = CreateFileW( filename.c_str() ,
-                                   desired_access ,
-                                   share_mode ,
-                                   &security_attributes ,
-                                   creation_disposition ,
-                                   flags_and_attributes ,
-                                   template_file );
+        file_handle = CreateFile( path_.data() ,//filename.c_str(),
+                                  desired_access,
+                                  share_mode,
+                                  & security_attributes,
+                                  creation_disposition,
+                                  flags_and_attributes,
+                                  template_file );
 
-        if( file_handle == INVALID_HANDLE_VALUE ) error_exit( L"\n Unable to open device." );
+        //if( file_handle == INVALID_HANDLE_VALUE ) 
+        if( ! file_handle )
+            error_exit( L"Unable to open device" );
+    }
 
-        HidD_GetAttributes( file_handle, & attributes );
-        HidD_GetManufacturerString( file_handle, manufacturer_buffer, string_size );
-        HidD_GetProductString( file_handle, product_buffer, string_size );
-        HidD_GetPhysicalDescriptor( file_handle, physical_buffer, string_size );
+    void Device::collect_information()
+    {
+        path();
+        connect();
+
+        bool result { false };
+
+        result = HidD_GetAttributes( file_handle, & attributes );
+        if(!result ) print_debug("\nGet attributes error: ");
+
+        result = HidD_GetManufacturerString( file_handle, manufacturer_buffer, string_size );
+        if( !result ) print_debug( "\nGet manufacturer string error: " );
+
+        result = HidD_GetProductString( file_handle, product_buffer, string_size );
+        if( !result ) print_debug( "\nGet product string error: " );
+
+        result = HidD_GetPhysicalDescriptor( file_handle, physical_buffer, string_size );
+        if( !result ) print_debug( L"\nGet physical descriptor error: ", 0 );
 
         //SeTcbPrivilege 
 
         //BY_HANDLE_FILE_INFORMATION file_information {};
         //GetFileInformationByHandle( file_handle, &file_information);
 
-        //CloseHandle( file_handle );
-
-        manufacturer = manufacturer_buffer;
-        product      = product_buffer;
-        physical     = physical_buffer;
+        manufacturer_ = manufacturer_buffer;
+        product_      = product_buffer;
+        physical_     = physical_buffer;
 
         /*ulong buffer_amount{0};
         HidD_GetNumInputBuffers( file_handle, &buffer_amount);
         std::wstring message;
         message = L"\n buffer amount: " + std::to_wstring( buffer_amount ); // as default of 32
         OutputDebugStringW( message.data() );*/
-
-        //set_text_device();
 
         // -- collections -------------------------------------------
         ulong collection_amount = capabilities.NumberLinkCollectionNodes;
@@ -277,50 +370,48 @@ namespace HID
                                               & collection_amount ,
                                               data );
 
-        if( result == HIDP_STATUS_BUFFER_TOO_SMALL ) error_exit( L"Collection buffer size error." );
+        if( result == HIDP_STATUS_BUFFER_TOO_SMALL ) error_exit( L"Buffer size error" );
 
         add_collection( nodes, capabilities.NumberLinkCollectionNodes );
 
         delete[] nodes;
         // ---------------------------------------------
 
-        _HIDP_BUTTON_CAPS * button_array{};
-        _HIDP_VALUE_CAPS * value_array{};
+        button_caps * button_array {};
+        value_caps  * value_array  {};
 
         // Retrieve array of input buttons capabilities.
-        button_array = new _HIDP_BUTTON_CAPS[ capabilities.NumberInputButtonCaps ];
+        button_array = new button_caps[ capabilities.NumberInputButtonCaps ];
 
-        result = HidP_GetButtonCaps( HidP_Input ,
-                                     button_array ,
-                                     &capabilities.NumberInputButtonCaps ,
+        result = HidP_GetButtonCaps( HidP_Input,
+                                     button_array,
+                                     & capabilities.NumberInputButtonCaps,
                                      data );
 
         // Store buttons in a input collection.
-        add_buttons( * this,
-                     report_type::input,
+        add_buttons( report_type::input,
                      button_array,
                      capabilities.NumberInputButtonCaps );
 
         delete[] button_array;
 
         // Retrieve array of input values capabilities.
-        value_array = new _HIDP_VALUE_CAPS[ capabilities.NumberInputValueCaps ];
+        value_array = new value_caps[ capabilities.NumberInputValueCaps ];
 
-        result = HidP_GetValueCaps( HidP_Input ,
-                                    value_array ,
-                                    & capabilities.NumberInputValueCaps ,
+        result = HidP_GetValueCaps( HidP_Input,
+                                    value_array,
+                                    & capabilities.NumberInputValueCaps,
                                     data );
 
         // Store values in a input collection.
-        add_values( * this,
-                    report_type::input,
+        add_values( report_type::input,
                     value_array,
                     capabilities.NumberInputValueCaps );
 
         delete[] value_array;
 
         // Retrieve array of output buttons capabilities.
-        button_array = new _HIDP_BUTTON_CAPS[ capabilities.NumberOutputButtonCaps ];
+        button_array = new button_caps[ capabilities.NumberOutputButtonCaps ];
 
         result = HidP_GetButtonCaps( HidP_Output,
                                      button_array,
@@ -328,57 +419,53 @@ namespace HID
                                      data );
 
         // Store buttons in a output collection.
-        add_buttons( * this,
-                     report_type::output,
+        add_buttons( report_type::output,
                      button_array,
                      capabilities.NumberOutputButtonCaps );
 
         delete[] button_array;
 
         // Retrieve array of output values capabilities.
-        value_array = new _HIDP_VALUE_CAPS[ capabilities.NumberOutputValueCaps ];
+        value_array = new value_caps[ capabilities.NumberOutputValueCaps ];
 
-        result = HidP_GetValueCaps( HidP_Output ,
-                                    value_array ,
-                                    &capabilities.NumberOutputValueCaps ,
+        result = HidP_GetValueCaps( HidP_Output,
+                                    value_array,
+                                    &capabilities.NumberOutputValueCaps,
                                     data );
 
         // Store values in a output collection.
-        add_values( * this,
-                    report_type::output,
+        add_values( report_type::output,
                     value_array,
                     capabilities.NumberOutputValueCaps );
 
         delete[] value_array;
 
         // Retrieve array of feature buttons capabilities.
-        button_array = new _HIDP_BUTTON_CAPS[ capabilities.NumberFeatureButtonCaps ];
+        button_array = new button_caps[ capabilities.NumberFeatureButtonCaps ];
 
-        result = HidP_GetButtonCaps( HidP_Feature ,
-                                     button_array ,
-                                     &capabilities.NumberFeatureButtonCaps ,
+        result = HidP_GetButtonCaps( HidP_Feature,
+                                     button_array,
+                                     &capabilities.NumberFeatureButtonCaps,
                                      data );
 
         // Store buttons in a feature collection.
-        add_buttons( * this ,
-                     report_type::feature ,
-                     button_array ,
+        add_buttons( report_type::feature,
+                     button_array,
                      capabilities.NumberFeatureButtonCaps );
 
         delete[] button_array;
 
-        // Retrieve array of feature buttons capabilities.
-        value_array = new _HIDP_VALUE_CAPS[ capabilities.NumberFeatureValueCaps ];
+        // Retrieve array of feature value capabilities.
+        value_array = new value_caps[ capabilities.NumberFeatureValueCaps ];
 
-        result = HidP_GetValueCaps( HidP_Feature ,
-                                    value_array ,
-                                    &capabilities.NumberFeatureValueCaps ,
+        result = HidP_GetValueCaps( HidP_Feature,
+                                    value_array,
+                                    & capabilities.NumberFeatureValueCaps,
                                     data );
 
         // Store values in a feature collection.
-        add_values( * this ,
-                    report_type::feature ,
-                    value_array ,
+        add_values( report_type::feature,
+                    value_array,
                     capabilities.NumberFeatureValueCaps );
 
         delete[] value_array;
@@ -460,56 +547,12 @@ if( node.FirstChild ) // left-most
 //collection.push_back( move( new_collection ) );//at( index ) = move( new_item );
 */
 
-
-// Array field : The bit field created by an Input , 
-// Output , or Feature main item which is declared as an Array.
-// An array field contains the index of a Usage , not the Usage value.
-// bit field  :  // Usage determines the field’s purpose.
-
-                // This one tries to generate SI units
-                /*static const TCHAR * DecodeUnit( ULONG unit , int & exp ) {
-                    static TCHAR buf[ 64 ];
-                    switch( unit ) {
-                    case 0x11: exp-=2; return T( "m" );     // meter
-                    case 0x101: exp-=3; return T( "kg" );   // kilo gram
-                    case 0x1001: return T( "s" );           // second
-                    case 0xF011: exp-=2; return T( "m/s" ); //
-                    case 0xF111: exp-=5; return T( "mN" );
-                    case 0xE011: exp-=2; return T( "m/s²" );
-                    case 0xE111: exp-=5; return T( "N" );
-                    case 0xE121: exp-=7; return T( "J" );  // joule
-                    case 0xE012: return T( "rad/s²" );
-                    case 0xF0D121: exp-=7; return T( "V" ); // volt
-                    case 0x100001: return T( "A" );         // amp
-                    case 0xE1F1: exp-=1; return T( "Pa" );
-                    }*/
-
-
-
    //void Device::set_text_device()
    //{
-   //    std::wstring content;
-
-   //    content =  L"manufacturer\t: ";
-   //    content += manufacturer;
-   //    content += L"\nproduct\t\t: ";
-   //    content += product;
-   //    content += L"\npage\t\t: ";
-   //    content += Usages::get_page( page );
-   //    content += L"\nusage\t\t: ";
-   //    content += Usages::get_usage( page , usage );
-
    //    ulong input_amount = HidP_MaxDataListLength( HidP_Input ,
    //                                                 reinterpret_cast< PHIDP_PREPARSED_DATA >( data_preparsed.data() ) );
 
    //    content += L"\ninput amount\t: " + std::to_wstring( input_amount );
-
-   //    information.set( content );
-   //    information.set_position( text_position );
-   //    information.set_layout_size( text_layout_size );
-   //    information.set_size( text_font_size );
-   //    information.set_colour( text_font_colour );
-   //    //information.set_rectangle_line_colour( rectangle_line_colour );
 
    //    // += attributes.VendorID;
    //    // += attributes.ProductID;

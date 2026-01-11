@@ -43,21 +43,21 @@ namespace HID
             HIDD_ATTRIBUTES            attributes       {};
             HIDP_EXTENDED_ATTRIBUTES   attributes_extra {};
 
-            static const uint string_size { 127u };
+            static const uint string_size { 500u };
 
             wchar_t manufacturer_buffer [ string_size ] {};
             wchar_t product_buffer      [ string_size ] {};
             wchar_t physical_buffer     [ string_size ] {};
 
-            std::wstring manufacturer {};
-            std::wstring product      {};
-            std::wstring physical     {};
+            std::wstring manufacturer_ {};
+            std::wstring product_      {};
+            std::wstring physical_     {};
             
             //hid_value * value_contact_identifier { nullptr };
             //ulong contact_identifier {0};
             //hid_value * x { nullptr };
 
-            const static uint contact_amount { 5 };
+            //const static uint contact_amount { 5 };
 
             //std::array< Contact , contact_amount > contacts;
 
@@ -65,13 +65,13 @@ namespace HID
             //D2D1_SIZE_F screen_dpi {};
             //D2D1_SIZE_F pad_to_screen_ratio {};
 
-            //Mulitple_touch & mt;
-
-            void collect_information();
+            void connect();
 
         public:
 
-            Device( HANDLE device );//, Mulitple_touch & mt );
+            friend class Multiple_touch;
+
+            Device( HANDLE device );
             ~Device();
 
             bool            is_multi_touch();
@@ -80,16 +80,22 @@ namespace HID
             std::wstring    path();
             Identity        identity() { return identity_; }
             HANDLE          handle()   { return raw_handle; }
-            
-            //page_and_usage  page_and_usage() { return { page , usage }; }
+
+            bool manufacturer( long manufacturer );
+            //std::wstring    manufacturer() { return manufacturer_; }
+            //std::wstring    product()      { return product_; }
+
+            std::vector< Collection > & collections() { return collections_; }
 
             bool            is_same_device( const Identity & identity ) { return identity_ == identity; }
             unsigned char * data()     { return data_preparsed.data(); }
             uint            input_report_size() { return capabilities.InputReportByteLength; }
             
-            void  update( RAWINPUT * report );
-            void  update_buffered( RAWINPUT ** rawinput_array, uint report_amount );
+            void collect_information();
+
             void  update();
+            void  async_read();
+            void  update_buffered( RAWINPUT ** rawinput_array, uint report_amount );
 
             long  value_scaled(   ushort page, ushort usage, RAWINPUT input );
             ulong value_unscaled( ushort page, ushort usage, RAWHID * input );

@@ -69,38 +69,249 @@ namespace HID
 
            // 0x30
            L"x"               ,// 0x30
-           L"y"               ,// 0x
-           L"z"               ,// 0x
-           L"rx"              ,// 0x
-           L"ry"              ,// 0x
-           L"rz"              ,// 0x
-           L"slider"          ,// 0x
-           L"dial"            ,// 0x
-           L"wheel"           ,// 0x
-           L"hat switch"      ,// 0x
-           L"counted buffer"  ,
-           L"byte count"      ,
-           L"motion wakeup"   ,
-           L"start"           ,
-           L"select"          ,
-           L"reserved"        ,
-           L"vx"              ,
-           L"vy"              ,
-           L"vz"              ,
-           L"vbr"             ,
-           L"vbry"            ,
-           L"vbrz"            ,
-           L"vno"             ,
-           L"feature notification"   ,
-           L"resolution multiplier"  ,
-           L"qx"              ,
-           L"qy"              ,
-           L"qz"              ,
-           L"qw"              ,
+           L"y"               ,// 0x31
+           L"z"               ,// 0x32
+           L"rx"              ,// 0x33
+           L"ry"              ,// 0x34
+           L"rz"              ,// 0x35
+           L"slider"          ,// 0x36
+           L"dial"            ,// 0x37
+           L"wheel"           ,// 0x38
+           L"hat switch"      ,// 0x39
+           L"counted buffer"  ,// 0x3A
+           L"byte count"      ,// 0x3B
+           L"motion wakeup"   ,// 0x3C
+           L"start"           ,// 0x3D
+           L"select"          ,// 0x3E
+           L"reserved"        ,// 0x
+           L"vx"              ,// 0x
+           L"vy"              ,// 0x
+           L"vz"              ,// 0x
+           L"vbr"             ,// 0x
+           L"vbry"            ,// 0x
+           L"vbrz"            ,// 0x
+           L"vno"             ,// 0x
+           L"feature notification"   ,// 0x
+           L"resolution multiplier"  ,// 0x
+           L"qx"              ,// 0x
+           L"qy"              ,// 0x
+           L"qz"              ,// 0x
+           L"qw"              ,// 0x
           // ... to 0xffff
        } ,
 
-       {  // page 0x02 
+       {  // page 0x02 Simulation Controls
+            L"Undefined",                     //    // 0x00
+            L"Flight Simulation Device",      // CA // 0x01
+            L"Automobile Simulation Device",  // CA // 0x02
+            L"Tank Simulation Device",        // CA // 0x03
+            L"Spaceship Simulation Device",   // CA // 0x04
+            L"Submarine Simulation Device",   // CA // 0x05
+            L"Sailing Simulation Device",     // CA // 0x06
+            L"Motorcycle Simulation Device",  // CA // 0x07
+            L"Sports Simulation Device",      // CA // 0x08
+            L"Airplane Simulation Device",    // CA // 0x09
+            L"Helicopter Simulation Device",  // CA // 0x0A
+            L"Magic Carpet Simulation Device",// CA // 0x0B
+            L"Bicycle Simulation Device",     // CA // 0x0C
+            L"Reserved",                      //    // 0x0D
+            L"Reserved",                      //    // 0x0E
+            L"Reserved",                      //    // 0x0F
+            L"Reserved",                      //    // 0x10
+            L"Reserved",                      //    // 0x11
+            L"Reserved",                      //    // 0x12
+            L"Reserved",                      //    // 0x13
+            L"Reserved",                      //    // 0x14
+            L"Reserved",                      //    // 0x15
+            L"Reserved",                      //    // 0x16
+            L"Reserved",                      //    // 0x17
+            L"Reserved",                      //    // 0x18
+            L"Reserved",                      //    // 0x19
+            L"Reserved",                      //    // 0x1A
+            L"Reserved",                      //    // 0x1B
+            L"Reserved",                      //    // 0x1C
+            L"Reserved",                      //    // 0x1D
+            L"Reserved",                      //    // 0x1E
+            L"Reserved",                      //    // 0x1F
+            L"Flight Control Stick",          // CA // 0x20
+            L"Flight Stick",                  // CA // 0x21
+            L"Cyclic Control",                // CP // 0x22
+            L"Cyclic Trim",                   // CP // 0x23
+            L"Flight Yoke",                   // CA // 0x24
+            L"Track Control",                 // CP // 0x25
+            //26 - AF Reserved
+            L"Reserved",                      //    // 0x26
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Reserved",                      //    // 0x
+            L"Aileron",//  DV
+            L"Aileron Trim",//  DV
+            L"Anti - Torque Control",//  DV
+            L"Autopilot Enable",//  OOC
+            L"Chaff Release",//  OSC
+            L"Collective Control",//  DV
+            L"Dive Brake",//  DV
+            L"Electronic Countermeasures",//  OOC
+            L"Elevator",//  DV
+            L"Elevator Trim",//  DV
+            L"Rudder",//  DV
+            L"Throttle",//  DV
+            L"Flight Communications",//  OOC
+            L"Flare Release",//  OSC
+            L"Landing Gear",//  OOC
+            L"Toe Brake",//  DV
+            L"Trigger",//  MC
+            L"Weapons Arm",//  OOC
+            L"Weapons Select",//  OSC
+            L"Wing Flaps",//  DV
+            L"Accelerator",//  DV
+            L"Brake",//  DV
+            L"Clutch",//  DV
+            L"Shifter",//  DV
+            L"Steering",//  DV
+            L"Turret Direction",//  DV
+            L"Barrel Elevation",//  DV
+            L"Dive Plane",//  DV
+            L"Ballast",//  DV
+            L"Bicycle Crank",//  DV
+            L"Handle Bars",//  DV
+            L"Front Brake",//  DV
+            L"Rear Brake",//  DV
+
+            //D1 - FFFF Reserve
        } ,
 
        {  // page 0x03 
@@ -113,6 +324,7 @@ namespace HID
        } ,
 
        {  // page 0x06
+           L"Undefined"
        } ,
 
        {  // page 0x07
@@ -157,10 +369,12 @@ namespace HID
        {  // page 0x0B
        } ,
 
-       {  // page 0x0C
+       {  // page 0x0C // Consumer Page
+            L"undefined"                      , // 0x00
+            L"Consumer Control"               , // 0x01 //CA
        } ,
 
-       {  // page 0x0D digitisers
+       {  // page 0x0D // Digitisers
            L"undefined"                      , // 0x00
            L"digitiser"                      , // 0x01
            L"pen"                            , // 0x02

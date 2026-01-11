@@ -10,35 +10,30 @@
 
 #include <string>
 #include <vector>
+using std::vector;
 
 namespace HID
 {
-    //class Device;
-
-    class Collection : public HIDP_LINK_COLLECTION_NODE, public HID::Usages
+    class Collection : public collection_node, public HID::Usages
     {
-        private:
+        protected:
 
-            //Device * device {};
+            vector< HID::Button > input_buttons_;
+            vector< HID::Value >  input_values_;
 
-            std::vector< HID::Button > input_buttons{};
-            std::vector< HID::Value >  input_values{};
+            vector< HID::Button > output_buttons_;
+            vector< HID::Value >  output_values_;
 
-            std::vector< HID::Button > output_buttons{};
-            std::vector< HID::Value >  output_values{};
-
-            std::vector< HID::Button > feature_buttons{};
-            std::vector< HID::Value >  feature_values{};
+            vector< HID::Button > feature_buttons_;
+            vector< HID::Value >  feature_values_;
 
         public:
 
             //Collection() {};
-            //Collection( Device * device ) : device( device ) {};
+            friend class Multiple_touch;
 
-            void operator = ( const _HIDP_LINK_COLLECTION_NODE & );
-            void operator = ( _HIDP_LINK_COLLECTION_NODE && ) noexcept;
-
-            //void calculate_positions();
+            void operator = ( const collection_node & );
+            void operator = ( collection_node && ) noexcept;
 
             void add_button( report_type, HID::Button & );
             void add_value( report_type, HID::Value & );
@@ -48,13 +43,14 @@ namespace HID
                          report_type report_type,
                          Item_type item_type );
 
-            //std::vector<hid_button>::iterator get_input_buttons() { return input_buttons.begin(); }
+            //vector<hid_button> & input_buttons() { return input_buttons.begin(); }
             //uint get_contact_amount();
             //uint get_contact_identifier();
             //uint get_x();
             //uint get_y();
             
-            void update( RAWINPUT * data );
+            void update( vector< uchar > & data );
+            //void update( RAWINPUT * data );
             //void update( RAWHID in_raw_data );
             //void draw();
     };

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Application" Collapsed="true">
+    <Position X="1.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAABAAAAAAAAEAAAAAAAACAAAAAAAAAAAUAAA=</HashCode>
+      <FileName>Source code\Hpp\Application.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MSWindows" Collapsed="true">
+    <Position X="3.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SAgEEQIICAgAAAAEBAEAEigQAABABBiIEAAiEoCECAg=</HashCode>
+      <FileName>Source code\Hpp\Operating system\MSWindows.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HID::Multiple_touch" Collapsed="true">
+    <Position X="1.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAUAAA=</HashCode>
+      <FileName>Source code\Hpp\Multiple touch.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HID::Devices" Collapsed="true">
+    <Position X="1.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEACBAAYAAAAAAAAAACAAAEAAA=</HashCode>
+      <FileName>Source code\Hpp\Input\HID\Devices.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HID::Collections" Collapsed="true">
+    <Position X="1.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAEAAAAAACAAAAAAAAAAgAAAAIAMAIA=</HashCode>
+      <FileName>Source code\Hpp\Input\HID\Collections.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HID::Device" Collapsed="true">
+    <Position X="1.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BEAAAgAIAhAAAhAEEAYHAAiAECAAEIAglAIyAABEYAI=</HashCode>
+      <FileName>Source code\Hpp\Input\HID\Device.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

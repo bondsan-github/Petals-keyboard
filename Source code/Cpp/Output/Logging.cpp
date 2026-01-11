@@ -6,14 +6,18 @@
 #include <strsafe.h>
 #include <iostream>
 #include <sstream>
-
-//
+#include <format>
 //Logging::Logging( HRESULT result, std::wstring message )
 //: result_( result ), message_( message )
 //{}
-//
-std::wstring Logging::system_message( HRESULT result )
+
+std::wstring Logging::system_message( long result )
 {
+    if( !result )
+    {
+        result = GetLastError();
+    }
+
     const ulong character_amount { 500 };
     
     wchar_t system_message[ character_amount ] {};
@@ -52,11 +56,10 @@ void Logging::print_debug( const char * message )
 
 void Logging::print_debug( const wchar_t * message, HRESULT result )
 {
-    // Create a text string initialised with the title_text parameter.
+    // Create a text string initialised with the message parameter.
     std::wstring text { message };
 
-    // If result is anything other than S_OK then append the system error message.
-    if( result != S_OK ) text += system_message( result );
+    text += system_message( result );
 
     // Print the message to the debugger.
     OutputDebugStringW( text.c_str() );
@@ -67,9 +70,11 @@ void Logging::error_exit( const wchar_t * message, HRESULT result )
 
     std::wstring sys_message = system_message( result );
 
-    MessageBoxW( 0 , sys_message.data() , L"Application fail." , MB_OK);
+    MessageBoxW( 0 , sys_message.data() , message , MB_OK );
 
-    OutputDebugStringW( sys_message.c_str() );
+    std::wstring debug_string = std::format(L"{}: {}", message, sys_message.c_str() );
+
+    OutputDebugString( debug_string.c_str() );
 
     PostQuitMessage( result );
 }
@@ -81,12 +86,12 @@ void Logging::error_exit( const wchar_t * message, HRESULT result )
 //    if( logger.result_ not_eq S_OK )
 //    {
 //        //std::wostringstream output_stream{};
-//        //output_stream << ' ' << logger.retreive_system_message( in_result );
+//        //output_stream << ' ' << logger.system_message( in_result );
 //        //OutputDebugStringW( output_stream.str().c_str() );
 //
 //        //std::wstring message {};
 //
-//        logger.message_ += logger.retreive_system_message( logger.result_ );
+//        logger.message_ += logger.system_message( logger.result_ );
 //        OutputDebugStringW( logger.message_.c_str() );
 //
 //        MessageBoxW( 0 , logger.message_.c_str() , L"Application fail." , MB_OK );

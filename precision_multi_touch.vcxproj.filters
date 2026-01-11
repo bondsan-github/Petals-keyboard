@@ -64,6 +64,9 @@
     <Filter Include="Cpp\Graphics\DWrite">
       <UniqueIdentifier>{f137f6cf-14a7-42d5-b679-d6fbea796fc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cpp\References">
+      <UniqueIdentifier>{8c3aceae-4608-4243-b21e-2914c55068e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="documents\hut1_3_0.pdf">
@@ -72,6 +75,7 @@
     <None Include="Documents\hid1_11.pdf">
       <Filter>Documents</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="Data\DeclareDPIAware.manifest">
@@ -177,6 +181,9 @@
     </ClCompile>
     <ClCompile Include="Source code\Cpp\Application.cpp">
       <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source code\Reference\PS3SampleApp\usbps3\usbps3.cpp">
+      <Filter>Cpp\References</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -291,9 +298,6 @@
     <ClInclude Include="Source code\Hpp\Input\HID\Value.h">
       <Filter>Hpp\Input\HID</Filter>
     </ClInclude>
-    <ClInclude Include="Source code\Hpp\Input\HID\Status.h">
-      <Filter>Hpp\Input\HID</Filter>
-    </ClInclude>
     <ClInclude Include="Source code\Hpp\Operating system\MSWindows messages.h">
       <Filter>Hpp\Operating system</Filter>
     </ClInclude>
@@ -313,7 +317,18 @@
       <Filter>Hpp</Filter>
     </ClInclude>
     <ClInclude Include="Source code\Hpp\targetver.h">
+      <Filter>reference</Filter>
+    </ClInclude>
+    <ClInclude Include="Source code\Hpp\Input\HID\Status.h">
       <Filter>Hpp</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Hpp</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
