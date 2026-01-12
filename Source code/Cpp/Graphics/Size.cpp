@@ -32,6 +32,7 @@ Size & Size::operator += ( float in_size )
     return *this;
 }
 
+/*
 // conversion
 Size::operator D2D1_SIZE_U ()
 {
@@ -55,6 +56,7 @@ Size::operator RECT ()
         .bottom = static_cast< long >( height_ )  // origin top left = bottom - top
     };
 }
+*/
 
 bool Size::operator < ( Size const & in_rectangle )
 {

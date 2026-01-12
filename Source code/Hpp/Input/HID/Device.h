@@ -44,6 +44,7 @@ namespace HID
             HIDP_EXTENDED_ATTRIBUTES   attributes_extra {};
 
             static const uint string_size { 500u };
+            ulong input_buffer_amount {};
 
             wchar_t manufacturer_buffer [ string_size ] {};
             wchar_t product_buffer      [ string_size ] {};
@@ -93,9 +94,9 @@ namespace HID
             
             void collect_information();
 
-            void  update();
-            void  async_read();
-            void  update_buffered( RAWINPUT ** rawinput_array, uint report_amount );
+            void  update( RAWINPUT input );
+            //void  async_read();
+            //void  update_buffered( RAWINPUT ** rawinput_array, uint report_amount );
 
             long  value_scaled(   ushort page, ushort usage, RAWINPUT input );
             ulong value_unscaled( ushort page, ushort usage, RAWHID * input );

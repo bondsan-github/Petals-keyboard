@@ -6,6 +6,8 @@
 
 //#include <winuser.h>
 //#include <wingdi.h>
+#include <sstream>
+#include <iomanip>
 
 typedef unsigned __int64 QWORD; // 64-bit integer
 
@@ -144,32 +146,116 @@ HWND MSWindows::window()
     return window_principle;
 }
 
-int MSWindows::message_loop()
+void MSWindows::process_input() //lParam
+{
+    uint header_size     = sizeof( RAWINPUTHEADER );
+    uint buffer_size     = 0;
+    uint result          = 0;
+    //std::vector< RAWINPUT > raw_input;
+    std::wstring message;
+
+    //  minimum required buffer size in bytes
+    result = GetRawInputBuffer( 0 , &buffer_size , header_size );
+    //
+   
+    if( buffer_size > 0 )
+    {
+        buffer_size *= 16;
+
+        PRAWINPUT pRawInput = ( PRAWINPUT ) malloc( buffer_size );
+
+        message = std::format( L"\nbuffers size: {}" , buffer_size );
+        OutputDebugString( message.data() );
+
+        //buffer_size *= 8;
+        //raw_input.resize( buffer_size );
+
+        //result = GetRawInputBuffer( raw_input.data() , &buffer_size , header_size );
+        //result = GetRawInputBuffer( pRawInput , &buffer_size , header_size );
+
+        message = std::format( L"\nbuffers read: {}" , result );
+        OutputDebugString( message.data() );
+
+        UINT nInput = GetRawInputBuffer( pRawInput , &buffer_size , sizeof( RAWINPUTHEADER ) );
+
+        if( nInput != 0 )
+        {
+            message = std::format( L"\nbuffers read: {}" , result );
+            OutputDebugString( message.data() );
+
+            PRAWINPUT * paRawInput = ( PRAWINPUT * ) malloc( sizeof( PRAWINPUT ) * nInput );
+
+            if( paRawInput != NULL )
+            {
+                PRAWINPUT pri = pRawInput;
+
+                for( UINT i = 0; i < nInput; ++i )
+                {
+                        //Log( _T( " input[%d] = @%p" ) , i , pri );
+                    paRawInput[ i ] = pri;
+                    pri = NEXTRAWINPUTBLOCK( pri );
+                }
+
+                free( paRawInput );
+            }
+        }
+
+        free( pRawInput );
+
+        // RAWINPUT.hid may be an array of RAWHID structures
+        /*
+        if( result > 0 )
+        {
+            for( auto & input : raw_input )
+            {
+                // for each input.data.hid
+                application->update( input );
+
+                if( input.data.hid.dwCount > 0 )
+                    message = std::format( L"\nhid array amount: {}" , input.data.hid.dwCount );
+
+                OutputDebugString( message.data() );
+            }
+        }
+        else print_debug( L"\nGet raw input error: " );
+        */
+    }
+    else print_debug( L"\nGet input buffer size error: ", 0);
+
+    //raw_input.clear();
+}
+
+unsigned long long MSWindows::message_loop()
 {
     MSG message {};
+    int result = 0;
 
-    //Application * app = reinterpret_cast< Application * >( GetWindowLongPtrW( window_principle , GWLP_USERDATA ) );
+    Application * app = reinterpret_cast< Application * >( GetWindowLongPtrW( window_principle , GWLP_USERDATA ) );
+    //process_input();
 
-    //while( message.message != WM_QUIT )
-    //{
-        //https://learn.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
-        //if( PeekMessageW( &message , NULL , 0U , 0U , PM_REMOVE ) ) // high cpu usage
-        while( GetMessage( &message, window_principle , 0, 0) )
+    while( ( result = GetMessage( &message, window_principle, 0, 0 ) ) != 0 )
+    {
+        if( result == -1 )
+        {
+            //print_debug( L"\nGetMessage error: ", 0 );
+        }
+        //else if( message.message == WM_INPUT ) app->process_input();
+        else
         {
             TranslateMessage( &message );
             DispatchMessage( &message );
+        }
 
-        //if( elapsed_time += get_delta() > 16ms )
+        //if( elapsed_time += frame_delta() > 16ms )
         //class_pointer->update();
         //class_pointer->render();
-        }
-    //}
+    }
 
-    //return static_cast< char >( message.wParam );
     return message.wParam;
 }
 
 //long long __stdcall MSWindows::message_handler( HWND window, UINT message, WPARAM wParam, LPARAM lParam )
+//__int64 
 LRESULT CALLBACK MSWindows::message_handler( HWND window, UINT message, WPARAM wParam, LPARAM lParam )
 {
     /*
@@ -191,7 +277,7 @@ LRESULT CALLBACK MSWindows::message_handler( HWND window, UINT message, WPARAM w
     }
     else
     {
-        if( application )// window has completed creation
+        if( application ) // window creation complete
         {
             switch( message )
             {
@@ -207,11 +293,39 @@ LRESULT CALLBACK MSWindows::message_handler( HWND window, UINT message, WPARAM w
                     PostQuitMessage( 0 );
                 } break;
 
-                case WM_INPUT:
+                //https://learn.microsoft.com/en-us/windows/win32/inputdev/using-raw-input
+                //https://ph3at.github.io/posts/Windows-Input/
+                //https://stackoverflow.com/questions/28879021/winapi-getrawinputbuffer
+                //https://docs.unity3d.com/6000.2/Documentation/ScriptReference/Windows.Input.ForwardRawInput.html
                 //case WM_TOUCH:
+                case WM_INPUT:
                 {
-                    application->update();
-                    //https://learn.microsoft.com/en-us/windows/win32/inputdev/using-raw-input
+                    std::wstring message;
+
+                    uint buffer_size = 0;
+
+                    GetRawInputData( ( HRAWINPUT ) lParam, RID_INPUT, NULL, &buffer_size, sizeof( RAWINPUTHEADER ) );
+
+                    //uchar * buffer = new uchar[ buffer_size ];
+                    RAWINPUT * buffer = new RAWINPUT[ buffer_size ];
+
+                    message = std::format( L"\nbuffers size: {}" , buffer_size );
+                    OutputDebugString( message.data() );
+
+                    if( GetRawInputData( ( HRAWINPUT )lParam, RID_INPUT, buffer, & buffer_size, sizeof( RAWINPUTHEADER ) ) != buffer_size )
+                        print_debug( L"\nGetRawInputData does not return correct size", 0 );
+
+                    std::stringstream ss {};
+                    for( int i=0; i < buffer_size; ++i )
+                    //ss << std::setfill('0') << std::hex << std::setw(2) << (unsigned int)std::uint8_t(-1);
+                        ss << std::setfill( '0' ) << std::hex << ( unsigned int ) buffer->data.hid.bRawData[ i ];
+                    std::string mystr = ss.str();
+                    
+                    //message = std::format( L"\nhid data: 0x{}" , mystr );
+                    //print_debug( message.data() );
+
+                    print_debug( mystr.data() );
+
                 } break;
 
                 /*
@@ -278,14 +392,17 @@ void MSWindows::register_input_device( ushort page , ushort usage ) //, touchpad
 {
     RAWINPUTDEVICE raw_device
     {
-        .usUsagePage = page ,
-        .usUsage     = usage ,
-        .dwFlags     = RIDEV_DEVNOTIFY , // | RIDEV_EXINPUTSINK | RIDEV_INPUTSINK // attached and detached
+        .usUsagePage = page,
+        .usUsage     = usage,
+        .dwFlags     = RIDEV_INPUTSINK, // RIDEV_DEVNOTIFY | RIDEV_EXINPUTSINK // attached and detached
         .hwndTarget  = window_principle
     };
 
     // 
-    RegisterRawInputDevices( & raw_device, 1, sizeof( RAWINPUTDEVICE ) );
+    bool result = RegisterRawInputDevices( & raw_device, 1, sizeof( raw_device ) );
+
+    if( ! result  ) print_debug( L"\nRegister input device error: ", 0 );
+    else print_debug( L"\n registered device.");
 }
 
 /*void MSWindows::window_rectangles()

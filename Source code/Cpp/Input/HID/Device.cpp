@@ -95,7 +95,6 @@ namespace HID
     Device::~Device()
     {
         //OutputDebugString( L"\n Device::~Device()" );
-        //if( file_handle ) CloseHandle( file_handle );
     }
 
     std::wstring Device::path()
@@ -126,6 +125,12 @@ namespace HID
         return path_;
     }
 
+    void Device::update( RAWINPUT input )
+    {
+
+    }
+
+    /*
     void Device::update()
     {
         //async_read();
@@ -158,14 +163,12 @@ namespace HID
         //ulong max = get_value( 0x0d , 0x55, input_report );
         //long contact_amount = get_value( 0x0d , 0x54 , buffer );
 
-        /*
         std::wstring message = std::format( L"\ncontact id: {}", id );
         message += L" x: " + std::to_wstring( x );
         message += L" y: " + std::to_wstring( y );
         message += L" contact_amount: " + std::to_wstring( contact_amount );
         message += L" buffer size: " + std::to_wstring( buffer_size );
         OutputDebugStringW( message.data() );
-        */
 
         //data[0] = \ &f00000000 report id 
                 //data[1] = x 
@@ -176,7 +179,9 @@ namespace HID
                 //https://eleccelerator.com/tutorial-about-usb-hid-report-descriptors/
                 //data.clear();
     }
+    */
     
+    /*
     void Device::async_read() //ReadFile
     {
         HANDLE event = CreateEventW( nullptr , false , false , L"read hid buffer" );
@@ -231,6 +236,7 @@ namespace HID
                                                  static_cast< float >( in_y ) );
     }*/
 
+    /*
     void Device::update_buffered( RAWINPUT ** rawinput_array, uint report_amount )
     {
         float x  { 0 };
@@ -267,6 +273,7 @@ namespace HID
         }
         //OutputDebugStringW( message.data() );
     }
+    */
 
     ulong Device::value_unscaled( ushort page, ushort usage, RAWHID * input )
     {
@@ -323,6 +330,12 @@ namespace HID
         //if( file_handle == INVALID_HANDLE_VALUE ) 
         if( ! file_handle )
             error_exit( L"Unable to open device" );
+
+        //BY_HANDLE_FILE_INFORMATION file_information {};
+        //GetFileInformationByHandle( file_handle, &file_information);
+
+        //** devices.add_connected( file_handle );
+        // devices::~devices() for(auto connected : devices_connected) CloseHandle( file_handle );
     }
 
     void Device::collect_information()
@@ -333,21 +346,20 @@ namespace HID
         bool result { false };
 
         result = HidD_GetAttributes( file_handle, & attributes );
-        if(!result ) print_debug("\nGet attributes error: ");
+        if( ! result ) print_debug( L"\nGet attributes error: ", 0);
 
         result = HidD_GetManufacturerString( file_handle, manufacturer_buffer, string_size );
-        if( !result ) print_debug( "\nGet manufacturer string error: " );
+        if( ! result ) print_debug( L"\nGet manufacturer string error: ", 0 );
 
         result = HidD_GetProductString( file_handle, product_buffer, string_size );
-        if( !result ) print_debug( "\nGet product string error: " );
+        if( ! result ) print_debug( L"\nGet product string error: ", 0 );
 
         result = HidD_GetPhysicalDescriptor( file_handle, physical_buffer, string_size );
-        if( !result ) print_debug( L"\nGet physical descriptor error: ", 0 );
+        if( ! result ) print_debug( L"\nGet physical descriptor error: ", 0 );
 
-        //SeTcbPrivilege 
-
-        //BY_HANDLE_FILE_INFORMATION file_information {};
-        //GetFileInformationByHandle( file_handle, &file_information);
+        result = HidD_GetNumInputBuffers( file_handle, & input_buffer_amount );
+        if( ! result ) print_debug( L"\nGet input buffer amount error: ", 0 );
+      
 
         manufacturer_ = manufacturer_buffer;
         product_      = product_buffer;

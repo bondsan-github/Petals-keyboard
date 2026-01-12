@@ -16,7 +16,8 @@
 
 //#define WIN32_LEAN_AND_MEAN
 
-#include <windows.h>
+//#include "Operating system\targetver.h"
+#include <Windows.h>
 
 #include "Aliases.h"
 #include "Graphics\Size.h"
@@ -24,6 +25,7 @@
 #include "Output\Logging.h"
 
 #include <set>
+#include <vector>
 
 class Application;
 
@@ -75,15 +77,15 @@ class MSWindows : public Logging
 
         LRESULT result { 0 };
 
-        //static long long __stdcall message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
         static LRESULT CALLBACK message_handler( HWND in_window , UINT message , WPARAM w_parameter , LPARAM l_parameter );
-        //void calculate_layout();
 
         //static MSWindows * class_pointer;
 
         uint error_code = 0xffff'ffff; //max unsigned int 4294967295
 
         Application * application {};
+
+        //static std::vector< RAWINPUT > raw_input;
 
         //EnumWindows()
 
@@ -92,6 +94,8 @@ class MSWindows : public Logging
         //void window_rectangles();
 
         //static BOOL CALLBACK enumerate_windows( HWND window , LPARAM parameter );
+
+        void process_input();
 
     protected:
         
@@ -119,10 +123,8 @@ class MSWindows : public Logging
         Size client_size();    // const;
 
         HWND window();
-        
-        int message_loop();
 
         //uint dpi();
-
+        unsigned long long message_loop();
         void register_input_device( ushort page , ushort usage );
 };

@@ -14,9 +14,10 @@ namespace HID
 
         std::wstring message;
 
-        if( input_devices.empty() ) message = L"\n No multiple touch devices found";
+        if( input_devices.empty() ) message = L"\nNo multiple touch devices found";
         else
         {
+            /*
             for( auto & device : input_devices )
             {
 
@@ -24,9 +25,10 @@ namespace HID
                 message += format( L"\nProduct: {}, 0x{:X}", device.product_, device.identity_.product );
                 message += format( L"\n Page: {}, 0x{:x}", page( device.capabilities.UsagePage ), device.capabilities.UsagePage );
                 message += format( L"\n Usage: {}, 0x{:x}", usage( device.capabilities.UsagePage , device.capabilities.Usage ), device.capabilities.Usage );
-                message += format( L"\n  Input report size = {} bytes" , device.capabilities.InputReportByteLength );
-                message += format( L"\n  Ouput report size = {} bytes" , device.capabilities.OutputReportByteLength );
-                message += format( L"\n  Feature report size = {} bytes" , device.capabilities.FeatureReportByteLength );
+                message += format( L"\n  Input report size = {} bytes", device.capabilities.InputReportByteLength );
+                message += format( L"\n  Input buffer amount = {}", device.input_buffer_amount );
+                message += format( L"\n  Ouput report size = {} bytes", device.capabilities.OutputReportByteLength );
+                message += format( L"\n  Feature report size = {} bytes", device.capabilities.FeatureReportByteLength );
 
                 for( auto & collection : device.collections_ )
                 {
@@ -168,8 +170,8 @@ namespace HID
                     }
                 }
             } // for each device
-
-            // ** register and open device/s **
+            */
+            // ** register device/s **
             for( auto & device : input_devices ) 
             {
                 register_input_device( device.page() , device.usage() );
@@ -180,9 +182,9 @@ namespace HID
         OutputDebugString( message.c_str() );
     }
 
-    void Multiple_touch::update() 
+    void Multiple_touch::update( RAWINPUT input ) 
     {
-        Devices::update();
+        Devices::update( input );
     }
     
     void Multiple_touch::render() {}

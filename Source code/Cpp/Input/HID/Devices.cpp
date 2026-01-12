@@ -59,8 +59,8 @@ namespace HID
     }
 
     // multiple devices
-    void Devices::update()
+    void Devices::update( RAWINPUT input )
     {
-        for( auto & device : input_devices ) device.update();
+        for( auto & device : input_devices ) device.update( input );
     }
 }// namespace HID

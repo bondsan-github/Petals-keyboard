@@ -31,6 +31,6 @@ namespace HID
             //update_contact_x( device, identifier, x);
             //update_contact_x( device, identifier, y);
 
-            void update();
+            void update( RAWINPUT input );
     };
 }

@@ -38,7 +38,7 @@ std::wstring Logging::system_message( long result )
     return message;
 }
 
-void Logging::print_debug( wchar_t * message )
+void Logging::print_debug( const wchar_t * message )
 {
     std::wostringstream ouput_stream {};
     ouput_stream << message;

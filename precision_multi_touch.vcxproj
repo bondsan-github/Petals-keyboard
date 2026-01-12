@@ -335,6 +335,9 @@
     <ClInclude Include="Source code\Hpp\Multiple touch.h" />
     <ClInclude Include="Source code\Hpp\Operating system\MSWindows messages.h" />
     <ClInclude Include="Source code\Hpp\Operating system\MSWindows.h" />
+    <ClInclude Include="Source code\Hpp\Operating system\targetver.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Source code\Hpp\Output\Logging.h" />
     <ClInclude Include="Source code\Hpp\Petal.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

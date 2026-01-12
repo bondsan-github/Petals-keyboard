@@ -5,6 +5,11 @@
 //#include "Time\Timer.h"
 #include "Graphics\Size.h"
 
+//#include "Operating system\targetver.h"
+//#define _WIN32_WINNT 0x0501
+//#include <Windows.h>
+//#include <WinUser.h>
+
 class Application : public MSWindows//, public Direct2D, public Timer
 {
     public:
@@ -16,6 +21,6 @@ class Application : public MSWindows//, public Direct2D, public Timer
 
         virtual ~Application() = default;
 
-        virtual void update() = 0;
+        virtual void update( RAWINPUT input ) = 0;
         virtual void render() = 0;
 };

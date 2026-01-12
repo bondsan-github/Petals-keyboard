@@ -57,16 +57,16 @@ class Logging
 
         void error_exit( const wchar_t * message, HRESULT result = 0); // print error message box and exit application
         
-        void print_debug( const wchar_t * message, HRESULT result = 0);
-        void print_debug( wchar_t * message );
-        void print_debug( const char * message );
+        static void print_debug( const wchar_t * message, HRESULT result);
+        static void print_debug( const wchar_t * message );
+        static void print_debug( const char * message );
 
     protected:
     
         HRESULT result_ { E_FAIL };
         
         std::wstring message_ {};
-        std::wstring system_message( long result = 0 );
+        static std::wstring system_message( long result = 0 );
 };
 //
 //void operator >> ( Logging, Token );
